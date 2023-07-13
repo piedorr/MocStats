@@ -4,11 +4,24 @@ In case of new character:
     If new char is trailblazer, update comp_rates.py, char_usage.py, and player_phase.py
 
 
-Rename data/raw_csvs/{version}.csv to moc.csv
+Rename data/raw_csvs/{version}.csv to data/raw_csvs/moc.csv
 Copy data/raw_csvs/{version}_char.csv to data/phase_characters.csv
 Run Comps/csv_filterer.py
 Change past_phase in Comps/comp_rates_config.py
 Run Comps/comp_rates.py
+
+If collecting new data:
+    - Copy char_results/uids.csv to mihomo/data/uids.csv
+    - Update mihomo package
+    - Run mihomo/nohomo.py
+    - Rename mihomo/output1.csv to mihomo/output.csv
+If using past data:
+    - Copy mihomo/results/{version}_output.csv to mihomo/output.csv
+
+- Copy data/raw_data/{version}.csv to mihomo/data/moc.csv
+- Copy char_results/all.csv to mihomo/data/all.csv
+- Run mihomo/stats.py
+- Run mihomo/stat.py
 
 New chars, weapon, relics:
 https://hsr.yatta.top/en/

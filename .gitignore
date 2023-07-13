@@ -292,3 +292,7 @@ cython_debug/
 #.idea/
 Comps/sort.py
 Comps/sheets.googleapis.com-python.json
+mihomo/artistats.py
+mihomo/nohomo_f.py
+mihomo/output.csv
+mihomo/Readme.txt
