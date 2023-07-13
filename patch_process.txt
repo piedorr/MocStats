@@ -1,0 +1,14 @@
+In case of new character:
+    Add to data/characters.json, use data from https://github.com/Mar-7th/StarRailRes/blob/master/index_new/en/characters.json
+    Add comp role at composition.py line 62
+    If new char is trailblazer, update comp_rates.py, char_usage.py, and player_phase.py
+
+
+Rename data/raw_csvs/{version}.csv to moc.csv
+Copy data/raw_csvs/{version}_char.csv to data/phase_characters.csv
+Run Comps/csv_filterer.py
+Change past_phase in Comps/comp_rates_config.py
+Run Comps/comp_rates.py
+
+New chars, weapon, relics:
+https://hsr.yatta.top/en/
