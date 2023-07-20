@@ -4,6 +4,8 @@ import json
 # Load the list of characters from their file
 with open('../data/characters.json') as char_file:
     CHARACTERS = json.load(char_file)
+with open('../data/relic_affixes.json') as relic_file:
+    articombinations = json.load(relic_file)
 
 class PlayerPhase:
     """An object that stores information about a player on a phase. Has:
@@ -37,15 +39,19 @@ class PlayerPhase:
             Artifacts, a string.
             Element, a string.
         """
-        # hpcom = ["Vourukasha's Glow, ", "Tenacity of the Millelith, "]
-        # comhp = [", Vourukasha's Glow", ", Tenacity of the Millelith"]
-        # for i in hpcom:
-        #     if i in artifacts:
-        #         artifacts = artifacts.replace(i, "HP +20%, ")
-        # for i in comhp:
-        #     if i in artifacts:
-        #         artifacts = artifacts.replace(i, "")
-        #         artifacts = "HP +20%, " + artifacts
+        for arti in articombinations:
+            articom = []
+            comarti = []
+            for artiset in articombinations[arti]:
+                articom.append(artiset + ", ")
+                comarti.append(", " + artiset)
+            for i in articom:
+                if i in artifacts:
+                    artifacts = artifacts.replace(i, arti + ", ")
+            for i in comarti:
+                if i in artifacts:
+                    artifacts = artifacts.replace(i, "")
+                    artifacts = arti + ", " + artifacts
 
         self.owned[name] = {
             "level": int(level),

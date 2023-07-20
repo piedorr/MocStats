@@ -35,7 +35,7 @@ class Composition:
         self.player = str(uid)
         self.phase = phase
         self.room = room
-        self.round_num = round_num
+        self.round_num = int(round_num)
         self.star_num = int(star_num)
         self.char_structs(comp_chars)
         self.name_structs(self.characters, info_char)

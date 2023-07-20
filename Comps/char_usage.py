@@ -2,6 +2,7 @@ import json
 import pandas as pd
 import operator
 import csv
+from archetypes import *
 
 ROOMS = ["1-1", "1-2", "2-1", "2-2", "3-1", "3-2", "4-1", "4-2", "5-1", "5-2", "6-1", "6-2", "7-1", "7-2", "8-1", "8-2", "9-1", "9-2", "10-1", "10-2"]
 global gear_app_threshold
@@ -77,10 +78,6 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
     total_battle = 0
     appears = {}
     players_chars = {}
-    pyroChars = ["Bennett","Xiangling","Hu Tao","Thoma","Yoimiya","Yanfei","Xinyan","Diluc","Amber","Klee"]
-    hydroChars = ["Mona","Sangonomiya Kokomi","Barbara","Xingqiu","Nilou","Candace","Yelan","Kamisato Ayato","Tartaglia"]
-    dendroChars = ["Alhaitham","Collei","Nahida","Tighnari","Traveler-D","Yaoyao","Baizhu","Kaveh","Kirara"]
-    onField = ["Alhaitham", "Arataki Itto", "Cyno", "Dehya", "Diluc", "Eula", "Ganyu", "Hu Tao", "Kamisato Ayaka", "Kamisato Ayato", "Keqing", "Klee", "Ningguang", "Noelle", "Razor", "Shikanoin Heizou", "Tartaglia", "Tighnari", "Wanderer", "Xiao", "Yanfei", "Yoimiya","Kaveh"]
 
     for phase in players:
         appears[phase] = {}
@@ -92,8 +89,10 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
             players_chars[phase][character] = []
             appears[phase][character] = {
                 "flat": 0,
+                "round": 0,
                 "owned": 0,
                 "percent": 0.00,
+                "avg_round": 0.00,
                 "weap_freq": {},
                 "arti_freq": {},
                 "planar_freq": {},
@@ -104,7 +103,9 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
             for i in range (7):
                 appears[phase][character]["cons_freq"][i] = {
                     "flat": 0,
+                    "round": 0,
                     "percent": 0,
+                    "avg_round": 0.00
                 }
 
         # There's probably a better way to cache these things
@@ -112,75 +113,19 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
             for chamber in chambers:
                 if player.chambers[chamber] == None:
                     continue
-                else:
-                    total_battle += 1
-                for char in player.chambers[chamber].char_presence.keys():
-                    # foundPyro = False
-                    # foundHydro = False
-                    # foundNilou = False
-                    # foundOnField = False
-                    # foundDendro = False
-
-                    # testChar = 0
-                    # while not foundPyro and testChar < len(pyroChars):
-                    #     if player.chambers[chamber].char_presence[pyroChars[testChar]]:
-                    #         foundPyro = True
-                    #     testChar += 1
-
-                    # testChar = 0
-                    # while not foundDendro and testChar < len(dendroChars):
-                    #     if player.chambers[chamber].char_presence[dendroChars[testChar]]:
-                    #         foundDendro = True
-                    #     testChar += 1
-
-                    # testChar = 0
-                    # while not foundHydro and testChar < len(hydroChars):
-                    #     if player.chambers[chamber].char_presence[hydroChars[testChar]]:
-                    #         foundHydro = True
-                    #     testChar += 1
-
-                    # testChar = 0
-                    # while not foundOnField and testChar < len(onField):
-                    #     if player.chambers[chamber].char_presence[onField[testChar]]:
-                    #         foundOnField = True
-                    #     testChar += 1
-
-                    # if player.chambers[chamber].char_presence["Nilou"]:
-                    #     foundNilou = True
-
-                    isValidChar = False
-                    match archetype:
-                        case "Nilou":
-                            if foundNilou:
-                                isValidChar = True
-                        case "dendro":
-                            if foundDendro:
-                                isValidChar = True
-                        case "nondendro":
-                            if not foundDendro:
-                                isValidChar = True
-                        case "off-field":
-                            if not foundOnField and not foundNilou:
-                                isValidChar = True
-                        case "on-field":
-                            if foundOnField and not foundNilou:
-                                isValidChar = True
-                        case "melt":
-                            if foundPyro:
-                                isValidChar = True
-                        case "freeze":
-                            if not foundPyro and foundHydro:
-                                isValidChar = True
-                        case _:
-                            isValidChar = True
-
-                    if isValidChar:
+                total_battle += 1
+                foundchar = resetfind()
+                for char in player.chambers[chamber].characters:
+                    findchars(char, foundchar)
+                if find_archetype(foundchar):
+                    for char in player.chambers[chamber].characters:
                         # to print the amount of players using a character, for char infographics
                         if player.player not in players_chars[phase][char]:
                             players_chars[phase][char].append(player.player)
 
                         char_name = char
                         appears[phase][char_name]["flat"] += 1
+                        appears[phase][char_name]["round"] += player.chambers[chamber].round_num
                         # In case of character in comp data missing from character data
                         if char not in player.owned:
                             # print("Comp data missing from character data: " + str(player.player) + ", " + str(char))
@@ -190,6 +135,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                             continue
                         appears[phase][char_name]["owned"] += 1
                         appears[phase][char_name]["cons_freq"][player.owned[char]["cons"]]["flat"] += 1
+                        appears[phase][char_name]["cons_freq"][player.owned[char]["cons"]]["round"] += player.chambers[chamber].round_num
                         appears[phase][char_name]["cons_avg"] += player.owned[char]["cons"]
 
                         if player.owned[char]["weapon"] != "":
@@ -229,6 +175,12 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                 )
             else:
                 appears[phase][char]["percent"] = 0.00
+            if appears[phase][char]["flat"] > 0:
+                appears[phase][char]["avg_round"] = round(
+                    appears[phase][char]["round"] / appears[phase][char]["flat"], 2
+                )
+            else:
+                appears[phase][char]["avg_round"] = 0.00
 
             # if (chambers == ["1-1", "1-2", "2-1", "2-2", "3-1", "3-2", "4-1", "4-2", "5-1", "5-2", "6-1", "6-2", "7-1", "7-2", "8-1", "8-2", "9-1", "9-2", "10-1", "10-2"]):
             appears[phase][char]["sample"] = len(players_chars[phase][char])
@@ -243,8 +195,12 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                         appears[phase][char]["cons_freq"][cons]["percent"] = round(
                             appears[phase][char]["cons_freq"][cons]["flat"] / app_flat, 2
                         )
+                        appears[phase][char]["cons_freq"][cons]["avg_round"] = round(
+                            appears[phase][char]["cons_freq"][cons]["round"] / appears[phase][char]["cons_freq"][cons]["flat"], 2
+                        )
                     else:
                         appears[phase][char]["cons_freq"][cons]["percent"] = 0.00
+                        appears[phase][char]["cons_freq"][cons]["avg_round"] = 0.00
 
             # Calculate weapons
             sorted_weapons = (sorted(
@@ -314,13 +270,19 @@ def usages(owns, appears, past_phase, filename, chambers=ROOMS, offset=1):
             reader = csv.reader(stats)
             col_names = next(reader)
             past_usage = {}
+            past_rounds = {}
 
             # Append lines and check for duplicate UIDs by checking if
             # there are exactly 12 entries (1 for each chamber) for a UID
             for line in reader:
                 past_usage[line[0]] = float(line[1].strip('%'))
+                try:
+                    past_rounds[line[0]] = float(line[2])
+                except:
+                    pass
     except:
         past_usage = {}
+        past_rounds = {}
 
     for phase in owns:
         uses[phase] = {}
@@ -329,9 +291,11 @@ def usages(owns, appears, past_phase, filename, chambers=ROOMS, offset=1):
             uses[phase][char] = {
                 "app": appears[phase][char]["percent"],
                 "app_flat": appears[phase][char]["flat"],
+                "round": appears[phase][char]["avg_round"],
                 "own": owns[phase][char]["percent"],
                 "usage" : 0,
                 "diff": "-",
+                "diff_rounds": "-",
                 "rarity": CHARACTERS[char]["availability"],
                 "weapons" : {},
                 "artifacts" : {},
@@ -346,6 +310,8 @@ def usages(owns, appears, past_phase, filename, chambers=ROOMS, offset=1):
 
                 if char in past_usage:
                     uses[phase][char]["diff"] = round(appears[phase][char]["percent"] - past_usage[char], 2)
+                if char in past_rounds:
+                    uses[phase][char]["diff_rounds"] = round(appears[phase][char]["avg_round"] - past_rounds[char], 2)
 
                 # if (chambers == ["1-1", "1-2", "2-1", "2-2", "3-1", "3-2", "4-1", "4-2", "5-1", "5-2", "6-1", "6-2", "7-1", "7-2", "8-1", "8-2", "9-1", "9-2", "10-1", "10-2"]):
                 for i in range (7):
@@ -384,8 +350,9 @@ def usages(owns, appears, past_phase, filename, chambers=ROOMS, offset=1):
 
                 for i in range (7):
                     uses[phase][char]["cons_usage"][i]["app"] = appears[phase][char]["cons_freq"][i]["percent"]
+                    uses[phase][char]["cons_usage"][i]["round"] = appears[phase][char]["cons_freq"][i]["avg_round"]
                     # uses[phase][char]["cons_usage"][i]["own"] = owns[phase][char]["cons_freq"][i]["percent"]
-                    # if char in {"Physical Trailblazer", "Fire Trailblazer"}:
+                    # if "Trailblazer" in char:
                     #     uses[phase][char]["cons_usage"][i]["usage"] = round(
                     #         appears[phase][char]["cons_freq"][i]["flat"]  / (owns[phase][char]["cons_freq"][i]["flat"] * (
                     #                 owns[phase][char]["flat"] / owns[phase][char]["cons_freq"][i]["flat"]

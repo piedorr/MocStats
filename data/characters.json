@@ -1545,6 +1545,10 @@
                 "image": "guide/Gamer/character_evaluation/8001.png",
                 "link": "https://www.gamer.cn/xqtd/article/10106"
             }
+        ],
+        "trailblazer_ids": [
+            "8001",
+            "8002"
         ]
     },
     "Fire Trailblazer": {
@@ -1599,6 +1603,65 @@
         "guide_material": [],
         "guide_evaluation": [],
         "availability": "4*",
+        "alt_name": null,
+        "out_name": false,
+        "trailblazer_ids": [
+            "8003",
+            "8004"
+        ]
+    },
+    "Blade": {
+        "id": "1205",
+        "name": "Blade",
+        "tag": "blade",
+        "rarity": 5,
+        "path": "Warrior",
+        "element": "Wind",
+        "max_sp": 130,
+        "ranks": [
+            "120501",
+            "120502",
+            "120503",
+            "120504",
+            "120505",
+            "120506"
+        ],
+        "skills": [
+            "120501",
+            "120502",
+            "120503",
+            "120504",
+            "120506",
+            "120507",
+            "120508"
+        ],
+        "skill_trees": [
+            "1205001",
+            "1205002",
+            "1205003",
+            "1205004",
+            "1205007",
+            "1205101",
+            "1205102",
+            "1205103",
+            "1205201",
+            "1205202",
+            "1205203",
+            "1205204",
+            "1205205",
+            "1205206",
+            "1205207",
+            "1205208",
+            "1205209",
+            "1205210"
+        ],
+        "icon": "icon/character/1205.png",
+        "preview": "image/character_preview/1205.png",
+        "portrait": "image/character_portrait/1205.png",
+        "guide_overview": [],
+        "guide_material": [],
+        "guide_evaluation": [],
+        "availability": "Limited 5*",
         "alt_name": null,
         "out_name": false
     }

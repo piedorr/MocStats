@@ -290,9 +290,21 @@ cython_debug/
 #  and can be added to the global gitignore or merged into this file.  For a more nuclear
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
-Comps/sort.py
+data/raw_csvs_real
+data/phase_characters.csv
+data/compositions.csv
+Comps/client_secret.json
 Comps/sheets.googleapis.com-python.json
+Comps/sort.py
+Comps/compile_usage.py
+mihomo/results_real
+mihomo/data
+mihomo/images
+mihomo/infographics
 mihomo/artistats.py
 mihomo/nohomo_f.py
 mihomo/output.csv
-mihomo/Readme.txt
+mihomo/readme_real.txt
+char_results
+comp_results
+patch_process_real.txt
