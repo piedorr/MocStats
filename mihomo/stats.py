@@ -1,3 +1,7 @@
+import sys
+sys.path.append('../Comps/')
+
+import os
 import numpy as np
 import operator
 import csv
@@ -9,18 +13,23 @@ import numpy as np
 from scipy.stats import skew
 from pynput import keyboard
 from itertools import chain
+from archetypes import *
+from nohomo_config import phase_num
 
-with open("output.csv", 'r', encoding='UTF8') as f:
+with open("output1.csv", 'r', encoding='UTF8') as f:
     reader = csv.reader(f, delimiter=',')
     headers = next(reader)
     data = np.array(list(reader))
 
-with open("data/moc.csv", 'r', encoding='UTF8') as f:
-    reader = csv.reader(f, delimiter=',')
-    headers = next(reader)
-    spiral = np.array(list(reader))
+if os.path.exists("../data/raw_csvs_real/"):
+    f = open("../data/raw_csvs_real/" + phase_num + ".csv", 'r', encoding='UTF8')
+else:
+    f = open("../data/raw_csvs/" + phase_num + ".csv", 'r', encoding='UTF8')
+reader = csv.reader(f, delimiter=',')
+headers = next(reader)
+spiral = list(reader)
 
-with open("data/all.csv", 'r', encoding='UTF8') as f:
+with open("../char_results/all.csv", 'r', encoding='UTF8') as f:
     reader = csv.reader(f, delimiter=',')
     headers = next(reader)
     build = np.array(list(reader))
@@ -37,8 +46,12 @@ substats = {}
 spiral_rows = {}
 for spiral_row in spiral:
     if spiral_row[0] not in spiral_rows:
-        spiral_rows[spiral_row[0]] = set()
-    spiral_rows[spiral_row[0]].update([spiral_row[5], spiral_row[6], spiral_row[7], spiral_row[8]])
+        spiral_rows[spiral_row[0]] = {}
+    for i in range(5,9):
+        if spiral_row[i] not in spiral_rows[spiral_row[0]]:
+            spiral_rows[spiral_row[0]][spiral_row[i]] = 1
+        else:
+            spiral_rows[spiral_row[0]][spiral_row[i]] += 1
 
 for row in build:
     chars.append(row[0])
@@ -72,7 +85,8 @@ for char in chars:
         "res_sub": [],
         "ehr_sub": [],
         "break_sub": [],
-        "sample_size": 0
+        "sample_size": 0,
+        "sample_size_players": 0
     }
     mean[char] = {
         "char_lvl": 0,
@@ -162,6 +176,8 @@ for row in data:
         uid = row[0]
         ar+=int(row[1])
         count+=1
+    if row[2] not in chars:
+        row[2] = "Trailblazer"
     if row[2] == "Trailblazer":
         match row[4]:
             case "Fire":
@@ -209,25 +225,27 @@ for row in data:
         # # if found and foundDendro and foundHydro: # Hyperbloom
         # # if found and foundDendro and not foundHydro: # Aggravate/Spread
         # if isValidChar:
-            stats[row[2]]["char_lvl"].append(float(row[3]))
-            stats[row[2]]["sample_size"] += 1
-            stats[row[2]]["spd_sub"].append(float(row[23]))
-            if (row[6].isnumeric()):
-                stats[row[2]]["light_cone_lvl"].append(float(row[6]))
-            for i in range(3,11):
-                stats[row[2]][statkeys[i]].append(float(row[i+4]))
-            for i in chain(range(11,19), range(20,28)):
-                stats[row[2]][statkeys[i]].append(float(row[i+4])/100)
-            for i in range(4):
-                if row[i+32] in mainstats[row[2]][mainstatkeys[i]]:
-                    mainstats[row[2]][mainstatkeys[i]][row[i+32]] += 1
-                else:
-                    mainstats[row[2]][mainstatkeys[i]][row[i+32]] = 1
+            stats[row[2]]["sample_size_players"] += 1
+            for i in range(spiral_rows[row[0]][row[2]]):
+                stats[row[2]]["char_lvl"].append(float(row[3]))
+                stats[row[2]]["sample_size"] += 1
+                stats[row[2]]["spd_sub"].append(float(row[23]))
+                if (row[6].isnumeric()):
+                    stats[row[2]]["light_cone_lvl"].append(float(row[6]))
+                for i in range(3,11):
+                    stats[row[2]][statkeys[i]].append(float(row[i+4]))
+                for i in chain(range(11,19), range(20,28)):
+                    stats[row[2]][statkeys[i]].append(float(row[i+4])/100)
+                for i in range(4):
+                    if row[i+32] in mainstats[row[2]][mainstatkeys[i]]:
+                        mainstats[row[2]][mainstatkeys[i]][row[i+32]] += 1
+                    else:
+                        mainstats[row[2]][mainstatkeys[i]][row[i+32]] = 1
 
-            # if char_arti in artifacts[char]:
-            #     artifacts[char][char_arti] += 1
-            # else:
-            #     artifacts[char][char_arti] = 1
+                # if char_arti in artifacts[char]:
+                #     artifacts[char][char_arti] += 1
+                # else:
+                #     artifacts[char][char_arti] = 1
 copy_chars = chars.copy()
 for char in copy_chars:
     # print(artifacts[char])
@@ -238,7 +256,7 @@ for char in copy_chars:
             skewness = 0
             if not stats[char][stat]:
                 stats[char][stat] = 0
-            elif stat != "name" and stat != "sample_size":
+            elif stat != "name" and "sample_size" not in stat:
                 if stat in ["char_lvl", "light_cone_lvl", "attack_lvl", "skill_lvl", "ultimate_lvl", "talent_lvl", "max_hp", "atk", "dfns", "speed"]:
                     median[char][stat] = round(statistics.median(stats[char][stat]), 2)
                     mean[char][stat] = round(statistics.mean(stats[char][stat]), 2)
@@ -307,11 +325,17 @@ for char in copy_chars:
         del stats[char]
         chars.remove(char)
 
-csv_writer = csv.writer(open("results/chars.csv", 'w', newline=''))
+if os.path.exists("results_real"):
+    csv_writer = csv.writer(open("results_real/chars.csv", 'w', newline=''))
+    csv_writer2 = csv.writer(open("results_real/demographic.csv", 'w', newline=''))
+else:
+    csv_writer = csv.writer(open("results/chars.csv", 'w', newline=''))
+    csv_writer2 = csv.writer(open("results/demographic.csv", 'w', newline=''))
+del stats[chars[0]]["sample_size"]
 csv_writer.writerow(stats[chars[0]].keys())
-csv_writer2 = csv.writer(open("results/demographic.csv", 'w', newline=''))
 for char in chars:
+    del stats[char]["sample_size"]
     csv_writer.writerow(stats[char].values())
-    csv_writer2.writerow([char + ": " + str(stats[char]["sample_size"])])
+    csv_writer2.writerow([char + ": " + str(stats[char]["sample_size_players"])])
 
 print("Average AR: ", (ar/count))

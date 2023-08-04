@@ -1,35 +1,43 @@
+import sys
+sys.path.append('../Comps/')
+
+import os
 import numpy as np
 import operator
 import csv
 import statistics
 import matplotlib
-matplotlib.use('TkAgg')
+# matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import skew
 from pynput import keyboard
+from nohomo_config import phase_num
 
-with open("output.csv", 'r', encoding='UTF8') as f:
+with open("output1.csv", 'r', encoding='UTF8') as f:
     reader = csv.reader(f, delimiter=',')
     headers = next(reader)
     data = np.array(list(reader))
 
-with open("data/moc.csv", 'r', encoding='UTF8') as f:
-    reader = csv.reader(f, delimiter=',')
-    headers = next(reader)
-    spiral = np.array(list(reader))
+if os.path.exists("../data/raw_csvs_real/"):
+    f = open("../data/raw_csvs_real/" + phase_num + ".csv", 'r', encoding='UTF8')
+else:
+    f = open("../data/raw_csvs/" + phase_num + ".csv", 'r', encoding='UTF8')
+reader = csv.reader(f, delimiter=',')
+headers = next(reader)
+spiral = list(reader)
 
-with open("data/all.csv", 'r', encoding='UTF8') as f:
+with open("../char_results/all.csv", 'r', encoding='UTF8') as f:
     reader = csv.reader(f, delimiter=',')
     headers = next(reader)
     build = np.array(list(reader))
 
 archetype = "all"
 
-chars = []
+# chars = []
 # for row in build:
 #     chars.append(row[0])
-chars = ["Pela", "Qingque"]
+chars = ["Blade", "Arlan", "Natasha", "Sushang"]
 stats = {}
 median = {}
 mean = {}
@@ -229,6 +237,9 @@ for row in data:
                 #     sample[row[2]][row[5]] = 0
                 if row[5] in weapons[row[2]]:
                     sample[row[2]][row[5]] += 1
+                    stats[row[2]][row[5]]["char_lvl"].append(float(row[3]))
+                    if (row[6].isnumeric()):
+                        stats[row[2]][row[5]]["light_cone_lvl"].append(float(row[6]))
                     for i in range(3,11):
                         stats[row[2]][row[5]][statkeys[i]].append(float(row[i+4]))
                     for i in range(11,19):
@@ -242,15 +253,15 @@ for char in chars:
             # print(weapon + ": " + str(sample[char][weapon]))
             for stat in stats[char][weapon]:
                 skewness = 0
-                if stat not in ["char_lvl", "light_cone_lvl", "name"]:
-                    if stat in ["attack_lvl", "skill_lvl", "ultimate_lvl", "talent_lvl", "max_hp", "atk", "dfns", "speed"]:
+                if stat not in ["name"]:
+                    if stat in ["char_lvl", "light_cone_lvl", "attack_lvl", "skill_lvl", "ultimate_lvl", "talent_lvl", "max_hp", "atk", "dfns", "speed"]:
                         median[char][weapon][stat] = round(statistics.median(stats[char][weapon][stat]), 2)
                         mean[char][weapon][stat] = round(statistics.mean(stats[char][weapon][stat]), 2)
                     else:
                         median[char][weapon][stat] = round(statistics.median(stats[char][weapon][stat]), 4)
                         mean[char][weapon][stat] = round(statistics.mean(stats[char][weapon][stat]), 4)
                     if (mean[char][weapon][stat] > 0 and median[char][weapon][stat] > 0 and sample[char][weapon] > 5):
-                        if stat not in ["attack_lvl", "skill_lvl", "ultimate_lvl", "talent_lvl", "energy_regen", "dmg_boost"]:
+                        if stat not in ["char_lvl", "light_cone_lvl", "attack_lvl", "skill_lvl", "ultimate_lvl", "talent_lvl", "energy_regen", "dmg_boost"]:
                             skewness = round(skew(stats[char][weapon][stat], axis=0, bias=True), 2)
                     if skewness > 1:
                         stats[char][weapon][stat] = str(median[char][weapon][stat])
@@ -275,7 +286,10 @@ for char in chars:
 
     print()
     print()
-    csv_writer = csv.writer(open("results/" + char + "_weapons.csv", 'w', newline=''))
+    if os.path.exists("results_real"):
+        csv_writer = csv.writer(open("results_real/" + char + "_weapons.csv", 'w', newline=''))
+    else:
+        csv_writer = csv.writer(open("results/" + char + "_weapons.csv", 'w', newline=''))
     csv_writer.writerow(stats[char][weapons[char][0]].keys())
     for weapon in weapons[char]:
         print(weapon + ": " + str(sample[char][weapon]))

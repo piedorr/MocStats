@@ -24,11 +24,7 @@ class PlayerPhase:
         self.player = player
         self.phase = phase
         self.owned = {}
-        self.chambers = { "1-1": None, "1-2": None, "2-1": None, "2-2": None,
-                          "3-1": None, "3-2": None, "4-1": None, "4-2": None,
-                          "5-1": None, "5-2": None, "6-1": None, "6-2": None,
-                          "7-1": None, "7-2": None, "8-1": None, "8-2": None,
-                          "9-1": None, "9-2": None, "10-1": None, "10-2": None }
+        self.chambers = {}
 
     def add_character(self, name, level, cons, weapon, element, artifacts, planars):
         """Adds in a character to the owned characters dict. Takes in:
@@ -66,7 +62,7 @@ class PlayerPhase:
         """Adds a composition to the chambers dict."""
         if composition.phase != self.phase or composition.player != self.player:
             return
-        if self.chambers[composition.room]:
+        if composition.room in self.chambers:
             return
         self.chambers[composition.room] = composition
     

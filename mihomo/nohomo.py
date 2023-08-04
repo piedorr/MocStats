@@ -29,7 +29,7 @@ async def v1():
 	cpt = 1
 	error_uids = []
 	header = ['uid', 'player_level', 'character', 'char_level', 'path', 'light_cone', 'light_cone_level', 'attack_lvl', 'skill_lvl', 'ultimate_lvl', 'talent_lvl', 'HP', 'ATK', 'DEF', 'SPD', 'CRIT Rate', 'CRIT DMG', 'DMG Boost', 'Outgoing Healing Boost', 'Energy Regeneration Rate', 'Effect RES', 'Effect Hit Rate', 'Break Effect', 'SPD sub', 'HP sub', 'ATK sub', 'DEF sub', 'CRIT Rate sub', 'CRIT DMG sub', 'Effect RES sub', 'Effect Hit Rate sub', 'Break Effect sub', 'Body', 'Feet', 'Sphere', 'Rope', 'relic', 'ornament']
-	writer = csv.writer(open('output2.csv', 'w', encoding='UTF8', newline=''))
+	writer = csv.writer(open(filename + '.csv', 'w', encoding='UTF8', newline=''))
 	writer.writerow(header)
 
 	for uid in uids:
