@@ -3,23 +3,25 @@ import json
 with open('../data/characters.json') as char_file:
     CHARACTERS = json.load(char_file)
 
-RECENT_PHASE = "1.2.1"
-past_phase = "1.1.3"
-char_infographics = "Blade"
+RECENT_PHASE = "1.2.2"
+past_phase = "1.2.1"
+char_infographics = "Luka"
 
 # threshold for comps, not inclusive
 global app_rate_threshold
 global app_rate_threshold_round
 global f2p_app_rate_threshold
 app_rate_threshold = 0.15
-app_rate_threshold_round = 0.3
+app_rate_threshold_round = 0.2
+json_threshold = 0.1
 f2p_app_rate_threshold = 0.1
 
 # threshold for comps in character infographics
 global char_app_rate_threshold
-char_app_rate_threshold = 0.07
+char_app_rate_threshold = 0.1
 
 
+skip_self = False
 archetype = "all"
 whaleCheck = False
 whaleSigWeap = False
@@ -28,9 +30,9 @@ standWeaps = []
 
 # Char infographics should be separated from overall comp rankings
 run_commands = [
-    # "Char usages 6 - 10",
+    "Char usages 6 - 10",
     # "Char usages for each stage",
-    "Comp usage 6 - 10",
+    # "Comp usage 6 - 10",
     # "Comp usages for each stage",
     # "Character specific infographics",
     # "Char usages all stages",

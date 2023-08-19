@@ -1,8 +1,11 @@
 import json
 import csv
 import os
+import sys
+sys.path.append('../Comps/')
 
-phase_num = "1.2.1"
+from comp_rates_config import RECENT_PHASE
+phase_num = RECENT_PHASE
 
 f = open('../data/relics.json')
 relics_data = json.load(f)

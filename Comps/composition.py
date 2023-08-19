@@ -65,7 +65,7 @@ class Composition:
                 dps.append(character)
             elif character in ["Clara", "Blade"]:
                 sub.insert(0, character)
-            elif character in ["Welt", "Serval", "Physical Trailblazer", "Sampo", "Herta"]:
+            elif character in ["Welt", "Serval", "Physical Trailblazer", "Sampo", "Herta", "Luka"]:
                 sub.append(character)
             elif character in ["Bronya", "Silver Wolf", "Asta", "Tingyun", "Pela", "Yukong"]:
                 anemo.append(character)
@@ -109,7 +109,9 @@ class Composition:
 
         if self.comp_name == "-":
             archetype = ""
-            if len(dps) + len(sub) > 1:
+            if len(dps) + len(sub) > 2:
+                archetype = " Triple Carry"
+            elif len(dps) + len(sub) > 1:
                 archetype = " Dual Carry"
             elif len(dps) + len(sub) == 1:
                 if len(anemo) > 1:

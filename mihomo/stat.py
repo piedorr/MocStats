@@ -37,7 +37,7 @@ archetype = "all"
 # chars = []
 # for row in build:
 #     chars.append(row[0])
-chars = ["Blade", "Arlan", "Natasha", "Sushang"]
+chars = ["Kafka", "Sampo", "Serval", "Luka"]
 stats = {}
 median = {}
 mean = {}

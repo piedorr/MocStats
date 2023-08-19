@@ -334,7 +334,8 @@ else:
 del stats[chars[0]]["sample_size"]
 csv_writer.writerow(stats[chars[0]].keys())
 for char in chars:
-    del stats[char]["sample_size"]
+    if char != chars[0]:
+        del stats[char]["sample_size"]
     csv_writer.writerow(stats[char].values())
     csv_writer2.writerow([char + ": " + str(stats[char]["sample_size_players"])])
 

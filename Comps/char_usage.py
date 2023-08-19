@@ -2,6 +2,7 @@ import json
 import pandas as pd
 import operator
 import csv
+import statistics
 from archetypes import *
 from comp_rates_config import RECENT_PHASE
 
@@ -90,7 +91,18 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
             players_chars[star_num][character] = set()
             appears[star_num][character] = {
                 "flat": 0,
-                "round": 0,
+                "round": {
+                    "1": [],
+                    "2": [],
+                    "3": [],
+                    "4": [],
+                    "5": [],
+                    "6": [],
+                    "7": [],
+                    "8": [],
+                    "9": [],
+                    "10": [],
+                },
                 "owned": 0,
                 "percent": 0.00,
                 "avg_round": 0.00,
@@ -104,7 +116,18 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
             for i in range (7):
                 appears[star_num][character]["cons_freq"][i] = {
                     "flat": 0,
-                    "round": 0,
+                    "round": {
+                        "1": [],
+                        "2": [],
+                        "3": [],
+                        "4": [],
+                        "5": [],
+                        "6": [],
+                        "7": [],
+                        "8": [],
+                        "9": [],
+                        "10": [],
+                    },
                     "percent": 0,
                     "avg_round": 0.00
                 }
@@ -129,7 +152,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
 
                         char_name = char
                         appears[star_num][char_name]["flat"] += 1
-                        appears[star_num][char_name]["round"] += player.chambers[chamber].round_num
+                        appears[star_num][char_name]["round"][list(str(chamber).split("-"))[0]].append(player.chambers[chamber].round_num)
                         # In case of character in comp data missing from character data
                         if len(chambers) < 5:
                             continue
@@ -141,7 +164,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                             continue
                         appears[star_num][char_name]["owned"] += 1
                         appears[star_num][char_name]["cons_freq"][player.owned[char]["cons"]]["flat"] += 1
-                        appears[star_num][char_name]["cons_freq"][player.owned[char]["cons"]]["round"] += player.chambers[chamber].round_num
+                        appears[star_num][char_name]["cons_freq"][player.owned[char]["cons"]]["round"][list(str(chamber).split("-"))[0]].append(player.chambers[chamber].round_num)
                         appears[star_num][char_name]["cons_avg"] += player.owned[char]["cons"]
 
                         if player.owned[char]["weapon"] != "":
@@ -182,9 +205,14 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
             else:
                 appears[star_num][char]["percent"] = 0.00
             if appears[star_num][char]["flat"] > 0:
-                appears[star_num][char]["avg_round"] = round(
-                    appears[star_num][char]["round"] / appears[star_num][char]["flat"], 2
-                )
+                avg_round = []
+                for room_num in range(1,11):
+                    if (appears[star_num][char]["round"][str(room_num)]):
+                        # avg_round.append(statistics.mean(appears[star_num][char]["round"][str(room_num)]))
+                        avg_round += appears[star_num][char]["round"][str(room_num)]
+                # if star_num == 4:
+                #     print(char + " " + str(avg_round))
+                appears[star_num][char]["avg_round"] = round(statistics.mean(avg_round), 2)
             else:
                 appears[star_num][char]["avg_round"] = 99.99
 
@@ -205,12 +233,14 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                     appears[star_num][char]["cons_freq"][cons]["percent"] = round(
                         appears[star_num][char]["cons_freq"][cons]["flat"] / app_flat, 2
                     )
-                    appears[star_num][char]["cons_freq"][cons]["avg_round"] = round(
-                        appears[star_num][char]["cons_freq"][cons]["round"] / appears[star_num][char]["cons_freq"][cons]["flat"], 2
-                    )
+                    avg_round = []
+                    for room_num in range(1,11):
+                        if (appears[star_num][char]["cons_freq"][cons]["round"][str(room_num)]):
+                            avg_round.append(statistics.mean(appears[star_num][char]["cons_freq"][cons]["round"][str(room_num)]))
+                    appears[star_num][char]["cons_freq"][cons]["avg_round"] = round(statistics.mean(avg_round), 2)
                 else:
-                    appears[star_num][char]["cons_freq"][cons]["percent"] = 0.00
-                    appears[star_num][char]["cons_freq"][cons]["avg_round"] = 0.00
+                    appears[star_num][char]["cons_freq"][cons]["percent"] = 99.99
+                    appears[star_num][char]["cons_freq"][cons]["avg_round"] = 99.99
 
             # Calculate weapons
             sorted_weapons = (sorted(

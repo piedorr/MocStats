@@ -7,15 +7,11 @@ Change past_phase in Comps/comp_rates_config.py
 Run Comps/comp_rates.py
 
 If collecting new data:
-    - Edit recent phase in mihomo_config.py
     - Update mihomo: pip install -U git+https://github.com/KT-Yeh/mihomo.git
     - Run mihomo/nohomo.py
-    - Rename mihomo/output1.csv to mihomo/output.csv
 If using past data:
-    - Copy mihomo/results/{version}_output.csv to mihomo/output.csv
+    - Copy mihomo/results/{version}_output.csv to mihomo/output1.csv
 
-- Copy data/raw_data/{version}.csv to mihomo/data/moc.csv
-- Copy char_results/all.csv to mihomo/data/all.csv
 - Run mihomo/stats.py
 - Run mihomo/stat.py
 

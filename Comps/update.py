@@ -87,6 +87,7 @@ for char in chars2:
                     chars1[char_name]["rarity"] = 4
                     chars1[char_name]["availability"] = "4*"
                     chars1[char_name]["name"] = "Trailblazer"
+                    chars1[char_name]["trailblazer_ids"] = [chars2[char]["id"]]
                 else:
                     # add_char = input("Limited Character? (y/n): ")
                     # if add_char == "y":
@@ -95,7 +96,6 @@ for char in chars2:
                     #     chars1[char_name]["availability"] = "Standard 5*"
             chars1[char_name]["alt_name"] = None
             chars1[char_name]["out_name"] = False
-            chars1[char_name]["trailblazer_ids"] = [chars2[char]["id"]]
 
 with open('../data/characters.json','w') as out_file:
     out_file.write(json.dumps(chars1,indent=4))

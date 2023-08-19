@@ -41,7 +41,7 @@ def main():
     last_uid = "0"
 
     for line in reader:
-        if line[0] in self_uids:
+        if skip_self and line[0] in self_uids:
             continue
         if line[0] != last_uid:
             skip_uid = False
@@ -285,6 +285,7 @@ def used_comps(players, comps, rooms, filename, whaleCheck, whaleSigWeap, sigWea
             whaleComp = False
             for char in range (4):
                 if comp_tuple[char] in players[phase][comp.player].owned:
+                # if comp_tuple[char] in players[phase][comp.player].owned and comp_tuple[char] == "Blade":
                     if (
                         players[phase][comp.player].owned[comp_tuple[char]]["cons"] != 0
                         and CHARACTERS[comp_tuple[char]]["availability"] in ["Limited 5*"]
@@ -308,13 +309,24 @@ def used_comps(players, comps, rooms, filename, whaleCheck, whaleSigWeap, sigWea
                         "comp_name": comp.comp_name,
                         "alt_comp_name": comp.alt_comp_name,
                         "star_num": comp.star_num,
-                        "round_num": [],
+                        "round_num": {
+                            "1": [],
+                            "2": [],
+                            "3": [],
+                            "4": [],
+                            "5": [],
+                            "6": [],
+                            "7": [],
+                            "8": [],
+                            "9": [],
+                            "10": [],
+                        },
                         "deepwood": 0,
                         "whale_count": set(),
                         "players": set(),
                     }
                 comps_dict[star_threshold][comp_tuple]["uses"] += 1
-                comps_dict[star_threshold][comp_tuple]["round_num"].append(comp.round_num)
+                comps_dict[star_threshold][comp_tuple]["round_num"][list(str(comp.room).split("-"))[0]].append(comp.round_num)
                 comps_dict[star_threshold][comp_tuple]["players"].add(comp.player)
                 if whaleComp:
                     comps_dict[star_threshold][comp_tuple]["whale_count"].add(comp.player)
@@ -350,7 +362,12 @@ def rank_usages(comps_dict, owns_offset=1):
             #     avg_round = round(statistics.mean(comps_dict[star_threshold][comp]["round_num"]), 2)
             # else:
             #     avg_round = round(statistics.median(comps_dict[star_threshold][comp]["round_num"]), 2)
-            avg_round = round(statistics.mean(comps_dict[star_threshold][comp]["round_num"]), 2)
+            avg_round = []
+            for room_num in range(1,11):
+                if (comps_dict[star_threshold][comp]["round_num"][str(room_num)]):
+                    # avg_round.append(statistics.mean(comps_dict[star_threshold][comp]["round_num"][str(room_num)]))
+                    avg_round += comps_dict[star_threshold][comp]["round_num"][str(room_num)]
+            avg_round = round(statistics.mean(avg_round), 2)
             app = int(100.0 * comps_dict[star_threshold][comp]["uses"] / (total_comps * owns_offset) * 200 + .5) / 100.0
             comps_dict[star_threshold][comp]["app_rate"] = app
             comps_dict[star_threshold][comp]["round"] = avg_round
@@ -506,9 +523,6 @@ def comp_usages_write(comps_dict, filename, floor, info_char, sort_app):
                         }
                         out_comps_append["app_rate"] = str(comps_dict[star_threshold][comp]["app_rate"]) + "%"
                         out_comps_append["avg_round"] = str(comps_dict[star_threshold][comp]["round"])
-                        out_comps_append["whale_count"] = str(len(comps_dict[star_threshold][comp]["whale_count"]))
-                        out_comps_append["app_flat"] = str(len(comps_dict[star_threshold][comp]["players"]))
-                        out_comps_append["uses"] = str(comps_dict[star_threshold][comp]["uses"])
 
                         # j = 1
                         # if floor:
@@ -526,14 +540,23 @@ def comp_usages_write(comps_dict, filename, floor, info_char, sort_app):
                             if comp_name not in comp_names:
                                 variations[comp_name] = 1
                                 out_comps_append["variation"] = variations[comp_name]
-                                out_comps.append(out_comps_append)
                             else:
                                 variations[comp_name] += 1
                                 out_comps_append["variation"] = variations[comp_name]
+
+                        out_comps_append["whale_count"] = str(len(comps_dict[star_threshold][comp]["whale_count"]))
+                        out_comps_append["app_flat"] = str(len(comps_dict[star_threshold][comp]["players"]))
+                        out_comps_append["uses"] = str(comps_dict[star_threshold][comp]["uses"])
+
+                        if info_char:
+                            if comp_name not in comp_names:
+                                out_comps.append(out_comps_append)
+                            else:
                                 var_comps.append(out_comps_append)
                         else:
                             out_comps.append(out_comps_append)
                         comp_names.append(comp_name)
+
                     elif floor:
                         temp_comp_name = "-"
                         if alt_comp_name != "-":
@@ -570,7 +593,9 @@ def comp_usages_write(comps_dict, filename, floor, info_char, sort_app):
                     outvar_comps_append["app_rate"] = str(comps_dict[star_threshold][comp]["app_rate"]) + "%"
                     outvar_comps_append["avg_round"] = str(comps_dict[star_threshold][comp]["round"])
                     outvar_comps.append(outvar_comps_append)
-            if not info_char:
+            if not info_char and (
+                comps_dict[star_threshold][comp]["app_rate"] >= json_threshold or filename not in ["1-1", "1-2", "2-1", "2-2", "3-1", "3-2", "4-1", "4-2", "5-1", "5-2"]
+            ):
                 out = name_filter(comp, mode="out")
                 out_json_dict = {
                     "char_one": out[0],
