@@ -1,6 +1,6 @@
-import json
 import csv
-import os
+import json
+import os.path
 import sys
 sys.path.append('../Comps/')
 

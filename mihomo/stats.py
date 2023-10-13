@@ -1,10 +1,11 @@
 import sys
 sys.path.append('../Comps/')
 
-import os
+import os.path
 import numpy as np
 import operator
 import csv
+import json
 import statistics
 import matplotlib
 # matplotlib.use('TkAgg')
@@ -16,20 +17,20 @@ from itertools import chain
 from archetypes import *
 from nohomo_config import phase_num
 
-with open("output1.csv", 'r', encoding='UTF8') as f:
+with open("output1.csv", 'r') as f:
     reader = csv.reader(f, delimiter=',')
     headers = next(reader)
     data = np.array(list(reader))
 
 if os.path.exists("../data/raw_csvs_real/"):
-    f = open("../data/raw_csvs_real/" + phase_num + ".csv", 'r', encoding='UTF8')
+    f = open("../data/raw_csvs_real/" + phase_num + ".csv", 'r')
 else:
-    f = open("../data/raw_csvs/" + phase_num + ".csv", 'r', encoding='UTF8')
+    f = open("../data/raw_csvs/" + phase_num + ".csv", 'r')
 reader = csv.reader(f, delimiter=',')
 headers = next(reader)
 spiral = list(reader)
 
-with open("../char_results/all.csv", 'r', encoding='UTF8') as f:
+with open("../char_results/all.csv", 'r') as f:
     reader = csv.reader(f, delimiter=',')
     headers = next(reader)
     build = np.array(list(reader))
@@ -47,6 +48,12 @@ spiral_rows = {}
 for spiral_row in spiral:
     if spiral_row[0] not in spiral_rows:
         spiral_rows[spiral_row[0]] = {}
+    spiral_temp = []
+    # for i in range(5,9):
+    #     spiral_temp.append(spiral_row[i])
+    # spiral_temp.sort()
+    # if spiral_temp != ['Bailu', 'Jing Yuan', 'Tingyun', 'Yukong']:
+    #     continue
     for i in range(5,9):
         if spiral_row[i] not in spiral_rows[spiral_row[0]]:
             spiral_rows[spiral_row[0]][spiral_row[i]] = 1
@@ -55,6 +62,7 @@ for spiral_row in spiral:
 
 for row in build:
     chars.append(row[0])
+
 for char in chars:
     stats[char] = {
         "name": char,
@@ -169,7 +177,15 @@ uid = 0
 statkeys = list(stats[chars[0]].keys())
 mainstatkeys = list(mainstats[chars[0]].keys())
 substatkeys = list(substats[chars[0]].keys())
+
+if os.path.isfile("../../uids.csv"):
+    with open("../../uids.csv", 'r', encoding='UTF8') as f:
+        reader = csv.reader(f, delimiter=',')
+        self_uids = list(reader)[0]
+
 for row in data:
+    # if row[0] not in self_uids:
+    #     continue
     # if (row[2].isnumeric()):
     #     row.insert(2,"Nilou")
     if row[0] != uid:
@@ -177,7 +193,12 @@ for row in data:
         ar+=int(row[1])
         count+=1
     if row[2] not in chars:
-        row[2] = "Trailblazer"
+        if "Dan Heng â€¢ Imbibitor Lunae" in row[2]:
+            row[2] = "Dan Heng • Imbibitor Lunae"
+        elif "Trailblazer" in row[2]:
+            row[2] = "Trailblazer"
+        else:
+            print(row[2])
     if row[2] == "Trailblazer":
         match row[4]:
             case "Fire":
@@ -266,8 +287,9 @@ for char in copy_chars:
                 if (mean[char][stat] > 0 and median[char][stat] > 0 and stats[char]["sample_size"] > 5):
                     if stat not in ["char_lvl", "light_cone_lvl", "attack_lvl", "skill_lvl", "ultimate_lvl", "talent_lvl", "energy_regen", "dmg_boost"]:
                         skewness = round(skew(stats[char][stat], axis=0, bias=True), 2)
+                # if skewness > 0 and char == "Blade":
                 if skewness > 1:
-                    stats[char][stat] = str(median[char][stat])
+                    stats[char][stat] = median[char][stat]
                     # print(skewness)
                     # print(stat + ": " + str(mean[char][stat]) + ", " + str(median[char][stat]))
                     # try:
@@ -283,7 +305,7 @@ for char in copy_chars:
                     #     else:
                     #         stats[char][stat] = str(median[char][stat])
                 else:
-                    stats[char][stat] = str(mean[char][stat])
+                    stats[char][stat] = mean[char][stat]
 
         for stat in mainstats[char]:
             sorted_stats = (sorted(
@@ -326,11 +348,16 @@ for char in copy_chars:
         chars.remove(char)
 
 if os.path.exists("results_real"):
-    csv_writer = csv.writer(open("results_real/chars.csv", 'w', newline=''))
-    csv_writer2 = csv.writer(open("results_real/demographic.csv", 'w', newline=''))
+    file1 = open("results_real/chars.csv", 'w', newline='')
+    file2 = open("results_real/demographic.csv", 'w', newline='')
+    file3 = open("results_real/chars.json", 'w')
 else:
-    csv_writer = csv.writer(open("results/chars.csv", 'w', newline=''))
-    csv_writer2 = csv.writer(open("results/demographic.csv", 'w', newline=''))
+    file1 = open("results/chars.csv", 'w', newline='')
+    file2 = open("results/demographic.csv", 'w', newline='')
+    file3 = open("results/chars.json", 'w')
+
+csv_writer = csv.writer(file1)
+csv_writer2 = csv.writer(file2)
 del stats[chars[0]]["sample_size"]
 csv_writer.writerow(stats[chars[0]].keys())
 for char in chars:
@@ -338,5 +365,17 @@ for char in chars:
         del stats[char]["sample_size"]
     csv_writer.writerow(stats[char].values())
     csv_writer2.writerow([char + ": " + str(stats[char]["sample_size_players"])])
+
+temp_stats = []
+for char in stats:
+    for i in chain(range(11,19), range(20,28)):
+        stats[char][statkeys[i]] = round(stats[char][statkeys[i]] * 100, 2)
+    for value in ["body_stats_1_app", "body_stats_2_app", "body_stats_3_app", "feet_stats_1_app", "feet_stats_2_app", "feet_stats_3_app", "sphere_stats_1_app", "sphere_stats_2_app", "sphere_stats_3_app", "rope_stats_1_app", "rope_stats_2_app", "rope_stats_3_app"]:
+        if isinstance(stats[char][value], float):
+            stats[char][value] = round(stats[char][value] * 100, 2)
+        else:
+            stats[char][value] = 0.00
+    temp_stats.append(stats[char])
+file3.write(json.dumps(temp_stats,indent=4))
 
 print("Average AR: ", (ar/count))

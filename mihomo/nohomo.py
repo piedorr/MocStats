@@ -26,6 +26,9 @@ def input_thread(input_list):
 	input_list.append(True)
 
 async def v1():
+	if not os.path.exists("results_real"):
+		os.makedirs("results_real")
+
 	cpt = 1
 	error_uids = []
 	header = ['uid', 'player_level', 'character', 'char_level', 'path', 'light_cone', 'light_cone_level', 'attack_lvl', 'skill_lvl', 'ultimate_lvl', 'talent_lvl', 'HP', 'ATK', 'DEF', 'SPD', 'CRIT Rate', 'CRIT DMG', 'DMG Boost', 'Outgoing Healing Boost', 'Energy Regeneration Rate', 'Effect RES', 'Effect Hit Rate', 'Break Effect', 'SPD sub', 'HP sub', 'ATK sub', 'DEF sub', 'CRIT Rate sub', 'CRIT DMG sub', 'Effect RES sub', 'Effect Hit Rate sub', 'Break Effect sub', 'Body', 'Feet', 'Sphere', 'Rope', 'relic', 'ornament']
@@ -63,7 +66,7 @@ async def v1():
 						"Talent": 0
 					}
 					for skill in character.traces:
-						if skill.type_text in skills:
+						if skill.type_text in skills and skill.max_level > 1:
 							skills[skill.type_text] = skill.level
 					for skill in skills.values():
 						line.append(skill)

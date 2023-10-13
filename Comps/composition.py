@@ -53,13 +53,22 @@ class Composition:
         healer = []
         temp = []
         temp_remove = []
+        len_element = {
+            "Ice": 0,
+            "Wind": 0,
+            "Fire": 0,
+            "Imaginary": 0,
+            "Quantum": 0,
+            "Lightning": 0,
+            "Physical": 0,
+        }
         comp_chars.sort()
         for character in comp_chars:
             self.char_presence[character] = True
             if CHARACTERS[character]["availability"] in ["Limited 5*", "5*"]:
                 fives.append(character)
 
-            if character in ["Seele", "Yanqing", "Hook", "Jing Yuan", "Kafka"]:
+            if character in ["Seele", "Yanqing", "Hook", "Jing Yuan", "Kafka", "Dan Heng • Imbibitor Lunae"]:
                 dps.insert(0, character)
             elif character in ["Qingque", "Arlan", "Himeko", "Dan Heng", "Sushang"]:
                 dps.append(character)
@@ -69,63 +78,85 @@ class Composition:
                 sub.append(character)
             elif character in ["Bronya", "Silver Wolf", "Asta", "Tingyun", "Pela", "Yukong"]:
                 anemo.append(character)
-            elif character in ["Natasha", "Luocha", "Bailu"]:
+            elif character in ["Natasha", "Luocha", "Bailu", "Lynx"]:
                 healer.insert(0, character)
-            elif character in ["March 7th", "Gepard", "Fire Trailblazer"]:
+            elif character in ["March 7th", "Gepard", "Fire Trailblazer", "Fu Xuan"]:
                 healer.append(character)
+
+            if CHARACTERS[character]["element"] == "Ice":
+                len_element["Ice"] += 1
+            if CHARACTERS[character]["element"] == "Wind":
+                len_element["Wind"] += 1
+            if CHARACTERS[character]["element"] == "Fire":
+                len_element["Fire"] += 1
+            if CHARACTERS[character]["element"] == "Imaginary":
+                len_element["Imaginary"] += 1
+            if CHARACTERS[character]["element"] == "Quantum":
+                len_element["Quantum"] += 1
+            if CHARACTERS[character]["element"] == "Thunder":
+                len_element["Lightning"] += 1
+            if CHARACTERS[character]["element"] == "Physical":
+                len_element["Physical"] += 1
         self.fivecount = len(fives)
         self.characters = dps + sub + anemo + healer
 
         """Name structure creator.
         """
-        comp_names = {
-            "Faux-Mono Lightning": [
-                ["Jing Yuan","Tingyun","Silver Wolf","Bailu"],
-                ["Jing Yuan","Silver Wolf","Tingyun","Bailu"],
-                ["Serval","Silver Wolf","Tingyun","Bailu"],
-            ],
-            "Faux-Mono Fire": [
-                ["Himeko","Asta","Silver Wolf","Fire Trailblazer"],
-            ],
-            "Faux-Mono Physical": [
-                ["Clara","Sushang","Silver Wolf","Natasha"],
-                ["Sushang","Clara","Silver Wolf","Natasha"],
-            ],
-            "Faux-Mono Ice": [
-                ["Yanqing","Pela","Silver Wolf","Gepard"],
-                ["Yanqing","Silver Wolf","Pela","Gepard"],
-                ["Yanqing","Silver Wolf","Pela","March 7th"],
-            ],
-            "Faux-Mono Imaginary": [
-                ["Welt","Silver Wolf","Yukong","Luocha"],
-            ]
-        }
+        # comp_names = {
+        #     "Faux-Mono Lightning": [
+        #         ["Jing Yuan","Tingyun","Silver Wolf","Bailu"],
+        #         ["Jing Yuan","Silver Wolf","Tingyun","Bailu"],
+        #         ["Serval","Silver Wolf","Tingyun","Bailu"],
+        #     ],
+        #     "Faux-Mono Fire": [
+        #         ["Himeko","Asta","Silver Wolf","Fire Trailblazer"],
+        #     ],
+        #     "Faux-Mono Physical": [
+        #         ["Clara","Sushang","Silver Wolf","Natasha"],
+        #         ["Sushang","Clara","Silver Wolf","Natasha"],
+        #     ],
+        #     "Faux-Mono Ice": [
+        #         ["Yanqing","Pela","Silver Wolf","Gepard"],
+        #         ["Yanqing","Silver Wolf","Pela","Gepard"],
+        #         ["Yanqing","Silver Wolf","Pela","March 7th"],
+        #     ],
+        #     "Faux-Mono Imaginary": [
+        #         ["Welt","Silver Wolf","Yukong","Luocha"],
+        #     ],
+        #     "Mono Imaginary": [
+        #         ["Dan Heng • Imbibitor Lunae","Welt","Yukong","Luocha"],
+        #     ]
+        # }
         self.comp_name = "-"
         self.alt_comp_name = "-"
-        for comp_name in comp_names:
-            if self.characters in comp_names[comp_name]:
-                self.comp_name = comp_name
-                break
+        # for comp_name in comp_names:
+        #     if self.characters in comp_names[comp_name]:
+        #         self.comp_name = comp_name
+        #         break
 
         if self.comp_name == "-":
-            archetype = ""
-            if len(dps) + len(sub) > 2:
-                archetype = " Triple Carry"
-            elif len(dps) + len(sub) > 1:
-                archetype = " Dual Carry"
-            elif len(dps) + len(sub) == 1:
-                if len(anemo) > 1:
-                    archetype = " Hypercarry"
-                elif len(healer) > 1:
-                    archetype = " Dual Sustain"
-            if dps:
-                self.comp_name = dps[0] + archetype
-            elif sub:
-                self.comp_name = sub[0] + archetype
-            elif anemo:
-                self.comp_name = anemo[0] + archetype
-            else:
-                self.comp_name = "Full Sustain"
+            for elem in len_element:
+                if len_element[elem] == 4:
+                    self.comp_name = "Mono " + elem
+            if self.comp_name == "-" and "Silver Wolf" in self.characters:
+                for elem in len_element:
+                    if len_element[elem] == 3 and elem != "Quantum":
+                        self.comp_name = "Faux-Mono " + elem
+            if self.comp_name == "-":
+                archetype = ""
+                if len(dps) + len(sub) > 2:
+                    archetype = " Triple Carry"
+                elif len(dps) + len(sub) > 1:
+                    archetype = " Dual Carry"
+                elif len(dps) + len(sub) == 1:
+                    if len(anemo) > 1:
+                        archetype = " Hypercarry"
+                    elif len(healer) > 1:
+                        archetype = " Dual Sustain"
+                if dps or sub or anemo:
+                    self.comp_name = self.characters[0] + archetype
+                else:
+                    self.comp_name = "Full Sustain"
 
     def comp_elements(self):
         """Composition elements tracker.

@@ -62,6 +62,18 @@ download = requests.get("https://github.com/Mar-7th/StarRailRes/raw/master/index
 with open("../data/relics.json", "w") as out_file:
     out_file.write(json.dumps(json.load(io.StringIO(download)),indent=4))
 
+download = requests.get("https://github.com/Mar-7th/StarRailRes/raw/master/index_new/en/simulated_blessings.json").content.decode('utf-8')
+with open("../data/simulated_blessings.json", "w") as out_file:
+    out_file.write(json.dumps(json.load(io.StringIO(download)),indent=4))
+
+# download = requests.get("https://github.com/Mar-7th/StarRailRes/raw/master/index_new/en/simulated_curios.json").content.decode('utf-8')
+# with open("../data/simulated_curios.json", "w") as out_file:
+#     out_file.write(json.dumps(json.load(io.StringIO(download)),indent=4))
+
+# download = requests.get("https://github.com/Mar-7th/StarRailRes/raw/master/index_new/en/simulated_blocks.json").content.decode('utf-8')
+# with open("../data/simulated_blocks.json", "w") as out_file:
+#     out_file.write(json.dumps(json.load(io.StringIO(download)),indent=4))
+
 with open('../data/characters.json') as char_file:
     chars1 = json.load(char_file)
 download = requests.get("https://github.com/Mar-7th/StarRailRes/raw/master/index_new/en/characters.json").content.decode('utf-8')
