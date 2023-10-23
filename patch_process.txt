@@ -4,7 +4,9 @@ In case of new character/relics:
 
 
 Change past_phase in Comps/comp_rates_config.py
+Change run_commands in the same file, line 32
 Run Comps/comp_rates.py
+Run Comps/swarm_rates.py
 
 If collecting new data:
     - Update mihomo: pip install -U git+https://github.com/KT-Yeh/mihomo.git
@@ -14,6 +16,3 @@ If using past data:
 
 - Run mihomo/stats.py
 - Run mihomo/stat.py
-
-New chars, weapon, relics:
-https://hsr.yatta.top/en/

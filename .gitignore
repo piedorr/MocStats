@@ -291,21 +291,18 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 data/raw_csvs_real
-data/phase_characters.csv
-data/compositions.csv
 Comps/client_secret.json
 Comps/sheets.googleapis.com-python.json
 Comps/sort.py
+Comps/hash.py
 Comps/compile_usage.py
 mihomo/results_real
-mihomo/data
 mihomo/images
-mihomo/infographics
 mihomo/artistats.py
 mihomo/nohomo_f.py
 mihomo/output*
-mihomo/readme_real.txt
 char_results
 comp_results
 rogue_results
+web_results
 patch_process_real.txt

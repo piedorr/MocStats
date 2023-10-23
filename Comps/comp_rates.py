@@ -14,6 +14,13 @@ from comp_rates_config import *
 from archetypes import *
 
 def main():
+    for make_path in [
+        "../comp_results", "../comp_results/json", "../mihomo/results_real",
+        "../char_results", "../rogue_results"
+    ]:
+        if not os.path.exists(make_path):
+            os.makedirs(make_path)
+
     global sample_size
     sample_size = {}
     start_time = time.time()
@@ -32,11 +39,6 @@ def main():
     else:
         stats = open("../data/raw_csvs/" + RECENT_PHASE + ".csv")
 
-    if not os.path.exists("../char_results"):
-        os.makedirs("../char_results")
-    if not os.path.exists("../comp_results"):
-        os.makedirs("../comp_results")
-
     # uid_freq_comp will help detect duplicate UIDs
     reader = csv.reader(stats)
     col_names_comps = next(reader)
@@ -47,6 +49,8 @@ def main():
 
     for line in reader:
         if skip_self and line[0] in self_uids:
+            continue
+        if skip_random and line[0] not in self_uids:
             continue
         if line[0] != last_uid:
             skip_uid = False
@@ -262,6 +266,7 @@ def used_comps(players, comps, rooms, filename, whaleCheck, whaleSigWeap, sigWea
     global total_comps
     total_comps = 0
     total_self_comps = 0
+    avg_cycles = 0
     whaleCount = 0
     healerless = 0
     for comp in comps:
@@ -275,6 +280,7 @@ def used_comps(players, comps, rooms, filename, whaleCheck, whaleSigWeap, sigWea
             findchars(char, foundchar)
         if find_archetype(foundchar):
             total_comps += 1
+            avg_cycles += comp.round_num
             if comp.player in self_uids:
                 total_self_comps += 1
             if len(comp_tuple) < 4:
@@ -331,9 +337,29 @@ def used_comps(players, comps, rooms, filename, whaleCheck, whaleSigWeap, sigWea
                         "whale_count": set(),
                         "players": set(),
                     }
+                    for char in range (4):
+                        comps_dict[star_threshold][comp_tuple][comp_tuple[char]] = {
+                            "weapon" : {},
+                            "artifacts" : {},
+                            "cons": {}
+                        }
+                        for i in range (7):
+                            comps_dict[star_threshold][comp_tuple][comp_tuple[char]]["cons"][str(i)] = 0
                 comps_dict[star_threshold][comp_tuple]["uses"] += 1
                 comps_dict[star_threshold][comp_tuple]["round_num"][list(str(comp.room).split("-"))[0]].append(comp.round_num)
                 comps_dict[star_threshold][comp_tuple]["players"].add(comp.player)
+                for i in range (4):
+                    if comp_tuple[i] in players[phase][comp.player].owned:
+                        if players[phase][comp.player].owned[comp_tuple[i]]["weapon"] in comps_dict[star_threshold][comp_tuple][comp_tuple[i]]["weapon"]:
+                            comps_dict[star_threshold][comp_tuple][comp_tuple[i]]["weapon"][players[phase][comp.player].owned[comp_tuple[i]]["weapon"]] += 1
+                        else:
+                            comps_dict[star_threshold][comp_tuple][comp_tuple[i]]["weapon"][players[phase][comp.player].owned[comp_tuple[i]]["weapon"]] = 1
+                        if players[phase][comp.player].owned[comp_tuple[i]]["artifacts"] != "":
+                            if players[phase][comp.player].owned[comp_tuple[i]]["artifacts"] in comps_dict[star_threshold][comp_tuple][comp_tuple[i]]["artifacts"]:
+                                comps_dict[star_threshold][comp_tuple][comp_tuple[i]]["artifacts"][players[phase][comp.player].owned[comp_tuple[i]]["artifacts"]] += 1
+                            else:
+                                comps_dict[star_threshold][comp_tuple][comp_tuple[i]]["artifacts"][players[phase][comp.player].owned[comp_tuple[i]]["artifacts"]] = 1
+                        comps_dict[star_threshold][comp_tuple][comp_tuple[i]]["cons"][str(players[phase][comp.player].owned[comp_tuple[i]]["cons"])] += 1
                 if whaleComp:
                     comps_dict[star_threshold][comp_tuple]["whale_count"].add(comp.player)
     chamber_num = list(str(filename).split("-"))
@@ -342,7 +368,8 @@ def used_comps(players, comps, rooms, filename, whaleCheck, whaleSigWeap, sigWea
             sample_size[chamber_num[0]] = {
                 "total": total_comps,
                 "self_report": total_self_comps,
-                "random": total_comps - total_self_comps
+                "random": total_comps - total_self_comps,
+                "average_cycles": round(avg_cycles / total_comps, 2),
             }
     # print(error_uids)
     # print("Less than four: " + str(lessFour))
@@ -392,7 +419,7 @@ def rank_usages(comps_dict, owns_offset=1):
             comps_dict[star_threshold][comp]["round_rank"] = rounds.index(comps_dict[star_threshold][comp]["round"]) + 1
 
     # # To check the list of weapons and artifacts for a comp
-    # comp_tuples = [('Blade', 'Bronya', 'Yukong', 'Luocha'), ('Blade', 'Bronya', 'Silver Wolf', 'Luocha')]
+    # comp_tuples = [('Kafka', 'Asta', 'Tingyun', 'Luocha'), ('Kafka', 'Asta', 'Tingyun', 'Bailu')]
     # for comp_tuple in comp_tuples:
     #     print(comp_tuple)
     #     print("   App: " + str(comps_dict[4][comp_tuple]["app_rate"]))
@@ -411,6 +438,9 @@ def rank_usages(comps_dict, owns_offset=1):
     #         print()
     #         for artifacts in comps_dict[4][comp_tuple][i]["artifacts"]:
     #             print("   " + artifacts + ": " + str(comps_dict[4][comp_tuple][i]["artifacts"][artifacts]))
+    #         print()
+    #         for cons in comps_dict[4][comp_tuple][i]["cons"]:
+    #             print("   " + cons + ": " + str(comps_dict[4][comp_tuple][i]["cons"][cons]))
     #         print()
 
 def duo_usages(comps,
@@ -673,14 +703,14 @@ def duo_write(duos_dict, usage, filename, archetype):
 
     if archetype != "all":
         filename = filename + "_" + archetype
-    csv_writer = csv.writer(open("../comp_results/" + filename + ".csv", 'w', newline=''))
+    csv_writer = csv.writer(open("../char_results/" + filename + ".csv", 'w', newline=''))
     count = 0
     for duos in out_duos:
         if count == 0:
             csv_writer.writerow(duos.keys())
             count += 1
         csv_writer.writerow(duos.values())
-    with open("../comp_results/" + filename + ".json", "w") as out_file:
+    with open("../char_results/" + filename + ".json", "w") as out_file:
         out_file.write(json.dumps(out_duos,indent=4))
 
 def char_usages_write(chars_dict, filename, floor, archetype):
@@ -705,27 +735,41 @@ def char_usages_write(chars_dict, filename, floor, archetype):
                 out_chars_append[i] = "-"
         if (list(chars_dict[char]["weapons"])):
             for i in range(weap_len):
-                out_chars_append["weapon_" + str(i + 1)] = list(chars_dict[char]["weapons"])[i]
-                out_chars_append["weapon_" + str(i + 1) + "_app"] = str(list(chars_dict[char]["weapons"].values())[i]) + "%"
-                out_chars_append["weapon_" + str(i + 1) + "_round"] = str(list(chars_dict[char]["weapons_round"].values())[i])
-                if out_chars_append["weapon_" + str(i + 1) + "_app"] == "-%":
-                    out_chars_append["weapon_" + str(i + 1) + "_app"] = "-"
+                if i < len(list(chars_dict[char]["weapons"])):
+                    out_chars_append["weapon_" + str(i + 1)] = list(chars_dict[char]["weapons"])[i]
+                    out_chars_append["weapon_" + str(i + 1) + "_app"] = str(list(chars_dict[char]["weapons"].values())[i]) + "%"
+                    out_chars_append["weapon_" + str(i + 1) + "_round"] = str(list(chars_dict[char]["weapons_round"].values())[i])
+                else:
+                    out_chars_append["weapon_" + str(i + 1)] = ""
+                    out_chars_append["weapon_" + str(i + 1) + "_app"] = "0.0"
+                    out_chars_append["weapon_" + str(i + 1) + "_round"] = "99.99"
             for i in range(arti_len):
-                out_chars_append["artifact_" + str(i + 1)] = list(chars_dict[char]["artifacts"])[i]
-                if out_chars_append["artifact_" + str(i + 1)] == "Flex":
-                    out_chars_append["artifact_" + str(i + 1)] = str(i)
-                out_chars_append["artifact_" + str(i + 1) + "_app"] = str(list(chars_dict[char]["artifacts"].values())[i]) + "%"
-                out_chars_append["artifact_" + str(i + 1) + "_round"] = str(list(chars_dict[char]["artifacts_round"].values())[i])
-                if out_chars_append["artifact_" + str(i + 1) + "_app"] == "-%":
-                    out_chars_append["artifact_" + str(i + 1) + "_app"] = "-"
+                if i < len(list(chars_dict[char]["artifacts"])):
+                    arti_name = list(chars_dict[char]["artifacts"])[i]
+                    out_chars_append["artifact_" + str(i + 1)] = arti_name
+                    arti_name = arti_name.split(", ")
+                    out_chars_append["artifact_" + str(i + 1) + "_1"] = arti_name[0]
+                    if len(arti_name) > 1:
+                        out_chars_append["artifact_" + str(i + 1) + "_2"] = arti_name[1]
+                    else:
+                        out_chars_append["artifact_" + str(i + 1) + "_2"] = ""
+                    out_chars_append["artifact_" + str(i + 1) + "_app"] = str(list(chars_dict[char]["artifacts"].values())[i]) + "%"
+                    out_chars_append["artifact_" + str(i + 1) + "_round"] = str(list(chars_dict[char]["artifacts_round"].values())[i])
+                else:
+                    out_chars_append["artifact_" + str(i + 1)] = ""
+                    out_chars_append["artifact_" + str(i + 1) + "_1"] = ""
+                    out_chars_append["artifact_" + str(i + 1) + "_2"] = ""
+                    out_chars_append["artifact_" + str(i + 1) + "_app"] = "0.0"
+                    out_chars_append["artifact_" + str(i + 1) + "_round"] = "99.99"
             for i in range(planar_len):
-                out_chars_append["planar_" + str(i + 1)] = list(chars_dict[char]["planars"])[i]
-                if out_chars_append["planar_" + str(i + 1)] == "Flex":
-                    out_chars_append["planar_" + str(i + 1)] = str(i)
-                out_chars_append["planar_" + str(i + 1) + "_app"] = str(list(chars_dict[char]["planars"].values())[i]) + "%"
-                out_chars_append["planar_" + str(i + 1) + "_round"] = str(list(chars_dict[char]["planars_round"].values())[i])
-                if out_chars_append["planar_" + str(i + 1) + "_app"] == "-%":
-                    out_chars_append["planar_" + str(i + 1) + "_app"] = "-"
+                if i < len(list(chars_dict[char]["planars"])):
+                    out_chars_append["planar_" + str(i + 1)] = list(chars_dict[char]["planars"])[i]
+                    out_chars_append["planar_" + str(i + 1) + "_app"] = str(list(chars_dict[char]["planars"].values())[i]) + "%"
+                    out_chars_append["planar_" + str(i + 1) + "_round"] = str(list(chars_dict[char]["planars_round"].values())[i])
+                else:
+                    out_chars_append["planar_" + str(i + 1)] = ""
+                    out_chars_append["planar_" + str(i + 1) + "_app"] = "0.0"
+                    out_chars_append["planar_" + str(i + 1) + "_round"] = "99.99"
             # for i in range(7):
             #     out_chars_append["use_" + str(i)] = str(list(list(chars_dict[char]["cons_usage"].values())[i].values())[2]) + "%"
             #     if out_chars_append["use_" + str(i)] == "-%":
@@ -735,22 +779,26 @@ def char_usages_write(chars_dict, filename, floor, archetype):
             #         out_chars_append["own_" + str(i)] = "-"
             for i in range(7):
                 out_chars_append["app_" + str(i)] = str(list(list(chars_dict[char]["cons_usage"].values())[i].values())[0]) + "%"
+                out_chars_append["round_" + str(i)] = str(list(list(chars_dict[char]["cons_usage"].values())[i].values())[3])
                 if out_chars_append["app_" + str(i)] == "-%":
                     out_chars_append["app_" + str(i)] = "-"
             out_chars_append["cons_avg"] = chars_dict[char]["cons_avg"]
             out_chars_append["sample"] = chars_dict[char]["sample"]
-            for i in range(7):
-                out_chars_append["round_" + str(i)] = str(list(list(chars_dict[char]["cons_usage"].values())[i].values())[3])
         else:
             for i in range(weap_len):
-                out_chars_append["weapon_" + str(i + 1)] = str(i)
-                out_chars_append["weapon_" + str(i + 1) + "_app"] = "-"
+                out_chars_append["weapon_" + str(i + 1)] = ""
+                out_chars_append["weapon_" + str(i + 1) + "_app"] = "0.0"
+                out_chars_append["weapon_" + str(i + 1) + "_round"] = "99.99"
             for i in range(arti_len):
-                out_chars_append["artifact_" + str(i + 1)] = str(i)
-                out_chars_append["artifact_" + str(i + 1) + "_app"] = "-"
+                out_chars_append["artifact_" + str(i + 1)] = ""
+                out_chars_append["artifact_" + str(i + 1) + "_1"] = ""
+                out_chars_append["artifact_" + str(i + 1) + "_2"] = ""
+                out_chars_append["artifact_" + str(i + 1) + "_app"] = "0.0"
+                out_chars_append["artifact_" + str(i + 1) + "_round"] = "99.99"
             for i in range(planar_len):
-                out_chars_append["planar_" + str(i + 1)] = str(i)
-                out_chars_append["planar_" + str(i + 1) + "_app"] = "-"
+                out_chars_append["planar_" + str(i + 1)] = ""
+                out_chars_append["planar_" + str(i + 1) + "_app"] = "0.0"
+                out_chars_append["planar_" + str(i + 1) + "_round"] = "99.99"
             # for i in range(7):
             #     out_chars_append["use_" + str(i)] = str(list(list(chars_dict[char]["cons_usage"].values())[i].values())[2]) + "%"
             #     if out_chars_append["use_" + str(i)] == "-%":
@@ -760,10 +808,9 @@ def char_usages_write(chars_dict, filename, floor, archetype):
             #         out_chars_append["own_" + str(i)] = "-"
             for i in range(7):
                 out_chars_append["app_" + str(i)] = "0.0%"
+                out_chars_append["round_" + str(i)] = "99.99"
             out_chars_append["cons_avg"] = chars_dict[char]["cons_avg"]
             out_chars_append["sample"] = chars_dict[char]["sample"]
-            for i in range(7):
-                out_chars_append["round_" + str(i)] = "99.99"
         out_chars.append(out_chars_append)
         if char == filename:
             break
@@ -778,17 +825,39 @@ def char_usages_write(chars_dict, filename, floor, archetype):
             csv_writer.writerow(header)
             count += 1
         csv_writer.writerow(chars.values())
+    iterate_value_app = ["app_rate", "diff"]
+    iterate_value_round = ["avg_round", "diff_rounds"]
+    iterate_name_arti = []
+    for i in range(weap_len):
+        iterate_value_app.append("weapon_" + str(i + 1) + "_app")
+        iterate_value_round.append("weapon_" + str(i + 1) + "_round")
+    for i in range(arti_len):
+        iterate_name_arti.append("artifact_" + str(i + 1))
+        iterate_value_app.append("artifact_" + str(i + 1) + "_app")
+        iterate_value_round.append("artifact_" + str(i + 1) + "_round")
+    for i in range(planar_len):
+        iterate_value_app.append("planar_" + str(i + 1) + "_app")
+        iterate_value_round.append("planar_" + str(i + 1) + "_round")
+    for i in range(7):
+        iterate_value_app.append("app_" + str(i))
+        iterate_value_round.append("round_" + str(i))
     for i in range(len(out_chars)):
-        for value in ["app_rate", "diff", "weapon_1_app", "weapon_2_app", "weapon_3_app", "weapon_4_app", "weapon_5_app", "weapon_6_app", "weapon_7_app", "weapon_8_app", "weapon_9_app", "weapon_10_app", "artifact_1_app", "artifact_2_app", "artifact_3_app", "artifact_4_app", "artifact_5_app", "artifact_6_app", "artifact_7_app", "artifact_8_app", "artifact_9_app", "artifact_10_app", "planar_1_app", "planar_2_app", "planar_3_app", "planar_4_app", "planar_5_app", "app_0", "app_1", "app_2", "app_3", "app_4", "app_5", "app_6"]:
+        # for i in range(7):
+        for value in iterate_value_app:
             if out_chars[i][value][:-1].replace(".", "").replace("-", "").isnumeric():
                 out_chars[i][value] = float(out_chars[i][value][:-1])
             else:
                 out_chars[i][value] = 0.00
-        for value in ["avg_round", "diff_rounds", "weapon_1_round", "weapon_2_round", "weapon_3_round", "weapon_4_round", "weapon_5_round", "weapon_6_round", "weapon_7_round", "weapon_8_round", "weapon_9_round", "weapon_10_round", "artifact_1_round", "artifact_2_round", "artifact_3_round", "artifact_4_round", "artifact_5_round", "artifact_6_round", "artifact_7_round", "artifact_8_round", "artifact_9_round", "artifact_10_round", "planar_1_round", "planar_2_round", "planar_3_round", "planar_4_round", "planar_5_round", "round_0", "round_1", "round_2", "round_3", "round_4", "round_5", "round_6"]:
+        for value in iterate_value_round:
             if out_chars[i][value].replace(".", "").replace("-", "").isnumeric():
                 out_chars[i][value] = float(out_chars[i][value])
             else:
-                out_chars[i][value] = 0.00
+                out_chars[i][value] = 99.99
+        for value in iterate_name_arti:
+            if out_chars[i][value]:
+                out_chars[i][value] = out_chars[i][value].replace(".", "").replace("-", "")
+            else:
+                out_chars[i][value] = 99.99
     with open("../char_results/" + filename + ".json", "w") as out_file:
         out_file.write(json.dumps(out_chars,indent=4))
 

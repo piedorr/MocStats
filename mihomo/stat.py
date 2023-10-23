@@ -37,7 +37,7 @@ archetype = "all"
 # chars = []
 # for row in build:
 #     chars.append(row[0])
-chars = ["Lynx"]
+chars = ["Qingque"]
 stats = {}
 median = {}
 mean = {}
@@ -47,9 +47,10 @@ copy_weapons = {}
 
 spiral_rows = {}
 for spiral_row in spiral:
-    if spiral_row[0] not in spiral_rows:
-        spiral_rows[spiral_row[0]] = set()
-    spiral_rows[spiral_row[0]].update([spiral_row[5], spiral_row[6], spiral_row[7], spiral_row[8]])
+    if int(''.join(filter(str.isdigit, spiral_row[1]))) > 5:
+        if spiral_row[0] not in spiral_rows:
+            spiral_rows[spiral_row[0]] = set()
+        spiral_rows[spiral_row[0]].update([spiral_row[5], spiral_row[6], spiral_row[7], spiral_row[8]])
 
 for char in chars:
     stats[char] = {}
@@ -61,7 +62,7 @@ for char in chars:
     for row in build:
         if row[0] == char:
             for j in range (6,33,3):
-                if row[j+1]!="-":
+                if row[j] != "":
                     weapons[char].append(row[j])
                     stats[char][row[j]] = {
                         "name": row[j],

@@ -242,7 +242,9 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
             app_flat = appears[star_num][char]["owned"] / 100.0
             # if owns[star_num][char]["flat"] > 0:
             if appears[star_num][char]["owned"] > 0:
-                appears[star_num][char]["cons_avg"] /= appears[star_num][char]["owned"]
+                appears[star_num][char]["cons_avg"] = round(
+                    appears[star_num][char]["cons_avg"] / appears[star_num][char]["owned"], 2
+                )
             for cons in appears[star_num][char]["cons_freq"]:
                 if appears[star_num][char]["cons_freq"][cons]["flat"] > 0:
                     appears[star_num][char]["cons_freq"][cons]["percent"] = round(
@@ -278,7 +280,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                         statistics.mean(appears[star_num][char]["weap_round"][weapon]), 2
                     )
                 else:
-                    appears[star_num][char]["weap_freq"][weapon] = "-"
+                    appears[star_num][char]["weap_freq"][weapon] = 0
                     appears[star_num][char]["weap_round"][weapon] = 99.99
             # sorted_weapons = (sorted(
             #     appears[star_num][char]["weap_round"].items(),
@@ -288,7 +290,9 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
             # appears[star_num][char]["weap_round"] = {k: v for k, v in sorted_weapons}
 
             # Remove flex artifacts
-            appears[star_num][char]["arti_freq"]["Flex"] = 0
+            if "Flex" in appears[star_num][char]["arti_freq"]:
+                del appears[star_num][char]["arti_freq"]["Flex"]
+                del appears[star_num][char]["arti_round"]["Flex"]
             # Calculate artifacts
             sorted_arti = (sorted(
                 appears[star_num][char]["arti_freq"].items(),
@@ -308,7 +312,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                         statistics.mean(appears[star_num][char]["arti_round"][arti]), 2
                     )
                 else:
-                    appears[star_num][char]["arti_freq"][arti] = "-"
+                    appears[star_num][char]["arti_freq"][arti] = 0
                     appears[star_num][char]["arti_round"][arti] = 99.99
             # sorted_arti = (sorted(
             #     appears[star_num][char]["arti_round"].items(),
@@ -318,7 +322,9 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
             # appears[star_num][char]["arti_round"] = {k: v for k, v in sorted_arti}
 
             # Remove flex artifacts
-            appears[star_num][char]["planar_freq"]["Flex"] = 0
+            if "Flex" in appears[star_num][char]["planar_freq"]:
+                del appears[star_num][char]["planar_freq"]["Flex"]
+                del appears[star_num][char]["planar_round"]["Flex"]
             # Calculate artifacts
             sorted_planars = (sorted(
                 appears[star_num][char]["planar_freq"].items(),
@@ -338,7 +344,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                         statistics.mean(appears[star_num][char]["planar_round"][planar]), 2
                     )
                 else:
-                    appears[star_num][char]["planar_freq"][planar] = "-"
+                    appears[star_num][char]["planar_freq"][planar] = 0
                     appears[star_num][char]["planar_round"][planar] = 99.99
             # sorted_planars = (sorted(
             #     appears[star_num][char]["planar_round"].items(),
@@ -415,55 +421,25 @@ def usages(owns, appears, past_phase, filename, chambers=ROOMS, offset=1):
                 continue
 
             weapons = list(appears[star_num][char]["weap_freq"])
-            i = 0
-            while i < 20:
-                if i >= len(weapons):
-                    uses[star_num][char]["weapons"][i] = "-"
-                else:
-                    uses[star_num][char]["weapons"][weapons[i]] = appears[star_num][char]["weap_freq"][weapons[i]]
-                i += 1
+            for i in range(len(weapons)):
+                uses[star_num][char]["weapons"][weapons[i]] = appears[star_num][char]["weap_freq"][weapons[i]]
             weapons = list(appears[star_num][char]["weap_round"])
-            i = 0
-            while i < 20:
-                if i >= len(weapons):
-                    uses[star_num][char]["weapons_round"][i] = "-"
-                else:
-                    uses[star_num][char]["weapons_round"][weapons[i]] = appears[star_num][char]["weap_round"][weapons[i]]
-                i += 1
+            for i in range(len(weapons)):
+                uses[star_num][char]["weapons_round"][weapons[i]] = appears[star_num][char]["weap_round"][weapons[i]]
 
             artifacts = list(appears[star_num][char]["arti_freq"])
-            i = 0
-            while i < 10:
-                if i >= len(artifacts):
-                    uses[star_num][char]["artifacts"][i] = "-"
-                else:
-                    uses[star_num][char]["artifacts"][artifacts[i]] = appears[star_num][char]["arti_freq"][artifacts[i]]
-                i += 1
+            for i in range(len(artifacts)):
+                uses[star_num][char]["artifacts"][artifacts[i]] = appears[star_num][char]["arti_freq"][artifacts[i]]
             artifacts = list(appears[star_num][char]["arti_round"])
-            i = 0
-            while i < 10:
-                if i >= len(artifacts):
-                    uses[star_num][char]["artifacts_round"][i] = "-"
-                else:
-                    uses[star_num][char]["artifacts_round"][artifacts[i]] = appears[star_num][char]["arti_round"][artifacts[i]]
-                i += 1
+            for i in range(len(artifacts)):
+                uses[star_num][char]["artifacts_round"][artifacts[i]] = appears[star_num][char]["arti_round"][artifacts[i]]
 
             planars = list(appears[star_num][char]["planar_freq"])
-            i = 0
-            while i < 10:
-                if i >= len(planars):
-                    uses[star_num][char]["planars"][i] = "-"
-                else:
-                    uses[star_num][char]["planars"][planars[i]] = appears[star_num][char]["planar_freq"][planars[i]]
-                i += 1
+            for i in range(len(planars)):
+                uses[star_num][char]["planars"][planars[i]] = appears[star_num][char]["planar_freq"][planars[i]]
             planars = list(appears[star_num][char]["planar_round"])
-            i = 0
-            while i < 10:
-                if i >= len(planars):
-                    uses[star_num][char]["planars_round"][i] = "-"
-                else:
-                    uses[star_num][char]["planars_round"][planars[i]] = appears[star_num][char]["planar_round"][planars[i]]
-                i += 1
+            for i in range(len(planars)):
+                uses[star_num][char]["planars_round"][planars[i]] = appears[star_num][char]["planar_round"][planars[i]]
 
             for i in range (7):
                 uses[star_num][char]["cons_usage"][i]["app"] = appears[star_num][char]["cons_freq"][i]["percent"]

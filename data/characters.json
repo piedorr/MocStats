@@ -1930,5 +1930,57 @@
         "availability": "Limited 5*",
         "alt_name": null,
         "out_name": false
+    },
+    "Jingliu": {
+        "id": "1212",
+        "name": "Jingliu",
+        "tag": "jingliu",
+        "rarity": 5,
+        "path": "Warrior",
+        "element": "Ice",
+        "max_sp": 140,
+        "ranks": [
+            "121201",
+            "121202",
+            "121203",
+            "121204",
+            "121205",
+            "121206"
+        ],
+        "skills": [
+            "121201",
+            "121202",
+            "121203",
+            "121204",
+            "121206",
+            "121207",
+            "121209"
+        ],
+        "skill_trees": [
+            "1212001",
+            "1212002",
+            "1212003",
+            "1212004",
+            "1212007",
+            "1212101",
+            "1212102",
+            "1212103",
+            "1212201",
+            "1212202",
+            "1212203",
+            "1212204",
+            "1212205",
+            "1212206",
+            "1212207",
+            "1212208",
+            "1212209",
+            "1212210"
+        ],
+        "icon": "icon/character/1212.png",
+        "preview": "image/character_preview/1212.png",
+        "portrait": "image/character_portrait/1212.png",
+        "availability": "Limited 5*",
+        "alt_name": null,
+        "out_name": false
     }
 }

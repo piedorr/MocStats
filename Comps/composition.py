@@ -72,7 +72,7 @@ class Composition:
                 dps.insert(0, character)
             elif character in ["Qingque", "Arlan", "Himeko", "Dan Heng", "Sushang"]:
                 dps.append(character)
-            elif character in ["Clara", "Blade"]:
+            elif character in ["Clara", "Blade", "Jingliu"]:
                 sub.insert(0, character)
             elif character in ["Welt", "Serval", "Physical Trailblazer", "Sampo", "Herta", "Luka"]:
                 sub.append(character)

@@ -46,19 +46,20 @@ substats = {}
 
 spiral_rows = {}
 for spiral_row in spiral:
-    if spiral_row[0] not in spiral_rows:
-        spiral_rows[spiral_row[0]] = {}
-    spiral_temp = []
-    # for i in range(5,9):
-    #     spiral_temp.append(spiral_row[i])
-    # spiral_temp.sort()
-    # if spiral_temp != ['Bailu', 'Jing Yuan', 'Tingyun', 'Yukong']:
-    #     continue
-    for i in range(5,9):
-        if spiral_row[i] not in spiral_rows[spiral_row[0]]:
-            spiral_rows[spiral_row[0]][spiral_row[i]] = 1
-        else:
-            spiral_rows[spiral_row[0]][spiral_row[i]] += 1
+    if int(''.join(filter(str.isdigit, spiral_row[1]))) > 5:
+        if spiral_row[0] not in spiral_rows:
+            spiral_rows[spiral_row[0]] = {}
+        spiral_temp = []
+        # for i in range(5,9):
+        #     spiral_temp.append(spiral_row[i])
+        # spiral_temp.sort()
+        # if spiral_temp != ['Bailu', 'Jing Yuan', 'Tingyun', 'Yukong']:
+        #     continue
+        for i in range(5,9):
+            if spiral_row[i] not in spiral_rows[spiral_row[0]]:
+                spiral_rows[spiral_row[0]][spiral_row[i]] = 1
+            else:
+                spiral_rows[spiral_row[0]][spiral_row[i]] += 1
 
 for row in build:
     chars.append(row[0])
@@ -287,7 +288,7 @@ for char in copy_chars:
                 if (mean[char][stat] > 0 and median[char][stat] > 0 and stats[char]["sample_size"] > 5):
                     if stat not in ["char_lvl", "light_cone_lvl", "attack_lvl", "skill_lvl", "ultimate_lvl", "talent_lvl", "energy_regen", "dmg_boost"]:
                         skewness = round(skew(stats[char][stat], axis=0, bias=True), 2)
-                # if skewness > 0 and char == "Blade":
+                # if skewness > 0 and char == "Seele":
                 if skewness > 1:
                     stats[char][stat] = median[char][stat]
                     # print(skewness)
@@ -370,7 +371,13 @@ temp_stats = []
 for char in stats:
     for i in chain(range(11,19), range(20,28)):
         stats[char][statkeys[i]] = round(stats[char][statkeys[i]] * 100, 2)
-    for value in ["body_stats_1_app", "body_stats_2_app", "body_stats_3_app", "feet_stats_1_app", "feet_stats_2_app", "feet_stats_3_app", "sphere_stats_1_app", "sphere_stats_2_app", "sphere_stats_3_app", "rope_stats_1_app", "rope_stats_2_app", "rope_stats_3_app"]:
+    iterate_value_app = []
+    for i in range(3):
+        iterate_value_app.append("body_stats_" + str(i + 1) + "_app")
+        iterate_value_app.append("feet_stats_" + str(i + 1) + "_app")
+        iterate_value_app.append("sphere_stats_" + str(i + 1) + "_app")
+        iterate_value_app.append("rope_stats_" + str(i + 1) + "_app")
+    for value in iterate_value_app:
         if isinstance(stats[char][value], float):
             stats[char][value] = round(stats[char][value] * 100, 2)
         else:
