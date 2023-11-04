@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import skew
 from pynput import keyboard
-from nohomo_config import phase_num
+from nohomo_config import *
 
 with open("output1.csv", 'r') as f:
     reader = csv.reader(f, delimiter=',')
@@ -34,10 +34,12 @@ with open("../char_results/all.csv", 'r') as f:
 
 archetype = "all"
 
-# chars = []
-# for row in build:
-#     chars.append(row[0])
-chars = ["Qingque"]
+if run_all_chars:
+    chars = []
+    for row in build:
+        chars.append(row[0])
+else:
+    chars = run_chars_name
 stats = {}
 median = {}
 mean = {}
@@ -127,6 +129,10 @@ for char in chars:
 statkeys = list(stats[chars[0]][weapons[chars[0]][0]].keys())
 
 for row in data:
+    if skip_self and row[0] in self_uids:
+        continue
+    if skip_random and row[0] not in self_uids:
+        continue
     # if (row[2].isnumeric()):
     #     row.insert(2,"Nilou")
     if "Dan Heng â€¢ Imbibitor Lunae" in row[2]:
@@ -266,21 +272,24 @@ for char in chars:
                     if (mean[char][weapon][stat] > 0 and median[char][weapon][stat] > 0 and sample[char][weapon] > 5):
                         if stat not in ["char_lvl", "light_cone_lvl", "attack_lvl", "skill_lvl", "ultimate_lvl", "talent_lvl", "energy_regen", "dmg_boost"]:
                             skewness = round(skew(stats[char][weapon][stat], axis=0, bias=True), 2)
-                    if skewness > 1:
-                        stats[char][weapon][stat] = str(median[char][weapon][stat])
-                        # print(stat + ": " + str(mean[char][weapon][stat]) + ", " + str(median[char][weapon][stat]))
-                        # try:
-                        #     plt.hist(stats[char][weapon][stat])
-                        #     plt.show()
-                        # except Exception:
-                        #     pass
-                        # # print("1 - Mean, 2 - Median: ")
-                        # with keyboard.Events() as events:
-                        #     event = events.get(1e6)
-                        #     if event.key == keyboard.KeyCode.from_char('1'):
-                        #         stats[char][weapon][stat] = str(mean[char][weapon][stat])
-                        #     else:
-                        #         stats[char][weapon][stat] = str(median[char][weapon][stat])
+                    if abs(skewness) > skew_num:
+                        if print_chart:
+                            print("skewness: " + str(skewness))
+                            print(stat + ": " + str(mean[char][weapon][stat]) + ", " + str(median[char][weapon][stat]))
+                            try:
+                                plt.hist(stats[char][weapon][stat])
+                                plt.show()
+                            except Exception:
+                                pass
+                            # print("1 - Mean, 2 - Median: ")
+                            with keyboard.Events() as events:
+                                event = events.get(1e6)
+                                if event.key == keyboard.KeyCode.from_char('1'):
+                                    stats[char][weapon][stat] = str(mean[char][weapon][stat])
+                                else:
+                                    stats[char][weapon][stat] = str(median[char][weapon][stat])
+                        else:
+                            stats[char][weapon][stat] = str(median[char][weapon][stat])
                     else:
                         stats[char][weapon][stat] = str(mean[char][weapon][stat])
         else:

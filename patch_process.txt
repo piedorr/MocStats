@@ -9,10 +9,11 @@ Run Comps/comp_rates.py
 Run Comps/swarm_rates.py
 
 If collecting new data:
-    - Update mihomo: pip install -U git+https://github.com/KT-Yeh/mihomo.git
-    - Run mihomo/nohomo.py
+    Update mihomo: pip install -U git+https://github.com/KT-Yeh/mihomo.git
+    Run mihomo/nohomo.py
 If using past data:
-    - Copy mihomo/results/{version}_output.csv to mihomo/output1.csv
+    Copy mihomo/results/{version}_output.csv to mihomo/output1.csv
 
-- Run mihomo/stats.py
-- Run mihomo/stat.py
+
+Run mihomo/stats.py
+Run mihomo/stat.py

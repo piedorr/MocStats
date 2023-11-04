@@ -4,7 +4,25 @@ import os.path
 import sys
 sys.path.append('../Comps/')
 
-from comp_rates_config import RECENT_PHASE
+skip_self = False
+skip_random = False
+print_chart = True
+
+# stats.py
+# comp_stats = ['Bailu', 'Jing Yuan', 'Tingyun', 'Yukong']
+comp_stats = []
+check_char = True
+check_char_name = "Yanqing"
+# check_stats = ["cvalue"]
+check_stats = []
+
+# stat.py
+run_all_chars = False
+run_chars_name = ["Topaz and Numby", "Guinaifen", "Sushang", "Luka"]
+
+
+
+from comp_rates_config import RECENT_PHASE, skew_num
 phase_num = RECENT_PHASE
 
 f = open('../data/relics.json')

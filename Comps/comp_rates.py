@@ -3,8 +3,8 @@ import re
 import time
 import operator
 import char_usage as cu
-import pygsheets
 import statistics
+import pygsheets
 import os
 from scipy.stats import skew
 from itertools import permutations
@@ -21,8 +21,6 @@ def main():
         if not os.path.exists(make_path):
             os.makedirs(make_path)
 
-    global sample_size
-    sample_size = {}
     start_time = time.time()
     print("start")
 
@@ -42,16 +40,20 @@ def main():
     # uid_freq_comp will help detect duplicate UIDs
     reader = csv.reader(stats)
     col_names_comps = next(reader)
-    comp_table = []
+    all_comps = []
+    avg_round = {"1": [], "2": [], "3": [], "4": [], "5": [], "6": [], "7": [], "8": [], "9": [], "10": []}
     uid_freq_comp = {}
     self_freq_comp = {}
+    dps_freq_comp = {}
     last_uid = "0"
 
     for line in reader:
-        if skip_self and line[0] in self_uids:
-            continue
-        if skip_random and line[0] not in self_uids:
-            continue
+        if skip_self:
+            if line[0] in self_uids:
+                continue
+        if skip_random:
+            if line[0] not in self_uids:
+                continue
         if line[0] != last_uid:
             skip_uid = False
             if line[0] in uid_freq_comp:
@@ -66,12 +68,50 @@ def main():
         #     uid_freq_comp[line[0]] += 1
         last_uid = line[0]
         if not skip_uid:
-            comp_table.append(line)
+            stage = ''.join(filter(str.isdigit, line[1]))
+            comp = Composition(line[0], comp_chars(line), RECENT_PHASE, line[3], line[4],
+                               stage + "-" + str(line[2]), alt_comps)
+            # if int(stage) > 7:
+            #     if line[0] not in dps_freq_comp:
+            #         dps_freq_comp[line[0]] = set()
+            #     if comp.dps == []:
+            #         if comp.sub != []:
+            #             dps_freq_comp[line[0]].add(frozenset([comp.sub[0]]))
+            #     else:
+            #         dps_freq_comp[line[0]].add(frozenset([comp.dps[0]]))
+            all_comps.append(comp)
+            avg_round[stage].append(int(line[3]))
+
+    # len_dps_freq_comp = {}
+    # for i in dps_freq_comp:
+    #     if len(dps_freq_comp[i]) not in len_dps_freq_comp:
+    #         len_dps_freq_comp[len(dps_freq_comp[i])] = 0
+    #     len_dps_freq_comp[len(dps_freq_comp[i])] += 1
+    #     if len(dps_freq_comp[i]) == 1:
+    #         print(str(i) + ": " + str(dps_freq_comp[i]))
+    # print(len_dps_freq_comp)
+    # exit()
+
+    global sample_size
+    sample_size = {}
+    max_weight = 0
     sample_size["all"] = {
         "total": len(uid_freq_comp),
         "self_report": len(self_freq_comp),
         "random": len(uid_freq_comp) - len(self_freq_comp)
     }
+
+    for stage in avg_round:
+        sample_size[stage] = {
+            "avg_round": round(statistics.mean(avg_round[stage]), 2),
+        }
+        if sample_size[stage]["avg_round"] > max_weight:
+            max_weight = sample_size[stage]["avg_round"]
+
+    # global stage_weight
+    # stage_weight = {}
+    # for stage in avg_round:
+    #     stage_weight[stage] = max_weight / sample_size[stage]["avg_round"]
 
     if os.path.exists("../data/raw_csvs_real/"):
         stats = open("../data/raw_csvs_real/" + RECENT_PHASE + "_char.csv")
@@ -81,9 +121,11 @@ def main():
     # uid_freq_char and last_uid will help detect duplicate UIDs
     reader = csv.reader(stats)
     col_names = next(reader)
-    player_table = []
-    uid_freq_char = []
+    all_players = {}
+    all_players[RECENT_PHASE] = {}
     last_uid = "0"
+    player = PlayerPhase(last_uid, RECENT_PHASE)
+    uid_freq_char = []
 
     # Append lines
     for line in reader:
@@ -96,31 +138,36 @@ def main():
                     # print("duplicate UID in char: " + line[0])
                 else:
                     uid_freq_char.append(line[0])
-            last_uid = line[0]
             if not skip_uid:
-                player_table.append(line)
-    cur_time = time.time()
-    print("done csv: ", (cur_time - start_time), "s")
+                if line[0] != last_uid:
+                    all_players[RECENT_PHASE][last_uid] = player
+                    last_uid = line[0]
+                    player = PlayerPhase(last_uid, RECENT_PHASE)
+                if "Dan Heng â€¢ Imbibitor Lunae" in line[2]:
+                    line[2] = "Dan Heng • Imbibitor Lunae"
+                player.add_character(line[2], line[3], line[4], line[5], line[6], line[7], line[8])
+    all_players[RECENT_PHASE][last_uid] = player
+
+    for comp in all_comps:
+        if comp.player not in all_players[comp.phase]:
+            all_players[comp.phase][comp.player] = PlayerPhase(comp.player, comp.phase)
+        all_players[comp.phase][comp.player].add_comp(comp)
 
     csv_writer = csv.writer(open("../char_results/uids.csv", 'w', newline=''))
     for uid in uid_freq_comp.keys():
         csv_writer.writerow([uid])
-    # print(uid_freq_comp)
-    # exit()
 
-    all_comps = form_comps(col_names_comps, comp_table, alt_comps)
-    all_players = form_players(player_table, all_comps, [RECENT_PHASE])
     cur_time = time.time()
-    print("done form: ", (cur_time - start_time), "s")
+    print("done csv: ", (cur_time - start_time), "s")
 
     if "Char usages all stages" in run_commands:
         usage_low = char_usages(all_players, archetype, past_phase, filename="all", floor=True)
         cur_time = time.time()
         print("done char: ", (cur_time - start_time), "s")
 
-    if "Char usages 6 - 10" in run_commands:
+    if "Char usages 8 - 10" in run_commands:
         global usage
-        usage = char_usages(all_players, archetype, past_phase, rooms=["6-1", "6-2", "7-1", "7-2", "8-1", "8-2", "9-1", "9-2", "10-1", "10-2"], filename="all", floor=True)
+        usage = char_usages(all_players, archetype, past_phase, rooms=["8-1", "8-2", "9-1", "9-2", "10-1", "10-2"], filename="all", floor=True)
         duo_usages(all_comps, all_players, usage, archetype)
         # appearances = {}
         # rounds = {}
@@ -141,11 +188,11 @@ def main():
         #             "diff": usage[star_num][char]["diff_rounds"]
         #         }
         # with open("../char_results/appearance_top.json", "w") as out_file:
-        #     out_file.write(json.dumps(appearances,indent=4))
+        #     out_file.write(json.dumps(appearances,indent=2))
         # with open("../char_results/rounds_top.json", "w") as out_file:
-        #     out_file.write(json.dumps(rounds,indent=4))
+        #     out_file.write(json.dumps(rounds,indent=2))
         cur_time = time.time()
-        print("done char 6 - 10: ", (cur_time - start_time), "s")
+        print("done char 8 - 10: ", (cur_time - start_time), "s")
 
     if "Char usages for each stage" in run_commands:
         char_chambers = {
@@ -177,9 +224,9 @@ def main():
                         "diff": char_chambers[room][star_num][char]["diff_rounds"]
                     }
         with open("../char_results/appearance.json", "w") as out_file:
-            out_file.write(json.dumps(appearances,indent=4))
+            out_file.write(json.dumps(appearances,indent=2))
         with open("../char_results/rounds.json", "w") as out_file:
-            out_file.write(json.dumps(rounds,indent=4))
+            out_file.write(json.dumps(rounds,indent=2))
         cur_time = time.time()
         print("done char stage: ", (cur_time - start_time), "s")
 
@@ -213,34 +260,41 @@ def main():
                         "diff": char_chambers[room][star_num][char]["diff_rounds"]
                     }
         with open("../char_results/appearance_combine.json", "w") as out_file:
-            out_file.write(json.dumps(appearances,indent=4))
+            out_file.write(json.dumps(appearances,indent=2))
         with open("../char_results/rounds_combine.json", "w") as out_file:
-            out_file.write(json.dumps(rounds,indent=4))
+            out_file.write(json.dumps(rounds,indent=2))
         cur_time = time.time()
         print("done char stage (combine): ", (cur_time - start_time), "s")
 
+    global all_comps_json
+    all_comps_json = {}
     if "Comp usage all stages" in run_commands:
         comp_usages(all_comps, all_players, whaleCheck, whaleSigWeap, sigWeaps, rooms=["1-1", "1-2", "2-1", "2-2", "3-1", "3-2", "4-1", "4-2", "5-1", "5-2", "6-1", "6-2", "7-1", "7-2", "8-1", "8-2", "9-1", "9-2", "10-1", "10-2"], filename="all", floor=True)
         cur_time = time.time()
         print("done comp all: ", (cur_time - start_time), "s")
 
-    if "Comp usage 6 - 10" in run_commands:
-        comp_usages(all_comps, all_players, whaleCheck, whaleSigWeap, sigWeaps, rooms=["6-1", "6-2", "7-1", "7-2", "8-1", "8-2", "9-1", "9-2", "10-1", "10-2"], filename="top", floor=True)
+    if "Comp usage 8 - 10" in run_commands:
+        comp_usages(all_comps, all_players, whaleCheck, whaleSigWeap, sigWeaps, rooms=["8-1", "8-2", "9-1", "9-2", "10-1", "10-2"], filename="top", floor=True)
         cur_time = time.time()
-        print("done comp 6 - 10: ", (cur_time - start_time), "s")
+        print("done comp 8 - 10: ", (cur_time - start_time), "s")
 
     if "Comp usages for each stage" in run_commands:
         for room in ["1-1", "1-2", "2-1", "2-2", "3-1", "3-2", "4-1", "4-2", "5-1", "5-2", "6-1", "6-2", "7-1", "7-2", "8-1", "8-2", "9-1", "9-2", "10-1", "10-2"]:
             comp_usages(all_comps, all_players, whaleCheck, whaleSigWeap, sigWeaps, rooms=[room], filename=room, offset=2)
+
         with open("../char_results/demographic.json", "w") as out_file:
-            out_file.write(json.dumps(sample_size,indent=4))
+            out_file.write(json.dumps(sample_size,indent=2))
         cur_time = time.time()
         print("done comp stage: ", (cur_time - start_time), "s")
 
     if "Character specific infographics" in run_commands:
-        comp_usages(all_comps, all_players, whaleCheck, whaleSigWeap, sigWeaps, rooms=["6-1", "6-2", "7-1", "7-2", "8-1", "8-2", "9-1", "9-2", "10-1", "10-2"], filename=char_infographics, info_char=True, floor=True)
+        comp_usages(all_comps, all_players, whaleCheck, whaleSigWeap, sigWeaps, rooms=["8-1", "8-2", "9-1", "9-2", "10-1", "10-2"], filename=char_infographics, info_char=True, floor=True)
         cur_time = time.time()
         print("done char infographics: ", (cur_time - start_time), "s")
+
+    if "Comp usage 8 - 10" in run_commands and "Comp usages for each stage" in run_commands:
+        with open("../comp_results/json/all_comps.json", "w") as out_file:
+            out_file.write(json.dumps(all_comps_json,indent=2))
 
 def comp_usages(comps, 
                 players, 
@@ -266,7 +320,6 @@ def used_comps(players, comps, rooms, filename, whaleCheck, whaleSigWeap, sigWea
     global total_comps
     total_comps = 0
     total_self_comps = 0
-    avg_cycles = 0
     whaleCount = 0
     healerless = 0
     for comp in comps:
@@ -280,7 +333,6 @@ def used_comps(players, comps, rooms, filename, whaleCheck, whaleSigWeap, sigWea
             findchars(char, foundchar)
         if find_archetype(foundchar):
             total_comps += 1
-            avg_cycles += comp.round_num
             if comp.player in self_uids:
                 total_self_comps += 1
             if len(comp_tuple) < 4:
@@ -299,10 +351,10 @@ def used_comps(players, comps, rooms, filename, whaleCheck, whaleSigWeap, sigWea
                 if comp_tuple[char] in players[phase][comp.player].owned:
                 # if comp_tuple[char] in players[phase][comp.player].owned and comp_tuple[char] == "Blade":
                     if (
-                        players[phase][comp.player].owned[comp_tuple[char]]["cons"] != 0
+                        players[phase][comp.player].owned[comp_tuple[char]]["cons"] > 2
                         and CHARACTERS[comp_tuple[char]]["availability"] in ["Limited 5*"]
-                    ) or (
-                        whaleSigWeap and players[phase][comp.player].owned[comp_tuple[char]]["weapon"] in sigWeaps
+                    # ) or (
+                    #     whaleSigWeap and players[phase][comp.player].owned[comp_tuple[char]]["weapon"] in sigWeaps
                     ):
                         whaleComp = True
             if whaleComp:
@@ -321,18 +373,7 @@ def used_comps(players, comps, rooms, filename, whaleCheck, whaleSigWeap, sigWea
                         "comp_name": comp.comp_name,
                         "alt_comp_name": comp.alt_comp_name,
                         "star_num": comp.star_num,
-                        "round_num": {
-                            "1": [],
-                            "2": [],
-                            "3": [],
-                            "4": [],
-                            "5": [],
-                            "6": [],
-                            "7": [],
-                            "8": [],
-                            "9": [],
-                            "10": [],
-                        },
+                        "round_num": {"1": [], "2": [], "3": [], "4": [], "5": [], "6": [], "7": [], "8": [], "9": [], "10": []},
                         "deepwood": 0,
                         "whale_count": set(),
                         "players": set(),
@@ -346,7 +387,7 @@ def used_comps(players, comps, rooms, filename, whaleCheck, whaleSigWeap, sigWea
                         for i in range (7):
                             comps_dict[star_threshold][comp_tuple][comp_tuple[char]]["cons"][str(i)] = 0
                 comps_dict[star_threshold][comp_tuple]["uses"] += 1
-                comps_dict[star_threshold][comp_tuple]["round_num"][list(str(comp.room).split("-"))[0]].append(comp.round_num)
+                # comps_dict[star_threshold][comp_tuple]["round_num"][list(str(comp.room).split("-"))[0]].append(comp.round_num)
                 comps_dict[star_threshold][comp_tuple]["players"].add(comp.player)
                 for i in range (4):
                     if comp_tuple[i] in players[phase][comp.player].owned:
@@ -362,15 +403,14 @@ def used_comps(players, comps, rooms, filename, whaleCheck, whaleSigWeap, sigWea
                         comps_dict[star_threshold][comp_tuple][comp_tuple[i]]["cons"][str(players[phase][comp.player].owned[comp_tuple[i]]["cons"])] += 1
                 if whaleComp:
                     comps_dict[star_threshold][comp_tuple]["whale_count"].add(comp.player)
+                else:
+                    comps_dict[star_threshold][comp_tuple]["round_num"][list(str(comp.room).split("-"))[0]].append(comp.round_num)
     chamber_num = list(str(filename).split("-"))
     if len(chamber_num) > 1:
         if chamber_num[1] == "1":
-            sample_size[chamber_num[0]] = {
-                "total": total_comps,
-                "self_report": total_self_comps,
-                "random": total_comps - total_self_comps,
-                "average_cycles": round(avg_cycles / total_comps, 2),
-            }
+            sample_size[chamber_num[0]]["total"] = total_comps
+            sample_size[chamber_num[0]]["self_report"] = total_self_comps
+            sample_size[chamber_num[0]]["random"] = total_comps - total_self_comps
     # print(error_uids)
     # print("Less than four: " + str(lessFour))
     # print("Less than four: " + str(len(lessFour)/total_comps))
@@ -398,9 +438,12 @@ def rank_usages(comps_dict, owns_offset=1):
             avg_round = []
             for room_num in range(1,11):
                 if (comps_dict[star_threshold][comp]["round_num"][str(room_num)]):
-                    # avg_round.append(statistics.mean(comps_dict[star_threshold][comp]["round_num"][str(room_num)]))
-                    avg_round += comps_dict[star_threshold][comp]["round_num"][str(room_num)]
-            avg_round = round(statistics.mean(avg_round), 2)
+                    avg_round.append(statistics.mean(comps_dict[star_threshold][comp]["round_num"][str(room_num)]))
+                    # avg_round += comps_dict[star_threshold][comp]["round_num"][str(room_num)]
+            if avg_round:
+                avg_round = round(statistics.mean(avg_round), 2)
+            else:
+                avg_round = 99.99
             app = int(100.0 * comps_dict[star_threshold][comp]["uses"] / (total_comps * owns_offset) * 200 + .5) / 100.0
             comps_dict[star_threshold][comp]["app_rate"] = app
             comps_dict[star_threshold][comp]["round"] = avg_round
@@ -411,12 +454,12 @@ def rank_usages(comps_dict, owns_offset=1):
             # deepwood = int(100.0 * comps_dict[star_threshold][comp]["deepwood"] / comps_dict[star_threshold][comp]["uses"] * 100 + .5) / 100.0
             # comps_dict[star_threshold][comp]["deepwood_rate"] = deepwood
             rates.append(app)
-            rounds.append(avg_round)
+            # rounds.append(avg_round)
         rates.sort(reverse=True)
-        rounds.sort(reverse=False)
+        # rounds.sort(reverse=False)
         for comp in comps_dict[star_threshold]:
             comps_dict[star_threshold][comp]["app_rank"] = rates.index(comps_dict[star_threshold][comp]["app_rate"]) + 1
-            comps_dict[star_threshold][comp]["round_rank"] = rounds.index(comps_dict[star_threshold][comp]["round"]) + 1
+            # comps_dict[star_threshold][comp]["round_rank"] = rounds.index(comps_dict[star_threshold][comp]["round"]) + 1
 
     # # To check the list of weapons and artifacts for a comp
     # comp_tuples = [('Kafka', 'Asta', 'Tingyun', 'Luocha'), ('Kafka', 'Asta', 'Tingyun', 'Bailu')]
@@ -447,7 +490,7 @@ def duo_usages(comps,
                 players,
                 usage,
                 archetype,
-                rooms=["6-1", "6-2", "7-1", "7-2", "8-1", "8-2", "9-1", "9-2", "10-1", "10-2"],
+                rooms=["8-1", "8-2", "9-1", "9-2", "10-1", "10-2"],
                 filename="duo_usages"):
     duos_dict = used_duos(players, comps, rooms, usage, archetype)
     duo_write(duos_dict, usage, filename, archetype)
@@ -470,14 +513,30 @@ def used_duos(players, comps, rooms, usage, archetype, phase=RECENT_PHASE):
         # two duos are used, Ganyu/Xiangling and Xiangling/Ganyu
         duos = list(permutations(comp.characters, 2))
         for duo in duos:
+            whaleComp = False
+            for char in range (2):
+                if duo[char] in players[phase][comp.player].owned:
+                # if duo[char] in players[phase][comp.player].owned and duo[char] == "Blade":
+                    if (
+                        players[phase][comp.player].owned[duo[char]]["cons"] > 2
+                        and CHARACTERS[duo[char]]["availability"] in ["Limited 5*"]
+                    # ) or (
+                    #     whaleSigWeap and players[phase][comp.player].owned[duo[char]]["weapon"] in sigWeaps
+                    ):
+                        whaleComp = True
+
             if duo not in duos_dict:
-                duos_dict[duo] = 1
-            else:
-                duos_dict[duo] += 1
+                duos_dict[duo] = {
+                    "uses": 0,
+                    "round_num": {"1": [], "2": [], "3": [], "4": [], "5": [], "6": [], "7": [], "8": [], "9": [], "10": []},
+                }
+            duos_dict[duo]["uses"] += 1
+            if not(whaleComp):
+                duos_dict[duo]["round_num"][list(str(comp.room).split("-"))[0]].append(comp.round_num)
 
     sorted_duos = (sorted(
         duos_dict.items(),
-        key = operator.itemgetter(1),
+        key = lambda t: t[1]["uses"],
         reverse=True
     ))
     duos_dict = {k: v for k, v in sorted_duos}
@@ -487,10 +546,19 @@ def used_duos(players, comps, rooms, usage, archetype, phase=RECENT_PHASE):
         if usage[4][duo[0]]["app_flat"] > 0:
             # Calculate the appearance rate of the duo by dividing the appearance count
             # of the duo with the appearance count of the first character
-            duos_dict[duo] = round(duos_dict[duo] * 100 / usage[4][duo[0]]["app_flat"], 2)
+            duos_dict[duo]["uses"] = round(duos_dict[duo]["uses"] * 100 / usage[4][duo[0]]["app_flat"], 2)
+            avg_round = []
+            for room_num in range(1,11):
+                if (duos_dict[duo]["round_num"][str(room_num)]):
+                    avg_round.append(statistics.mean(duos_dict[duo]["round_num"][str(room_num)]))
+                    # avg_round += duos_dict[duo]["round_num"][str(room_num)]
+            if avg_round:
+                duos_dict[duo]["round_num"] = round(statistics.mean(avg_round), 2)
+            else:
+                duos_dict[duo]["round_num"] = 99.99
             if duo[0] not in sorted_duos:
                 sorted_duos[duo[0]] = []
-            sorted_duos[duo[0]].append([duo[1], duos_dict[duo]])
+            sorted_duos[duo[0]].append([duo[1], duos_dict[duo]["uses"], duos_dict[duo]["round_num"]])
 
     return sorted_duos
 
@@ -506,10 +574,11 @@ def char_usages(players,
     own = {}
     app = cu.appearances(players, own, archetype, chambers = rooms, offset = offset, info_char = info_char)
     chars_dict = cu.usages(own, app, past_phase, filename, chambers = rooms, offset = offset)
+    exit()
     # # Print the list of weapons and artifacts used for a character
     # if floor:
     #     print(app[RECENT_PHASE][filename])
-    if rooms == ["6-1", "6-2", "7-1", "7-2", "8-1", "8-2", "9-1", "9-2", "10-1", "10-2"]:
+    if rooms == ["8-1", "8-2", "9-1", "9-2", "10-1", "10-2"]:
         char_usages_write(chars_dict[4], filename, floor, archetype)
     return chars_dict
 
@@ -663,14 +732,14 @@ def comp_usages_write(comps_dict, filename, floor, info_char, sort_app):
     #     # for comps in f2p_comps:
     #     #     csv_writer.writerow(comps.values())
     #     with open("../comp_results/var_" + filename + ".json", "w") as out_file:
-    #         out_file.write(json.dumps(outvar_comps,indent=4))
+    #         out_file.write(json.dumps(outvar_comps,indent=2))
 
     if floor:
         csv_writer = csv.writer(open("../comp_results/comps_usage_" + filename + ".csv", 'w', newline=''))
         for comps in out_comps:
             csv_writer.writerow(comps.values())
         # with open("../comp_results/exc_" + filename + ".json", "w") as out_file:
-        #     out_file.write(json.dumps(exc_comps,indent=4))
+        #     out_file.write(json.dumps(exc_comps,indent=2))
 
     if not info_char and sort_app:
         # csv_writer = csv.writer(open("../comp_results/csv/" + filename + ".csv", 'w', newline=''))
@@ -679,25 +748,29 @@ def comp_usages_write(comps_dict, filename, floor, info_char, sort_app):
         #     csv_writer.writerow(comps.values())
 
         # with open("../comp_results/exc_" + filename + ".json", "w") as out_file:
-        #     out_file.write(json.dumps(exc_comps,indent=4))
-        with open("../comp_results/json/" + filename + ".json", "w") as out_file:
-            out_file.write(json.dumps(out_json,indent=4))
+        #     out_file.write(json.dumps(exc_comps,indent=2))
+
+        all_comps_json[filename] = out_json.copy()
+        # with open("../comp_results/json/" + filename + ".json", "w") as out_file:
+        #     out_file.write(json.dumps(out_json,indent=2))
 
 def duo_write(duos_dict, usage, filename, archetype):
     out_duos = []
     for char in duos_dict:
-        if usage[4][char]["app_flat"] > 20:
+        if usage[4][char]["app_flat"] > 0:
             out_duos_append = {
                 "char": char,
                 "round": usage[4][char]["round"],
             }
-            for i in range(8):
+            for i in range(10):
                 if i < len(duos_dict[char]):
-                    out_duos_append["app_rate_" + str(i + 1)] = str(duos_dict[char][i][1]) + "%"
                     out_duos_append["char_" + str(i + 1)] = duos_dict[char][i][0]
+                    out_duos_append["app_rate_" + str(i + 1)] = str(duos_dict[char][i][1]) + "%"
+                    out_duos_append["avg_round_" + str(i + 1)] = duos_dict[char][i][2]
                 else:
-                    out_duos_append["app_rate_" + str(i + 1)] = "0%"
                     out_duos_append["char_" + str(i + 1)] = "-"
+                    out_duos_append["app_rate_" + str(i + 1)] = "0.00%"
+                    out_duos_append["avg_round_" + str(i + 1)] = 0.00
             out_duos.append(out_duos_append)
     out_duos = sorted(out_duos, key=lambda t: t["round"], reverse = False)
 
@@ -710,8 +783,13 @@ def duo_write(duos_dict, usage, filename, archetype):
             csv_writer.writerow(duos.keys())
             count += 1
         csv_writer.writerow(duos.values())
+        for i in range(10):
+            if i < len(duos_dict[char]):
+                duos["app_rate_" + str(i + 1)] = float(duos["app_rate_" + str(i + 1)][:-1])
+            else:
+                duos["app_rate_" + str(i + 1)] = 0.00
     with open("../char_results/" + filename + ".json", "w") as out_file:
-        out_file.write(json.dumps(out_duos,indent=4))
+        out_file.write(json.dumps(out_duos,indent=2))
 
 def char_usages_write(chars_dict, filename, floor, archetype):
     out_chars = []
@@ -832,7 +910,6 @@ def char_usages_write(chars_dict, filename, floor, archetype):
         iterate_value_app.append("weapon_" + str(i + 1) + "_app")
         iterate_value_round.append("weapon_" + str(i + 1) + "_round")
     for i in range(arti_len):
-        iterate_name_arti.append("artifact_" + str(i + 1))
         iterate_value_app.append("artifact_" + str(i + 1) + "_app")
         iterate_value_round.append("artifact_" + str(i + 1) + "_round")
     for i in range(planar_len):
@@ -859,7 +936,7 @@ def char_usages_write(chars_dict, filename, floor, archetype):
             else:
                 out_chars[i][value] = 99.99
     with open("../char_results/" + filename + ".json", "w") as out_file:
-        out_file.write(json.dumps(out_chars,indent=4))
+        out_file.write(json.dumps(out_chars,indent=2))
 
 def name_filter(comp, mode="out"):
     filtered = []
@@ -878,48 +955,5 @@ def comp_chars(row):
         if row[i] != "":
             comp.append(row[i])
     return comp
-
-def form_comps(col_names, table, info_char):
-    round_num = col_names.index('round_num')
-    star_num = col_names.index('star_num')
-    room = col_names.index('node')
-    floor = col_names.index('floor')
-    comps = []
-
-    for row in table:
-        comp = Composition(row[0], comp_chars(row), RECENT_PHASE, row[round_num], row[star_num],
-                           str(re.findall('[0-9]+', row[floor])[0]) + "-" + str(row[room]), info_char)
-        comps.append(comp)
-
-    return comps
-
-def add_players_comps(players, comps):
-    for comp in comps:
-        if comp.phase in players:
-            if comp.player not in players[comp.phase]:
-                players[comp.phase][comp.player] = PlayerPhase(comp.player, comp.phase)
-            players[comp.phase][comp.player].add_comp(comp)
-
-def form_players(table, comps, phases):
-    # index 0 is player id, 1 is phase, 2 is character name, 3 is character level
-    # 4 is constellation, 5 is weapons, 6 is artifacts
-    players = {}
-    for phase in phases:
-        players[phase] = {}
-
-    phase = table[0][1]
-    id = table[0][0]
-    player = PlayerPhase(id, phase)
-    for row in table:
-        if row[0] != id or row[1] != phase:
-            players[phase][id] = player
-            id = row[0]
-            phase = row[1]
-            player = PlayerPhase(id, phase)
-        player.add_character(row[2], row[3], row[4], row[5], row[6], row[7], row[8])
-    players[phase][id] = player
-
-    add_players_comps(players, comps)
-    return players
 
 main()

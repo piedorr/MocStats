@@ -47,10 +47,10 @@ class Composition:
         """
         self.char_presence = {}
         fives = []
-        dps = []
-        sub = []
-        anemo = []
-        healer = []
+        self.dps = []
+        self.subdps = []
+        self.anemo = []
+        self.healer = []
         temp = []
         temp_remove = []
         len_element = {
@@ -64,24 +64,26 @@ class Composition:
         }
         comp_chars.sort()
         for character in comp_chars:
+            if "Dan Heng â€¢ Imbibitor Lunae" in character:
+                character = "Dan Heng • Imbibitor Lunae"
             self.char_presence[character] = True
             if CHARACTERS[character]["availability"] in ["Limited 5*", "5*"]:
                 fives.append(character)
 
             if character in ["Seele", "Yanqing", "Hook", "Jing Yuan", "Kafka", "Dan Heng • Imbibitor Lunae"]:
-                dps.insert(0, character)
+                self.dps.insert(0, character)
             elif character in ["Qingque", "Arlan", "Himeko", "Dan Heng", "Sushang"]:
-                dps.append(character)
+                self.dps.append(character)
             elif character in ["Clara", "Blade", "Jingliu"]:
-                sub.insert(0, character)
-            elif character in ["Welt", "Serval", "Physical Trailblazer", "Sampo", "Herta", "Luka"]:
-                sub.append(character)
+                self.subdps.insert(0, character)
+            elif character in ["Welt", "Serval", "Physical Trailblazer", "Sampo", "Herta", "Luka", "Topaz and Numby", "Guinaifen"]:
+                self.subdps.append(character)
             elif character in ["Bronya", "Silver Wolf", "Asta", "Tingyun", "Pela", "Yukong"]:
-                anemo.append(character)
+                self.anemo.append(character)
             elif character in ["Natasha", "Luocha", "Bailu", "Lynx"]:
-                healer.insert(0, character)
+                self.healer.insert(0, character)
             elif character in ["March 7th", "Gepard", "Fire Trailblazer", "Fu Xuan"]:
-                healer.append(character)
+                self.healer.append(character)
 
             if CHARACTERS[character]["element"] == "Ice":
                 len_element["Ice"] += 1
@@ -98,7 +100,7 @@ class Composition:
             if CHARACTERS[character]["element"] == "Physical":
                 len_element["Physical"] += 1
         self.fivecount = len(fives)
-        self.characters = dps + sub + anemo + healer
+        self.characters = self.dps + self.subdps + self.anemo + self.healer
 
         """Name structure creator.
         """
@@ -144,16 +146,16 @@ class Composition:
                         self.comp_name = "Faux-Mono " + elem
             if self.comp_name == "-":
                 archetype = ""
-                if len(dps) + len(sub) > 2:
+                if len(self.dps) + len(self.subdps) > 2:
                     archetype = " Triple Carry"
-                elif len(dps) + len(sub) > 1:
+                elif len(self.dps) + len(self.subdps) > 1:
                     archetype = " Dual Carry"
-                elif len(dps) + len(sub) == 1:
-                    if len(anemo) > 1:
+                elif len(self.dps) + len(self.subdps) == 1:
+                    if len(self.anemo) > 1:
                         archetype = " Hypercarry"
-                    elif len(healer) > 1:
+                    elif len(self.healer) > 1:
                         archetype = " Dual Sustain"
-                if dps or sub or anemo:
+                if self.dps or self.subdps or self.anemo:
                     self.comp_name = self.characters[0] + archetype
                 else:
                     self.comp_name = "Full Sustain"

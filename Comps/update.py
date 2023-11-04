@@ -5,9 +5,9 @@ import io
 download = requests.get("https://github.com/Mar-7th/StarRailRes/raw/master/index_new/en/relic_sets.json").content.decode('utf-8')
 artifacts = json.load(io.StringIO(download))
 
-# with open('../data/relic_affixes.json') as artifact_file:
-#     artifacts2 = json.load(artifact_file)
-artifacts2 = {}
+with open('../data/relic_affixes.json') as artifact_file:
+    artifacts2 = json.load(artifact_file)
+# artifacts2 = {}
 
 artifacts_affixes = {}
 for artifact in artifacts:

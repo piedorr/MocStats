@@ -15,7 +15,7 @@ from scipy.stats import skew
 from pynput import keyboard
 from itertools import chain
 from archetypes import *
-from nohomo_config import phase_num
+from nohomo_config import *
 
 with open("output1.csv", 'r') as f:
     reader = csv.reader(f, delimiter=',')
@@ -49,13 +49,16 @@ for spiral_row in spiral:
     if int(''.join(filter(str.isdigit, spiral_row[1]))) > 5:
         if spiral_row[0] not in spiral_rows:
             spiral_rows[spiral_row[0]] = {}
-        spiral_temp = []
-        # for i in range(5,9):
-        #     spiral_temp.append(spiral_row[i])
-        # spiral_temp.sort()
-        # if spiral_temp != ['Bailu', 'Jing Yuan', 'Tingyun', 'Yukong']:
-        #     continue
+        # if comp_stats:
+        #     spiral_temp = []
+        #     for i in range(5,9):
+        #         spiral_temp.append(spiral_row[i])
+        #     spiral_temp.sort()
+        #     if spiral_temp != ['Bailu', 'Jing Yuan', 'Tingyun', 'Yukong']:
+        #         continue
         for i in range(5,9):
+            if "Dan Heng â€¢ Imbibitor Lunae" in spiral_row[i]:
+                spiral_row[i] = "Dan Heng • Imbibitor Lunae"
             if spiral_row[i] not in spiral_rows[spiral_row[0]]:
                 spiral_rows[spiral_row[0]][spiral_row[i]] = 1
             else:
@@ -94,6 +97,7 @@ for char in chars:
         "res_sub": [],
         "ehr_sub": [],
         "break_sub": [],
+        # "cvalue": [],
         "sample_size": 0,
         "sample_size_players": 0
     }
@@ -124,7 +128,8 @@ for char in chars:
         "cdmg_sub": 0,
         "res_sub": 0,
         "ehr_sub": 0,
-        "break_sub": 0
+        "break_sub": 0,
+        # "cvalue": 0,
     }
     median[char] = {
         "char_lvl": 0,
@@ -153,7 +158,8 @@ for char in chars:
         "cdmg_sub": 0,
         "res_sub": 0,
         "ehr_sub": 0,
-        "break_sub": 0
+        "break_sub": 0,
+        # "cvalue": 0,
     }
     mainstats[char] = {
         "body_stats": {},
@@ -185,8 +191,10 @@ if os.path.isfile("../../uids.csv"):
         self_uids = list(reader)[0]
 
 for row in data:
-    # if row[0] not in self_uids:
-    #     continue
+    if skip_self and row[0] in self_uids:
+        continue
+    if skip_random and row[0] not in self_uids:
+        continue
     # if (row[2].isnumeric()):
     #     row.insert(2,"Nilou")
     if row[0] != uid:
@@ -228,7 +236,9 @@ for row in data:
             #             found = True
     found = False
     if row[0] in spiral_rows:
-        if row[2] in spiral_rows[row[0]] or ("Trailblazer" in spiral_rows[row[0]] and "Trailblazer" in row[2]):
+        if row[2] in spiral_rows[row[0]] or (
+            "Trailblazer" in spiral_rows[row[0]] and "Trailblazer" in row[2]
+        ):
             found = True
         # for char in spiral_rows[row[0]]:
         #     if char in ["Thoma","Yoimiya","Yanfei","Hu Tao","Xinyan","Diluc","Amber","Xiangling","Klee","Bennett","Dehya"]:
@@ -263,6 +273,7 @@ for row in data:
                         mainstats[row[2]][mainstatkeys[i]][row[i+32]] += 1
                     else:
                         mainstats[row[2]][mainstatkeys[i]][row[i+32]] = 1
+                # stats[row[2]]["cvalue"].append(stats[row[2]]["crate"][-1] * 2 + stats[row[2]]["cdmg"][-1])
 
                 # if char_arti in artifacts[char]:
                 #     artifacts[char][char_arti] += 1
@@ -288,23 +299,27 @@ for char in copy_chars:
                 if (mean[char][stat] > 0 and median[char][stat] > 0 and stats[char]["sample_size"] > 5):
                     if stat not in ["char_lvl", "light_cone_lvl", "attack_lvl", "skill_lvl", "ultimate_lvl", "talent_lvl", "energy_regen", "dmg_boost"]:
                         skewness = round(skew(stats[char][stat], axis=0, bias=True), 2)
-                # if skewness > 0 and char == "Seele":
-                if skewness > 1:
-                    stats[char][stat] = median[char][stat]
-                    # print(skewness)
-                    # print(stat + ": " + str(mean[char][stat]) + ", " + str(median[char][stat]))
-                    # try:
-                    #     plt.hist(stats[char][stat])
-                    #     plt.show()
-                    # except Exception:
-                    #     pass
-                    # # print("1 - Mean, 2 - Median: ")
-                    # with keyboard.Events() as events:
-                    #     event = events.get(1e6)
-                    #     if event.key == keyboard.KeyCode.from_char('1'):
-                    #         stats[char][stat] = str(mean[char][stat])
-                    #     else:
-                    #         stats[char][stat] = str(median[char][stat])
+                if abs(skewness) > skew_num:
+                    if print_chart:
+                        if (not(check_char) or char == check_char_name) and stat in check_stats:
+                            print("skewness: " + str(skewness))
+                            print(stat + ": " + str(mean[char][stat]) + ", " + str(median[char][stat]))
+                            try:
+                                plt.hist(stats[char][stat])
+                                plt.show()
+                            except Exception:
+                                pass
+                            # print("1 - Mean, 2 - Median: ")
+                            with keyboard.Events() as events:
+                                event = events.get(1e6)
+                                if event.key == keyboard.KeyCode.from_char('1'):
+                                    stats[char][stat] = str(mean[char][stat])
+                                else:
+                                    stats[char][stat] = str(median[char][stat])
+                        else:
+                            stats[char][stat] = median[char][stat]
+                    else:
+                        stats[char][stat] = median[char][stat]
                 else:
                     stats[char][stat] = mean[char][stat]
 
@@ -351,11 +366,9 @@ for char in copy_chars:
 if os.path.exists("results_real"):
     file1 = open("results_real/chars.csv", 'w', newline='')
     file2 = open("results_real/demographic.csv", 'w', newline='')
-    file3 = open("results_real/chars.json", 'w')
 else:
     file1 = open("results/chars.csv", 'w', newline='')
     file2 = open("results/demographic.csv", 'w', newline='')
-    file3 = open("results/chars.json", 'w')
 
 csv_writer = csv.writer(file1)
 csv_writer2 = csv.writer(file2)
@@ -368,6 +381,9 @@ for char in chars:
     csv_writer2.writerow([char + ": " + str(stats[char]["sample_size_players"])])
 
 temp_stats = []
+iter_char = 0
+with open('../char_results/all.json') as char_file:
+    CHARACTERS = json.load(char_file)
 for char in stats:
     for i in chain(range(11,19), range(20,28)):
         stats[char][statkeys[i]] = round(stats[char][statkeys[i]] * 100, 2)
@@ -382,7 +398,16 @@ for char in stats:
             stats[char][value] = round(stats[char][value] * 100, 2)
         else:
             stats[char][value] = 0.00
-    temp_stats.append(stats[char])
-file3.write(json.dumps(temp_stats,indent=4))
+
+    if stats[char]["name"] == CHARACTERS[iter_char]["char"]:
+        del stats[char]["name"]
+    else:
+        print(stats[char]["name"])
+        print(CHARACTERS[iter_char]["char"])
+        exit()
+    temp_stats.append(CHARACTERS[iter_char] | stats[char])
+    iter_char += 1
+with open('../char_results/all2.json', 'w') as char_file:
+    char_file.write(json.dumps(temp_stats,indent=2))
 
 print("Average AR: ", (ar/count))
