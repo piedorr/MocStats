@@ -574,7 +574,6 @@ def char_usages(players,
     own = {}
     app = cu.appearances(players, own, archetype, chambers = rooms, offset = offset, info_char = info_char)
     chars_dict = cu.usages(own, app, past_phase, filename, chambers = rooms, offset = offset)
-    exit()
     # # Print the list of weapons and artifacts used for a character
     # if floor:
     #     print(app[RECENT_PHASE][filename])
@@ -815,8 +814,8 @@ def char_usages_write(chars_dict, filename, floor, archetype):
             for i in range(weap_len):
                 if i < len(list(chars_dict[char]["weapons"])):
                     out_chars_append["weapon_" + str(i + 1)] = list(chars_dict[char]["weapons"])[i]
-                    out_chars_append["weapon_" + str(i + 1) + "_app"] = str(list(chars_dict[char]["weapons"].values())[i]) + "%"
-                    out_chars_append["weapon_" + str(i + 1) + "_round"] = str(list(chars_dict[char]["weapons_round"].values())[i])
+                    out_chars_append["weapon_" + str(i + 1) + "_app"] = str(list(chars_dict[char]["weapons"].values())[i]["percent"]) + "%"
+                    out_chars_append["weapon_" + str(i + 1) + "_round"] = str(list(chars_dict[char]["weapons"].values())[i]["avg_round"])
                 else:
                     out_chars_append["weapon_" + str(i + 1)] = ""
                     out_chars_append["weapon_" + str(i + 1) + "_app"] = "0.0"
@@ -831,8 +830,8 @@ def char_usages_write(chars_dict, filename, floor, archetype):
                         out_chars_append["artifact_" + str(i + 1) + "_2"] = arti_name[1]
                     else:
                         out_chars_append["artifact_" + str(i + 1) + "_2"] = ""
-                    out_chars_append["artifact_" + str(i + 1) + "_app"] = str(list(chars_dict[char]["artifacts"].values())[i]) + "%"
-                    out_chars_append["artifact_" + str(i + 1) + "_round"] = str(list(chars_dict[char]["artifacts_round"].values())[i])
+                    out_chars_append["artifact_" + str(i + 1) + "_app"] = str(list(chars_dict[char]["artifacts"].values())[i]["percent"]) + "%"
+                    out_chars_append["artifact_" + str(i + 1) + "_round"] = str(list(chars_dict[char]["artifacts"].values())[i]["avg_round"])
                 else:
                     out_chars_append["artifact_" + str(i + 1)] = ""
                     out_chars_append["artifact_" + str(i + 1) + "_1"] = ""
@@ -842,8 +841,8 @@ def char_usages_write(chars_dict, filename, floor, archetype):
             for i in range(planar_len):
                 if i < len(list(chars_dict[char]["planars"])):
                     out_chars_append["planar_" + str(i + 1)] = list(chars_dict[char]["planars"])[i]
-                    out_chars_append["planar_" + str(i + 1) + "_app"] = str(list(chars_dict[char]["planars"].values())[i]) + "%"
-                    out_chars_append["planar_" + str(i + 1) + "_round"] = str(list(chars_dict[char]["planars_round"].values())[i])
+                    out_chars_append["planar_" + str(i + 1) + "_app"] = str(list(chars_dict[char]["planars"].values())[i]["percent"]) + "%"
+                    out_chars_append["planar_" + str(i + 1) + "_round"] = str(list(chars_dict[char]["planars"].values())[i]["avg_round"])
                 else:
                     out_chars_append["planar_" + str(i + 1)] = ""
                     out_chars_append["planar_" + str(i + 1) + "_app"] = "0.0"

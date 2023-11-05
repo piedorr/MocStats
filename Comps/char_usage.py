@@ -5,10 +5,12 @@ import csv
 import statistics
 import matplotlib
 import matplotlib.pyplot as plt
+import warnings
 from scipy.stats import skew, trim_mean
 from archetypes import *
 from comp_rates_config import RECENT_PHASE
 
+warnings.filterwarnings("ignore", category=RuntimeWarning)
 ROOMS = ["1-1", "1-2", "2-1", "2-2", "3-1", "3-2", "4-1", "4-2", "5-1", "5-2", "6-1", "6-2", "7-1", "7-2", "8-1", "8-2", "9-1", "9-2", "10-1", "10-2"]
 global gear_app_threshold
 gear_app_threshold = 0
@@ -99,11 +101,8 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                 "percent": 0.00,
                 "avg_round": 0.00,
                 "weap_freq": {},
-                "weap_round": {},
                 "arti_freq": {},
-                "arti_round": {},
                 "planar_freq": {},
-                "planar_round": {},
                 "cons_freq": {},
                 "cons_avg": 0.00,
                 "sample": 0
@@ -162,36 +161,48 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
 
                         if player.owned[char]["weapon"] != "":
                             if player.owned[char]["weapon"] not in appears[star_num][char_name]["weap_freq"]:
-                                appears[star_num][char_name]["weap_freq"][player.owned[char]["weapon"]] = 0
-                                appears[star_num][char_name]["weap_round"][player.owned[char]["weapon"]] = {"1": [], "2": [], "3": [], "4": [], "5": [], "6": [], "7": [], "8": [], "9": [], "10": []}
-                            appears[star_num][char_name]["weap_freq"][player.owned[char]["weapon"]] += 1
+                                appears[star_num][char_name]["weap_freq"][player.owned[char]["weapon"]] = {
+                                    "flat": 0,
+                                    "round": {"1": [], "2": [], "3": [], "4": [], "5": [], "6": [], "7": [], "8": [], "9": [], "10": []},
+                                    "percent": 0,
+                                    "avg_round": 0.00
+                                }
+                            appears[star_num][char_name]["weap_freq"][player.owned[char]["weapon"]]["flat"] += 1
                             if CHARACTERS[char]["availability"] in ["Limited 5*"]:
                                 if player.owned[char]["cons"] < 3:
-                                    appears[star_num][char_name]["weap_round"][player.owned[char]["weapon"]][list(str(chamber).split("-"))[0]].append(player.chambers[chamber].round_num)
+                                    appears[star_num][char_name]["weap_freq"][player.owned[char]["weapon"]]["round"][list(str(chamber).split("-"))[0]].append(player.chambers[chamber].round_num)
                             else:
-                                appears[star_num][char_name]["weap_round"][player.owned[char]["weapon"]][list(str(chamber).split("-"))[0]].append(player.chambers[chamber].round_num)
+                                appears[star_num][char_name]["weap_freq"][player.owned[char]["weapon"]]["round"][list(str(chamber).split("-"))[0]].append(player.chambers[chamber].round_num)
 
                         if player.owned[char]["artifacts"] != "":
                             if player.owned[char]["artifacts"] not in appears[star_num][char_name]["arti_freq"]:
-                                appears[star_num][char_name]["arti_freq"][player.owned[char]["artifacts"]] = 0
-                                appears[star_num][char_name]["arti_round"][player.owned[char]["artifacts"]] = {"1": [], "2": [], "3": [], "4": [], "5": [], "6": [], "7": [], "8": [], "9": [], "10": []}
-                            appears[star_num][char_name]["arti_freq"][player.owned[char]["artifacts"]] += 1
+                                appears[star_num][char_name]["arti_freq"][player.owned[char]["artifacts"]] = {
+                                    "flat": 0,
+                                    "round": {"1": [], "2": [], "3": [], "4": [], "5": [], "6": [], "7": [], "8": [], "9": [], "10": []},
+                                    "percent": 0,
+                                    "avg_round": 0.00
+                                }
+                            appears[star_num][char_name]["arti_freq"][player.owned[char]["artifacts"]]["flat"] += 1
                             if CHARACTERS[char]["availability"] in ["Limited 5*"]:
                                 if player.owned[char]["cons"] < 3:
-                                    appears[star_num][char_name]["arti_round"][player.owned[char]["artifacts"]][list(str(chamber).split("-"))[0]].append(player.chambers[chamber].round_num)
+                                    appears[star_num][char_name]["arti_freq"][player.owned[char]["artifacts"]]["round"][list(str(chamber).split("-"))[0]].append(player.chambers[chamber].round_num)
                             else:
-                                appears[star_num][char_name]["arti_round"][player.owned[char]["artifacts"]][list(str(chamber).split("-"))[0]].append(player.chambers[chamber].round_num)
+                                appears[star_num][char_name]["arti_freq"][player.owned[char]["artifacts"]]["round"][list(str(chamber).split("-"))[0]].append(player.chambers[chamber].round_num)
 
                         if player.owned[char]["planars"] != "":
                             if player.owned[char]["planars"] not in appears[star_num][char_name]["planar_freq"]:
-                                appears[star_num][char_name]["planar_freq"][player.owned[char]["planars"]] = 0
-                                appears[star_num][char_name]["planar_round"][player.owned[char]["planars"]] = {"1": [], "2": [], "3": [], "4": [], "5": [], "6": [], "7": [], "8": [], "9": [], "10": []}
-                            appears[star_num][char_name]["planar_freq"][player.owned[char]["planars"]] += 1
+                                appears[star_num][char_name]["planar_freq"][player.owned[char]["planars"]] = {
+                                    "flat": 0,
+                                    "round": {"1": [], "2": [], "3": [], "4": [], "5": [], "6": [], "7": [], "8": [], "9": [], "10": []},
+                                    "percent": 0,
+                                    "avg_round": 0.00
+                                }
+                            appears[star_num][char_name]["planar_freq"][player.owned[char]["planars"]]["flat"] += 1
                             if CHARACTERS[char]["availability"] in ["Limited 5*"]:
                                 if player.owned[char]["cons"] < 3:
-                                    appears[star_num][char_name]["planar_round"][player.owned[char]["planars"]][list(str(chamber).split("-"))[0]].append(player.chambers[chamber].round_num)
+                                    appears[star_num][char_name]["planar_freq"][player.owned[char]["planars"]]["round"][list(str(chamber).split("-"))[0]].append(player.chambers[chamber].round_num)
                             else:
-                                appears[star_num][char_name]["planar_round"][player.owned[char]["planars"]][list(str(chamber).split("-"))[0]].append(player.chambers[chamber].round_num)
+                                appears[star_num][char_name]["planar_freq"][player.owned[char]["planars"]]["round"][list(str(chamber).split("-"))[0]].append(player.chambers[chamber].round_num)
 
         if comp_error:
             df_char = pd.read_csv('../data/phase_characters.csv')
@@ -218,12 +229,6 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                     if (appears[star_num][char]["round"][str(room_num)]):
                         if appears[star_num][char]["flat"] > 1:
                             skewness = skew(appears[star_num][char]["round"][str(room_num)], axis=0, bias=True)
-                            if char == "Arlan":
-                                print(char + ": " + str(round(skewness, 2)) + ", " + str(appears[star_num][char]["flat"]))
-                                print(str(round(statistics.mean(appears[star_num][char]["round"][str(room_num)]), 2)) + ", " + str(round(trim_mean(appears[star_num][char]["round"][str(room_num)], 0.1), 2)) + ", " + str(round(trim_mean(appears[star_num][char]["round"][str(room_num)], 0.25), 2)) + ", " + str(round(statistics.median(appears[star_num][char]["round"][str(room_num)]), 2)))
-                                print()
-                                plt.hist(appears[star_num][char]["round"][str(room_num)])
-                                plt.show()
                             if abs(skewness) > 0.8:
                                 avg_round.append(trim_mean(appears[star_num][char]["round"][str(room_num)], 0.25))
                             else:
@@ -271,7 +276,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
             # Calculate weapons
             sorted_weapons = (sorted(
                 appears[star_num][char]["weap_freq"].items(),
-                key = operator.itemgetter(1),
+                key = lambda t: t[1]["flat"],
                 reverse=True
             ))
             appears[star_num][char]["weap_freq"] = {k: v for k, v in sorted_weapons}
@@ -279,38 +284,39 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                 # If a gear appears >15 times, include it
                 # Because there might be 1* gears
                 # If it's for character infographic, include all gears
-                if appears[star_num][char]["weap_freq"][weapon] > gear_app_threshold or info_char or (
-                    appears[star_num][char]["weap_freq"][weapon] / app_flat) > 20:
-                    appears[star_num][char]["weap_freq"][weapon] = round(
-                        appears[star_num][char]["weap_freq"][weapon] / app_flat, 2
+                if appears[star_num][char]["weap_freq"][weapon]["flat"] > gear_app_threshold or info_char or (
+                    appears[star_num][char]["weap_freq"][weapon]["flat"] / app_flat) > 20:
+                    appears[star_num][char]["weap_freq"][weapon]["percent"] = round(
+                        appears[star_num][char]["weap_freq"][weapon]["flat"] / app_flat, 2
                     )
                     avg_round = []
                     for room_num in range(1,11):
-                        if (appears[star_num][char]["weap_round"][weapon][str(room_num)]):
-                            # avg_round += appears[star_num][char]["weap_round"][weapon][str(room_num)]
-                            avg_round.append(statistics.mean(appears[star_num][char]["weap_round"][weapon][str(room_num)]))
+                        if appears[star_num][char]["weap_freq"][weapon]["round"][str(room_num)]:
+                            if appears[star_num][char]["weap_freq"][weapon]["flat"] > 1:
+                                skewness = skew(appears[star_num][char]["weap_freq"][weapon]["round"][str(room_num)], axis=0, bias=True)
+                                if abs(skewness) > 0.8:
+                                    avg_round.append(trim_mean(appears[star_num][char]["weap_freq"][weapon]["round"][str(room_num)], 0.25))
+                                else:
+                                    avg_round.append(statistics.mean(appears[star_num][char]["weap_freq"][weapon]["round"][str(room_num)]))
+                            else:
+                                avg_round.append(statistics.mean(appears[star_num][char]["weap_freq"][weapon]["round"][str(room_num)]))
+                            # avg_round += appears[star_num][char]["weap_freq"][weapon]["round"][str(room_num)]
+                            # avg_round.append(statistics.mean(appears[star_num][char]["weap_freq"][weapon]["round"][str(room_num)]))
                     if avg_round:
-                        appears[star_num][char]["weap_round"][weapon] = round(statistics.mean(avg_round), 2)
+                        appears[star_num][char]["weap_freq"][weapon]["avg_round"] = round(statistics.mean(avg_round), 2)
                     else:
-                        appears[star_num][char]["weap_round"][weapon] = 99.99
+                        appears[star_num][char]["weap_freq"][weapon]["avg_round"] = 99.99
                 else:
-                    appears[star_num][char]["weap_freq"][weapon] = 0
-                    appears[star_num][char]["weap_round"][weapon] = 99.99
-            # sorted_weapons = (sorted(
-            #     appears[star_num][char]["weap_round"].items(),
-            #     key = operator.itemgetter(1),
-            #     reverse=False
-            # ))
-            # appears[star_num][char]["weap_round"] = {k: v for k, v in sorted_weapons}
+                    appears[star_num][char]["weap_freq"][weapon]["percent"] = 0
+                    appears[star_num][char]["weap_freq"][weapon]["avg_round"] = 99.99
 
             # Remove flex artifacts
             if "Flex" in appears[star_num][char]["arti_freq"]:
                 del appears[star_num][char]["arti_freq"]["Flex"]
-                del appears[star_num][char]["arti_round"]["Flex"]
             # Calculate artifacts
             sorted_arti = (sorted(
                 appears[star_num][char]["arti_freq"].items(),
-                key = operator.itemgetter(1),
+                key = lambda t: t[1]["flat"],
                 reverse=True
             ))
             appears[star_num][char]["arti_freq"] = {k: v for k, v in sorted_arti}
@@ -318,37 +324,38 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                 # If a gear appears >15 times, include it
                 # Because there might be 1* gears
                 # If it's for character infographic, include all gears
-                if (appears[star_num][char]["arti_freq"][arti] > gear_app_threshold or info_char) and arti != "Flex":
-                    appears[star_num][char]["arti_freq"][arti] = round(
-                        appears[star_num][char]["arti_freq"][arti] / app_flat, 2
+                if (appears[star_num][char]["arti_freq"][arti]["flat"] > gear_app_threshold or info_char) and arti != "Flex":
+                    appears[star_num][char]["arti_freq"][arti]["percent"] = round(
+                        appears[star_num][char]["arti_freq"][arti]["flat"] / app_flat, 2
                     )
                     avg_round = []
                     for room_num in range(1,11):
-                        if (appears[star_num][char]["arti_round"][arti][str(room_num)]):
-                            # avg_round += appears[star_num][char]["arti_round"][arti][str(room_num)]
-                            avg_round.append(statistics.mean(appears[star_num][char]["arti_round"][arti][str(room_num)]))
+                        if (appears[star_num][char]["arti_freq"][arti]["round"][str(room_num)]):
+                            if appears[star_num][char]["arti_freq"][arti]["flat"] > 1:
+                                skewness = skew(appears[star_num][char]["arti_freq"][arti]["round"][str(room_num)], axis=0, bias=True)
+                                if abs(skewness) > 0.8:
+                                    avg_round.append(trim_mean(appears[star_num][char]["arti_freq"][arti]["round"][str(room_num)], 0.25))
+                                else:
+                                    avg_round.append(statistics.mean(appears[star_num][char]["arti_freq"][arti]["round"][str(room_num)]))
+                            else:
+                                avg_round.append(statistics.mean(appears[star_num][char]["arti_freq"][arti]["round"][str(room_num)]))
+                            # avg_round += appears[star_num][char]["arti_freq"][arti]["round"][str(room_num)]
+                            # avg_round.append(statistics.mean(appears[star_num][char]["arti_freq"][arti]["round"][str(room_num)]))
                     if avg_round:
-                        appears[star_num][char]["arti_round"][arti] = round(statistics.mean(avg_round), 2)
+                        appears[star_num][char]["arti_freq"][arti]["avg_round"] = round(statistics.mean(avg_round), 2)
                     else:
-                        appears[star_num][char]["arti_round"][arti] = 99.99
+                        appears[star_num][char]["arti_freq"][arti]["avg_round"] = 99.99
                 else:
-                    appears[star_num][char]["arti_freq"][arti] = 0
-                    appears[star_num][char]["arti_round"][arti] = 99.99
-            # sorted_arti = (sorted(
-            #     appears[star_num][char]["arti_round"].items(),
-            #     key = operator.itemgetter(1),
-            #     reverse=False
-            # ))
-            # appears[star_num][char]["arti_round"] = {k: v for k, v in sorted_arti}
+                    appears[star_num][char]["arti_freq"][arti]["percent"] = 0
+                    appears[star_num][char]["arti_freq"][arti]["avg_round"] = 99.99
 
             # Remove flex artifacts
             if "Flex" in appears[star_num][char]["planar_freq"]:
                 del appears[star_num][char]["planar_freq"]["Flex"]
-                del appears[star_num][char]["planar_round"]["Flex"]
             # Calculate artifacts
             sorted_planars = (sorted(
                 appears[star_num][char]["planar_freq"].items(),
-                key = operator.itemgetter(1),
+                key = lambda t: t[1]["flat"],
                 reverse=True
             ))
             appears[star_num][char]["planar_freq"] = {k: v for k, v in sorted_planars}
@@ -356,28 +363,30 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                 # If a gear appears >15 times, include it
                 # Because there might be 1* gears
                 # If it's for character infographic, include all gears
-                if (appears[star_num][char]["planar_freq"][planar] > gear_app_threshold or info_char) and planar != "Flex":
-                    appears[star_num][char]["planar_freq"][planar] = round(
-                        appears[star_num][char]["planar_freq"][planar] / app_flat, 2
+                if (appears[star_num][char]["planar_freq"][planar]["flat"] > gear_app_threshold or info_char) and planar != "Flex":
+                    appears[star_num][char]["planar_freq"][planar]["percent"] = round(
+                        appears[star_num][char]["planar_freq"][planar]["flat"] / app_flat, 2
                     )
                     avg_round = []
                     for room_num in range(1,11):
-                        if (appears[star_num][char]["planar_round"][planar][str(room_num)]):
-                            # avg_round += appears[star_num][char]["planar_round"][planar][str(room_num)]
-                            avg_round.append(statistics.mean(appears[star_num][char]["planar_round"][planar][str(room_num)]))
+                        if (appears[star_num][char]["planar_freq"][planar]["round"][str(room_num)]):
+                            if appears[star_num][char]["planar_freq"][planar]["flat"] > 1:
+                                skewness = skew(appears[star_num][char]["planar_freq"][planar]["round"][str(room_num)], axis=0, bias=True)
+                                if abs(skewness) > 0.8:
+                                    avg_round.append(trim_mean(appears[star_num][char]["planar_freq"][planar]["round"][str(room_num)], 0.25))
+                                else:
+                                    avg_round.append(statistics.mean(appears[star_num][char]["planar_freq"][planar]["round"][str(room_num)]))
+                            else:
+                                avg_round.append(statistics.mean(appears[star_num][char]["planar_freq"][planar]["round"][str(room_num)]))
+                            # avg_round += appears[star_num][char]["planar_freq"][planar]["round"][str(room_num)]
+                            # avg_round.append(statistics.mean(appears[star_num][char]["planar_freq"][planar]["round"][str(room_num)]))
                     if avg_round:
-                        appears[star_num][char]["planar_round"][planar] = round(statistics.mean(avg_round), 2)
+                        appears[star_num][char]["planar_freq"][planar]["avg_round"] = round(statistics.mean(avg_round), 2)
                     else:
-                        appears[star_num][char]["planar_round"][planar] = 99.99
+                        appears[star_num][char]["planar_freq"][planar]["avg_round"] = 99.99
                 else:
-                    appears[star_num][char]["planar_freq"][planar] = 0
-                    appears[star_num][char]["planar_round"][planar] = 99.99
-            # sorted_planars = (sorted(
-            #     appears[star_num][char]["planar_round"].items(),
-            #     key = operator.itemgetter(1),
-            #     reverse=False
-            # ))
-            # appears[star_num][char]["planar_round"] = {k: v for k, v in sorted_planars}
+                    appears[star_num][char]["planar_freq"][planar]["percent"] = 0
+                    appears[star_num][char]["planar_freq"][planar]["avg_round"] = 99.99
     return appears
 
 def usages(owns, appears, past_phase, filename, chambers=ROOMS, offset=1):
@@ -449,23 +458,14 @@ def usages(owns, appears, past_phase, filename, chambers=ROOMS, offset=1):
             weapons = list(appears[star_num][char]["weap_freq"])
             for i in range(len(weapons)):
                 uses[star_num][char]["weapons"][weapons[i]] = appears[star_num][char]["weap_freq"][weapons[i]]
-            weapons = list(appears[star_num][char]["weap_round"])
-            for i in range(len(weapons)):
-                uses[star_num][char]["weapons_round"][weapons[i]] = appears[star_num][char]["weap_round"][weapons[i]]
 
             artifacts = list(appears[star_num][char]["arti_freq"])
             for i in range(len(artifacts)):
                 uses[star_num][char]["artifacts"][artifacts[i]] = appears[star_num][char]["arti_freq"][artifacts[i]]
-            artifacts = list(appears[star_num][char]["arti_round"])
-            for i in range(len(artifacts)):
-                uses[star_num][char]["artifacts_round"][artifacts[i]] = appears[star_num][char]["arti_round"][artifacts[i]]
 
             planars = list(appears[star_num][char]["planar_freq"])
             for i in range(len(planars)):
                 uses[star_num][char]["planars"][planars[i]] = appears[star_num][char]["planar_freq"][planars[i]]
-            planars = list(appears[star_num][char]["planar_round"])
-            for i in range(len(planars)):
-                uses[star_num][char]["planars_round"][planars[i]] = appears[star_num][char]["planar_round"][planars[i]]
 
             for i in range (7):
                 uses[star_num][char]["cons_usage"][i]["app"] = appears[star_num][char]["cons_freq"][i]["percent"]
