@@ -66,6 +66,8 @@ class Composition:
         for character in comp_chars:
             if "Dan Heng â€¢ Imbibitor Lunae" in character:
                 character = "Dan Heng • Imbibitor Lunae"
+            if "Topaz and Numby" in character:
+                character = "Topaz & Numby"
             self.char_presence[character] = True
             if CHARACTERS[character]["availability"] in ["Limited 5*", "5*"]:
                 fives.append(character)
@@ -76,11 +78,11 @@ class Composition:
                 self.dps.append(character)
             elif character in ["Clara", "Blade", "Jingliu"]:
                 self.subdps.insert(0, character)
-            elif character in ["Welt", "Serval", "Physical Trailblazer", "Sampo", "Herta", "Luka", "Topaz and Numby", "Guinaifen"]:
+            elif character in ["Welt", "Serval", "Physical Trailblazer", "Sampo", "Herta", "Luka", "Topaz & Numby", "Guinaifen"]:
                 self.subdps.append(character)
             elif character in ["Bronya", "Silver Wolf", "Asta", "Tingyun", "Pela", "Yukong"]:
                 self.anemo.append(character)
-            elif character in ["Natasha", "Luocha", "Bailu", "Lynx"]:
+            elif character in ["Natasha", "Luocha", "Bailu", "Lynx", "Huohuo"]:
                 self.healer.insert(0, character)
             elif character in ["March 7th", "Gepard", "Fire Trailblazer", "Fu Xuan"]:
                 self.healer.append(character)

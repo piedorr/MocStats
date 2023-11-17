@@ -49,7 +49,7 @@ copy_weapons = {}
 
 spiral_rows = {}
 for spiral_row in spiral:
-    if int(''.join(filter(str.isdigit, spiral_row[1]))) > 5:
+    if int(''.join(filter(str.isdigit, spiral_row[1]))) > 7:
         if spiral_row[0] not in spiral_rows:
             spiral_rows[spiral_row[0]] = set()
         spiral_rows[spiral_row[0]].update([spiral_row[5], spiral_row[6], spiral_row[7], spiral_row[8]])
@@ -137,6 +137,8 @@ for row in data:
     #     row.insert(2,"Nilou")
     if "Dan Heng â€¢ Imbibitor Lunae" in row[2]:
         row[2] = "Dan Heng • Imbibitor Lunae"
+    if "Topaz and Numby" in row[2]:
+        row[2] = "Topaz & Numby"
     if row[2] == "Trailblazer":
         match row[4]:
             case "Fire":

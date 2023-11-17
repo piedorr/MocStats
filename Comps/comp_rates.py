@@ -6,7 +6,7 @@ import char_usage as cu
 import statistics
 import pygsheets
 import os
-from scipy.stats import skew
+from scipy.stats import skew, trim_mean
 from itertools import permutations
 from composition import Composition
 from player_phase import PlayerPhase
@@ -145,6 +145,8 @@ def main():
                     player = PlayerPhase(last_uid, RECENT_PHASE)
                 if "Dan Heng â€¢ Imbibitor Lunae" in line[2]:
                     line[2] = "Dan Heng • Imbibitor Lunae"
+                elif "Topaz and Numby" in line[2]:
+                    line[2] = "Topaz & Numby"
                 player.add_character(line[2], line[3], line[4], line[5], line[6], line[7], line[8])
     all_players[RECENT_PHASE][last_uid] = player
 
@@ -292,9 +294,9 @@ def main():
         cur_time = time.time()
         print("done char infographics: ", (cur_time - start_time), "s")
 
-    if "Comp usage 8 - 10" in run_commands and "Comp usages for each stage" in run_commands:
-        with open("../comp_results/json/all_comps.json", "w") as out_file:
-            out_file.write(json.dumps(all_comps_json,indent=2))
+    # if "Comp usage 8 - 10" in run_commands and "Comp usages for each stage" in run_commands:
+    #     with open("../comp_results/json/all_comps.json", "w") as out_file:
+    #         out_file.write(json.dumps(all_comps_json,indent=2))
 
 def comp_usages(comps, 
                 players, 
@@ -428,17 +430,18 @@ def rank_usages(comps_dict, owns_offset=1):
         rates = []
         rounds = []
         for comp in comps_dict[star_threshold]:
-            # skewness = 0
-            # if comps_dict[star_threshold][comp]["uses"] > 5:
-            #     skewness = round(skew(comps_dict[star_threshold][comp]["round_num"], axis=0, bias=True), 2)
-            # if skewness < 1:
-            #     avg_round = round(statistics.mean(comps_dict[star_threshold][comp]["round_num"]), 2)
-            # else:
-            #     avg_round = round(statistics.median(comps_dict[star_threshold][comp]["round_num"]), 2)
             avg_round = []
             for room_num in range(1,11):
                 if (comps_dict[star_threshold][comp]["round_num"][str(room_num)]):
-                    avg_round.append(statistics.mean(comps_dict[star_threshold][comp]["round_num"][str(room_num)]))
+                    if comps_dict[star_threshold][comp]["uses"] > 1:
+                        skewness = skew(comps_dict[star_threshold][comp]["round_num"][str(room_num)], axis=0, bias=True)
+                        if abs(skewness) > 0.8:
+                            avg_round.append(trim_mean(comps_dict[star_threshold][comp]["round_num"][str(room_num)], 0.25))
+                        else:
+                            avg_round.append(statistics.mean(comps_dict[star_threshold][comp]["round_num"][str(room_num)]))
+                    else:
+                        avg_round.append(statistics.mean(comps_dict[star_threshold][comp]["round_num"][str(room_num)]))
+                    # avg_round.append(statistics.mean(comps_dict[star_threshold][comp]["round_num"][str(room_num)]))
                     # avg_round += comps_dict[star_threshold][comp]["round_num"][str(room_num)]
             if avg_round:
                 avg_round = round(statistics.mean(avg_round), 2)
@@ -550,7 +553,15 @@ def used_duos(players, comps, rooms, usage, archetype, phase=RECENT_PHASE):
             avg_round = []
             for room_num in range(1,11):
                 if (duos_dict[duo]["round_num"][str(room_num)]):
-                    avg_round.append(statistics.mean(duos_dict[duo]["round_num"][str(room_num)]))
+                    if duos_dict[duo]["uses"] > 1:
+                        skewness = skew(duos_dict[duo]["round_num"][str(room_num)], axis=0, bias=True)
+                        if abs(skewness) > 0.8:
+                            avg_round.append(trim_mean(duos_dict[duo]["round_num"][str(room_num)], 0.25))
+                        else:
+                            avg_round.append(statistics.mean(duos_dict[duo]["round_num"][str(room_num)]))
+                    else:
+                        avg_round.append(statistics.mean(duos_dict[duo]["round_num"][str(room_num)]))
+                    # avg_round.append(statistics.mean(duos_dict[duo]["round_num"][str(room_num)]))
                     # avg_round += duos_dict[duo]["round_num"][str(room_num)]
             if avg_round:
                 duos_dict[duo]["round_num"] = round(statistics.mean(avg_round), 2)
@@ -749,9 +760,9 @@ def comp_usages_write(comps_dict, filename, floor, info_char, sort_app):
         # with open("../comp_results/exc_" + filename + ".json", "w") as out_file:
         #     out_file.write(json.dumps(exc_comps,indent=2))
 
-        all_comps_json[filename] = out_json.copy()
-        # with open("../comp_results/json/" + filename + ".json", "w") as out_file:
-        #     out_file.write(json.dumps(out_json,indent=2))
+        # all_comps_json[filename] = out_json.copy()
+        with open("../comp_results/json/" + filename + ".json", "w") as out_file:
+            out_file.write(json.dumps(out_json,indent=2))
 
 def duo_write(duos_dict, usage, filename, archetype):
     out_duos = []

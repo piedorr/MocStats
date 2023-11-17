@@ -189,6 +189,7 @@ async def v1():
 
 	if len(error_uids):
 		print('Error with UIDs:')
-		print(error_uids)
+		for i in error_uids:
+			print(i)
 
 asyncio.run(v1())

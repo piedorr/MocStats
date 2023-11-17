@@ -3,9 +3,9 @@ import json
 with open('../data/characters.json') as char_file:
     CHARACTERS = json.load(char_file)
 
-RECENT_PHASE = "1.4.2"
-past_phase = "1.4.1"
-char_infographics = ["Topaz and Numby", "Guinaifen", "Sushang", "Luka"]
+RECENT_PHASE = "1.4.3"
+past_phase = "1.4.2"
+char_infographics = ["Topaz & Numby", "Seele", "Guinaifen", "Sushang", "Luka"]
 char_infographics = char_infographics[3]
 
 # threshold for comps, not inclusive
@@ -20,7 +20,7 @@ skew_num = 0.8
 
 # threshold for comps in character infographics
 global char_app_rate_threshold
-char_app_rate_threshold = 0.1
+char_app_rate_threshold = 0.0
 
 skip_self = False
 skip_random = False
@@ -34,8 +34,8 @@ standWeaps = []
 run_commands = [
     "Char usages 8 - 10",
     # "Comp usage 8 - 10",
-    # "Char usages for each stage",
-    # "Char usages for each stage (combined)",
+    "Char usages for each stage",
+    "Char usages for each stage (combined)",
     # "Comp usages for each stage",
     # "Character specific infographics",
     # "Char usages all stages",

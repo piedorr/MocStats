@@ -92,6 +92,7 @@ for char in chars2:
         add_char = input("Add " + char_name + "? (y/n): ")
         if add_char == "y":
             chars1[char_name] = chars2[char].copy()
+
             if chars2[char]["rarity"] == 4:
                 chars1[char_name]["availability"] = "4*"
             elif chars2[char]["rarity"] == 5:
@@ -106,6 +107,19 @@ for char in chars2:
                     chars1[char_name]["availability"] = "Limited 5*"
                     # else:
                     #     chars1[char_name]["availability"] = "Standard 5*"
+
+            print("Role? 0: DPS, 1: Debuffer, 2: Amplifier, 3: Sustain")
+            role_char = input()
+            match str(role_char):
+                case "0":
+                    chars1[char_name]["role"] = "Damage Dealer"
+                case "1":
+                    chars1[char_name]["role"] = "Debuffer"
+                case "2":
+                    chars1[char_name]["role"] = "Amplifier"
+                case "3":
+
+                    chars1[char_name]["role"] = "Sustain"
             chars1[char_name]["alt_name"] = None
             chars1[char_name]["out_name"] = False
 

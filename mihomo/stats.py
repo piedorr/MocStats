@@ -22,6 +22,13 @@ with open("output1.csv", 'r') as f:
     headers = next(reader)
     data = np.array(list(reader))
 
+# lastuid = ""
+# for i in data:
+#     if i[0] != lastuid:
+#         lastuid = i[0]
+#         print(i[0])
+# exit()
+
 if os.path.exists("../data/raw_csvs_real/"):
     f = open("../data/raw_csvs_real/" + phase_num + ".csv", 'r')
 else:
@@ -46,7 +53,7 @@ substats = {}
 
 spiral_rows = {}
 for spiral_row in spiral:
-    if int(''.join(filter(str.isdigit, spiral_row[1]))) > 5:
+    if int(''.join(filter(str.isdigit, spiral_row[1]))) > 7:
         if spiral_row[0] not in spiral_rows:
             spiral_rows[spiral_row[0]] = {}
         # if comp_stats:
@@ -59,6 +66,8 @@ for spiral_row in spiral:
         for i in range(5,9):
             if "Dan Heng â€¢ Imbibitor Lunae" in spiral_row[i]:
                 spiral_row[i] = "Dan Heng • Imbibitor Lunae"
+            if "Topaz and Numby" in spiral_row[i]:
+                spiral_row[i] = "Topaz & Numby"
             if spiral_row[i] not in spiral_rows[spiral_row[0]]:
                 spiral_rows[spiral_row[0]][spiral_row[i]] = 1
             else:
@@ -204,10 +213,13 @@ for row in data:
     if row[2] not in chars:
         if "Dan Heng â€¢ Imbibitor Lunae" in row[2]:
             row[2] = "Dan Heng • Imbibitor Lunae"
+        elif "Topaz and Numby" in row[2]:
+            row[2] = "Topaz & Numby"
         elif "Trailblazer" in row[2]:
             row[2] = "Trailblazer"
         else:
             print(row[2])
+            exit()
     if row[2] == "Trailblazer":
         match row[4]:
             case "Fire":

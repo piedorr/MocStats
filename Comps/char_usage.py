@@ -136,13 +136,14 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
 
                         char_name = char
                         appears[star_num][char_name]["flat"] += 1
-                        if CHARACTERS[char]["availability"] in ["Limited 5*"] and char in player.owned:
-                            if player.owned[char]["cons"] < 3:
-                                appears[star_num][char_name]["round"][list(str(chamber).split("-"))[0]].append(player.chambers[chamber].round_num)
+                        if CHARACTERS[char]["availability"] in ["Limited 5*"]:
+                            if char in player.owned:
+                                if player.owned[char]["cons"] < 3:
+                                    appears[star_num][char_name]["round"][list(str(chamber).split("-"))[0]].append(player.chambers[chamber].round_num)
                         else:
                             appears[star_num][char_name]["round"][list(str(chamber).split("-"))[0]].append(player.chambers[chamber].round_num)
                         # In case of character in comp data missing from character data
-                        if len(chambers) < 5:
+                        if len(chambers) < 3:
                             continue
                         if char not in player.owned or star_num != 4:
                             # print("Comp data missing from character data: " + str(player.player) + ", " + str(char))
@@ -223,7 +224,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                 )
             else:
                 appears[star_num][char]["percent"] = 0.00
-            if appears[star_num][char]["flat"] > 5:
+            if appears[star_num][char]["flat"] > 10:
                 avg_round = []
                 for room_num in range(1,11):
                     if (appears[star_num][char]["round"][str(room_num)]):
@@ -266,8 +267,16 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                     avg_round = []
                     for room_num in range(1,11):
                         if (appears[star_num][char]["cons_freq"][cons]["round"][str(room_num)]):
+                            if appears[star_num][char]["cons_freq"][cons]["flat"] > 1:
+                                skewness = skew(appears[star_num][char]["cons_freq"][cons]["round"][str(room_num)], axis=0, bias=True)
+                                if abs(skewness) > 0.8:
+                                    avg_round.append(trim_mean(appears[star_num][char]["cons_freq"][cons]["round"][str(room_num)], 0.25))
+                                else:
+                                    avg_round.append(statistics.mean(appears[star_num][char]["cons_freq"][cons]["round"][str(room_num)]))
+                            else:
+                                avg_round.append(statistics.mean(appears[star_num][char]["cons_freq"][cons]["round"][str(room_num)]))
                             # avg_round += appears[star_num][char]["cons_freq"][cons]["round"][str(room_num)]
-                            avg_round.append(statistics.mean(appears[star_num][char]["cons_freq"][cons]["round"][str(room_num)]))
+                            # avg_round.append(statistics.mean(appears[star_num][char]["cons_freq"][cons]["round"][str(room_num)]))
                     appears[star_num][char]["cons_freq"][cons]["avg_round"] = round(statistics.mean(avg_round), 2)
                 else:
                     appears[star_num][char]["cons_freq"][cons]["percent"] = 0.00
