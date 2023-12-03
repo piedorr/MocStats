@@ -294,9 +294,9 @@ def main():
         cur_time = time.time()
         print("done char infographics: ", (cur_time - start_time), "s")
 
-    # if "Comp usage 8 - 10" in run_commands and "Comp usages for each stage" in run_commands:
-    #     with open("../comp_results/json/all_comps.json", "w") as out_file:
-    #         out_file.write(json.dumps(all_comps_json,indent=2))
+    if "Comp usage 8 - 10" in run_commands and "Comp usages for each stage" in run_commands:
+        with open("../comp_results/json/all_comps.json", "w") as out_file:
+            out_file.write(json.dumps(all_comps_json,indent=2))
 
 def comp_usages(comps, 
                 players, 
@@ -323,7 +323,9 @@ def used_comps(players, comps, rooms, filename, whaleCheck, whaleSigWeap, sigWea
     total_comps = 0
     total_self_comps = 0
     whaleCount = 0
-    healerless = 0
+    sustainless = 0
+    dual_sustain = {}
+    total_char_comps = {}
     for comp in comps:
         comp_tuple = tuple(comp.characters)
         # Check if the comp is used in the rooms that are being checked
@@ -335,18 +337,29 @@ def used_comps(players, comps, rooms, filename, whaleCheck, whaleSigWeap, sigWea
             findchars(char, foundchar)
         if find_archetype(foundchar):
             total_comps += 1
+            # for char_damage in ["Jingliu", "Dan Heng • Imbibitor Lunae", "Kafka", "Jing Yuan", "Seele", "Blade", "Qingque"]:
+            #     if char_damage in comp_tuple:
+            #         if char_damage not in total_char_comps:
+            #             total_char_comps[char_damage] = 0
+            #         total_char_comps[char_damage] += 1
             if comp.player in self_uids:
                 total_self_comps += 1
             if len(comp_tuple) < 4:
             #     lessFour.append(comp.player)
                 continue
 
-            healer = False
-            for i in ["Bailu", "Gepard", "Natasha"]:
-                if i in comp_tuple:
-                    healer = True
-            if not healer:
-                healerless +=1
+            # sustain = 0
+            # for i in ["Huohuo", "Luocha", "Fu Xuan", "Bailu", "Lynx", "Gepard", "Natasha", "March 7th", "Fire Trailblazer"]:
+            #     if i in comp_tuple:
+            #         sustain += 1
+            # if not sustain:
+            #     sustainless = True
+            # if sustain > 1:
+            #     for char_damage in total_char_comps:
+            #         if char_damage in comp_tuple:
+            #             if char_damage not in dual_sustain:
+            #                 dual_sustain[char_damage] = 0
+            #             dual_sustain[char_damage] += 1
 
             whaleComp = False
             for char in range (4):
@@ -416,8 +429,12 @@ def used_comps(players, comps, rooms, filename, whaleCheck, whaleSigWeap, sigWea
     # print(error_uids)
     # print("Less than four: " + str(lessFour))
     # print("Less than four: " + str(len(lessFour)/total_comps))
-    # print("Healerless: " + str(healerless))
-    # print("Healerless: " + str(healerless/total_comps))
+    # print("Healerless: " + str(sustainless))
+    # print("Healerless: " + str(sustainless/total_comps))
+    # for char in dual_sustain:
+    #     print("Char: " + str(char))
+    #     print("    Dual Sustain: " + str(dual_sustain[char]/total_char_comps[char]))
+    #     print()
     if whaleCheck:
         print("Whale percentage: " + str(whaleCount/total_comps))
     # print("Tighnari with deepwood: " + str(deepwoodTighnari))
@@ -760,7 +777,7 @@ def comp_usages_write(comps_dict, filename, floor, info_char, sort_app):
         # with open("../comp_results/exc_" + filename + ".json", "w") as out_file:
         #     out_file.write(json.dumps(exc_comps,indent=2))
 
-        # all_comps_json[filename] = out_json.copy()
+        all_comps_json[filename] = out_json.copy()
         with open("../comp_results/json/" + filename + ".json", "w") as out_file:
             out_file.write(json.dumps(out_json,indent=2))
 
@@ -814,6 +831,7 @@ def char_usages_write(chars_dict, filename, floor, archetype):
             "avg_round": str(chars_dict[char]["round"]),
             # "usage_rate": str(chars_dict[char]["usage"]) + "%",
             # "own_rate": str(chars_dict[char]["own"]) + "%",
+            "role": chars_dict[char]["role"],
             "rarity": chars_dict[char]["rarity"],
             "diff": str(chars_dict[char]["diff"]) + "%",
             "diff_rounds": str(chars_dict[char]["diff_rounds"])

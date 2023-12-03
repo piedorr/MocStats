@@ -139,14 +139,17 @@ class Composition:
         #         break
 
         if self.comp_name == "-":
-            for elem in len_element:
-                if len_element[elem] == 4:
-                    self.comp_name = "Mono " + elem
-            if self.comp_name == "-" and "Silver Wolf" in self.characters:
-                for elem in len_element:
-                    if len_element[elem] == 3 and elem != "Quantum":
-                        self.comp_name = "Faux-Mono " + elem
-            if self.comp_name == "-":
+            if len_element["Quantum"] == 4:
+                self.comp_name = "Mono Quantum"
+            # for elem in len_element:
+            #     if len_element[elem] == 4:
+            #         self.comp_name = "Mono " + elem
+            # if self.comp_name == "-" and "Silver Wolf" in self.characters:
+            #     for elem in len_element:
+            #         if len_element[elem] == 3 and elem != "Quantum":
+            #             self.comp_name = "Faux-Mono " + elem
+            # if self.comp_name == "-":
+            else:
                 archetype = ""
                 if len(self.dps) + len(self.subdps) > 2:
                     archetype = " Triple Carry"

@@ -423,6 +423,7 @@ def usages(owns, appears, past_phase, filename, chambers=ROOMS, offset=1):
                 "usage" : 0,
                 "diff": "-",
                 "diff_rounds": "-",
+                "role": CHARACTERS[char]["role"],
                 "rarity": CHARACTERS[char]["availability"],
                 "weapons" : {},
                 "weapons_round" : {},
