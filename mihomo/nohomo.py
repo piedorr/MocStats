@@ -179,7 +179,7 @@ async def v1():
 					writer.writerow(line)
 				break
 			except asyncio.exceptions.TimeoutError as e:
-				time.sleep(3)
+				time.sleep(5)
 				pass
 			except Exception as e:
 				error_uids.append('{}: {}'.format(uid, e))

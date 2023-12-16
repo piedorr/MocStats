@@ -396,6 +396,10 @@ temp_stats = []
 iter_char = 0
 with open('../char_results/all.json') as char_file:
     CHARACTERS = json.load(char_file)
+with open('../char_results/appearance_combine.json') as app_char_file:
+    APP = json.load(app_char_file)
+with open('../char_results/rounds_combine.json') as round_char_file:
+    ROUND = json.load(round_char_file)
 for char in stats:
     for i in chain(range(11,19), range(20,28)):
         stats[char][statkeys[i]] = round(stats[char][statkeys[i]] * 100, 2)
@@ -417,7 +421,12 @@ for char in stats:
         print(stats[char]["name"])
         print(CHARACTERS[iter_char]["char"])
         exit()
-    temp_stats.append(CHARACTERS[iter_char] | stats[char])
+
+    app_dict = {
+        "10_app": APP["10-1"]["4"][char]["app"],
+        "10_round": ROUND["10-1"]["4"][char]["round"],
+    }
+    temp_stats.append((CHARACTERS[iter_char] | stats[char]) | app_dict)
     iter_char += 1
 with open('../char_results/all2.json', 'w') as char_file:
     char_file.write(json.dumps(temp_stats,indent=2))

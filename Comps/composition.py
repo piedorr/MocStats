@@ -72,7 +72,7 @@ class Composition:
             if CHARACTERS[character]["availability"] in ["Limited 5*", "5*"]:
                 fives.append(character)
 
-            if character in ["Seele", "Yanqing", "Hook", "Jing Yuan", "Kafka", "Dan Heng • Imbibitor Lunae"]:
+            if character in ["Seele", "Yanqing", "Hook", "Jing Yuan", "Kafka", "Dan Heng • Imbibitor Lunae", "Argenti"]:
                 self.dps.insert(0, character)
             elif character in ["Qingque", "Arlan", "Himeko", "Dan Heng", "Sushang"]:
                 self.dps.append(character)
@@ -80,7 +80,7 @@ class Composition:
                 self.subdps.insert(0, character)
             elif character in ["Welt", "Serval", "Physical Trailblazer", "Sampo", "Herta", "Luka", "Topaz & Numby", "Guinaifen"]:
                 self.subdps.append(character)
-            elif character in ["Bronya", "Silver Wolf", "Asta", "Tingyun", "Pela", "Yukong"]:
+            elif character in ["Bronya", "Silver Wolf", "Asta", "Tingyun", "Pela", "Yukong", "Hanya"]:
                 self.anemo.append(character)
             elif character in ["Natasha", "Luocha", "Bailu", "Lynx", "Huohuo"]:
                 self.healer.insert(0, character)
@@ -133,14 +133,16 @@ class Composition:
         # }
         self.comp_name = "-"
         self.alt_comp_name = "-"
+        self.dual_comp_name = "-"
         # for comp_name in comp_names:
         #     if self.characters in comp_names[comp_name]:
         #         self.comp_name = comp_name
         #         break
 
         if self.comp_name == "-":
-            if len_element["Quantum"] == 4:
-                self.comp_name = "Mono Quantum"
+            # if len_element["Quantum"] == 4:
+            #     self.alt_comp_name = "Mono Quantum"
+            #     self.dual_comp_name = "Mono Quantum"
             # for elem in len_element:
             #     if len_element[elem] == 4:
             #         self.comp_name = "Mono " + elem
@@ -149,21 +151,22 @@ class Composition:
             #         if len_element[elem] == 3 and elem != "Quantum":
             #             self.comp_name = "Faux-Mono " + elem
             # if self.comp_name == "-":
-            else:
-                archetype = ""
+            archetype = ""
+            if len(self.dps) + len(self.subdps) > 1:
                 if len(self.dps) + len(self.subdps) > 2:
                     archetype = " Triple Carry"
-                elif len(self.dps) + len(self.subdps) > 1:
-                    archetype = " Dual Carry"
-                elif len(self.dps) + len(self.subdps) == 1:
-                    if len(self.anemo) > 1:
-                        archetype = " Hypercarry"
-                    elif len(self.healer) > 1:
-                        archetype = " Dual Sustain"
-                if self.dps or self.subdps or self.anemo:
-                    self.comp_name = self.characters[0] + archetype
                 else:
-                    self.comp_name = "Full Sustain"
+                    archetype = " Dual Carry"
+                self.dual_comp_name = self.characters[1] + archetype
+            elif len(self.dps) + len(self.subdps) == 1:
+                if len(self.anemo) > 1:
+                    archetype = " Hypercarry"
+                elif len(self.healer) > 1:
+                    archetype = " Dual Sustain"
+            if self.dps or self.subdps or self.anemo:
+                self.comp_name = self.characters[0] + archetype
+            else:
+                self.comp_name = "Full Sustain"
 
     def comp_elements(self):
         """Composition elements tracker.

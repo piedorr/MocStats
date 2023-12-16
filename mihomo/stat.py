@@ -29,7 +29,7 @@ spiral = list(reader)
 
 with open("../char_results/all.csv", 'r') as f:
     reader = csv.reader(f, delimiter=',')
-    headers = next(reader)
+    col_names_build = next(reader)
     build = np.array(list(reader))
 
 archetype = "all"
@@ -63,7 +63,7 @@ for char in chars:
 
     for row in build:
         if row[0] == char:
-            for j in range (6,33,3):
+            for j in range (col_names_build.index("weapon_1"), col_names_build.index("weapon_1") + 27, 3):
                 if row[j] != "":
                     weapons[char].append(row[j])
                     stats[char][row[j]] = {

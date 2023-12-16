@@ -112,6 +112,7 @@ def main():
     # stage_weight = {}
     # for stage in avg_round:
     #     stage_weight[stage] = max_weight / sample_size[stage]["avg_round"]
+    #     sample_size[stage]["weight"] = stage_weight[stage]
 
     if os.path.exists("../data/raw_csvs_real/"):
         stats = open("../data/raw_csvs_real/" + RECENT_PHASE + "_char.csv")
@@ -349,29 +350,36 @@ def used_comps(players, comps, rooms, filename, whaleCheck, whaleSigWeap, sigWea
                 continue
 
             # sustain = 0
-            # for i in ["Huohuo", "Luocha", "Fu Xuan", "Bailu", "Lynx", "Gepard", "Natasha", "March 7th", "Fire Trailblazer"]:
-            #     if i in comp_tuple:
+            # for char in range (4):
+            #     if comp_tuple[char] not in total_char_comps:
+            #         total_char_comps[comp_tuple[char]] = 0
+            #     total_char_comps[comp_tuple[char]] += 1
+            #     if CHARACTERS[comp_tuple[char]]["role"] == "Sustain":
             #         sustain += 1
             # if not sustain:
             #     sustainless = True
             # if sustain > 1:
-            #     for char_damage in total_char_comps:
-            #         if char_damage in comp_tuple:
-            #             if char_damage not in dual_sustain:
-            #                 dual_sustain[char_damage] = 0
-            #             dual_sustain[char_damage] += 1
+            #     # for char_damage in total_char_comps:
+            #     #     if char_damage in comp_tuple:
+            #     #         if char_damage not in dual_sustain:
+            #     #             dual_sustain[char_damage] = 0
+            #     #         dual_sustain[char_damage] += 1
+            #     for char in range (4):
+            #         if comp_tuple[char] not in dual_sustain:
+            #             dual_sustain[comp_tuple[char]] = 0
+            #         dual_sustain[comp_tuple[char]] += 1
 
             whaleComp = False
             for char in range (4):
-                if comp_tuple[char] in players[phase][comp.player].owned:
-                # if comp_tuple[char] in players[phase][comp.player].owned and comp_tuple[char] == "Blade":
-                    if (
-                        players[phase][comp.player].owned[comp_tuple[char]]["cons"] > 2
-                        and CHARACTERS[comp_tuple[char]]["availability"] in ["Limited 5*"]
-                    # ) or (
-                    #     whaleSigWeap and players[phase][comp.player].owned[comp_tuple[char]]["weapon"] in sigWeaps
-                    ):
-                        whaleComp = True
+                if CHARACTERS[comp_tuple[char]]["availability"] == "Limited 5*":
+                    if comp_tuple[char] in players[phase][comp.player].owned:
+                    # if comp_tuple[char] in players[phase][comp.player].owned and comp_tuple[char] == "Blade":
+                        if (
+                            players[phase][comp.player].owned[comp_tuple[char]]["cons"] > 0
+                        # ) or (
+                        #     whaleSigWeap and players[phase][comp.player].owned[comp_tuple[char]]["weapon"] in sigWeaps
+                        ):
+                            whaleComp = True
             if whaleComp:
                 whaleCount += 1
                 if whaleCheck:
@@ -387,6 +395,7 @@ def used_comps(players, comps, rooms, filename, whaleCheck, whaleSigWeap, sigWea
                         "5* count": comp.fivecount,
                         "comp_name": comp.comp_name,
                         "alt_comp_name": comp.alt_comp_name,
+                        "dual_comp_name": comp.dual_comp_name,
                         "star_num": comp.star_num,
                         "round_num": {"1": [], "2": [], "3": [], "4": [], "5": [], "6": [], "7": [], "8": [], "9": [], "10": []},
                         "deepwood": 0,
@@ -432,9 +441,11 @@ def used_comps(players, comps, rooms, filename, whaleCheck, whaleSigWeap, sigWea
     # print("Healerless: " + str(sustainless))
     # print("Healerless: " + str(sustainless/total_comps))
     # for char in dual_sustain:
-    #     print("Char: " + str(char))
-    #     print("    Dual Sustain: " + str(dual_sustain[char]/total_char_comps[char]))
-    #     print()
+    #     dual_percent = dual_sustain[char]/total_char_comps[char]
+    #     if dual_percent > 0.5:
+    #         print("Char: " + str(char))
+    #         print("    Dual Sustain: " + str(dual_percent))
+    #         print()
     if whaleCheck:
         print("Whale percentage: " + str(whaleCount/total_comps))
     # print("Tighnari with deepwood: " + str(deepwoodTighnari))
@@ -524,8 +535,16 @@ def used_duos(players, comps, rooms, usage, archetype, phase=RECENT_PHASE):
             continue
 
         foundchar = resetfind()
+        whaleComp = False
+        sustainCount = 0
         for char in comp.characters:
             findchars(char, foundchar)
+            if CHARACTERS[char]["availability"] == "Limited 5*":
+                if char in players[phase][comp.player].owned:
+                    if players[phase][comp.player].owned[char]["cons"] > 0:
+                        whaleComp = True
+            if CHARACTERS[char]["role"] == "Sustain":
+                sustainCount += 1
         if not find_archetype(foundchar):
             continue
 
@@ -533,26 +552,18 @@ def used_duos(players, comps, rooms, usage, archetype, phase=RECENT_PHASE):
         # two duos are used, Ganyu/Xiangling and Xiangling/Ganyu
         duos = list(permutations(comp.characters, 2))
         for duo in duos:
-            whaleComp = False
-            for char in range (2):
-                if duo[char] in players[phase][comp.player].owned:
-                # if duo[char] in players[phase][comp.player].owned and duo[char] == "Blade":
-                    if (
-                        players[phase][comp.player].owned[duo[char]]["cons"] > 2
-                        and CHARACTERS[duo[char]]["availability"] in ["Limited 5*"]
-                    # ) or (
-                    #     whaleSigWeap and players[phase][comp.player].owned[duo[char]]["weapon"] in sigWeaps
-                    ):
-                        whaleComp = True
-
             if duo not in duos_dict:
                 duos_dict[duo] = {
                     "uses": 0,
                     "round_num": {"1": [], "2": [], "3": [], "4": [], "5": [], "6": [], "7": [], "8": [], "9": [], "10": []},
                 }
             duos_dict[duo]["uses"] += 1
-            if not(whaleComp):
-                duos_dict[duo]["round_num"][list(str(comp.room).split("-"))[0]].append(comp.round_num)
+            if not whaleComp:
+                if CHARACTERS[duo[0]]["role"] == "Sustain":
+                    if sustainCount == 1 or duo[0] in ["Fire Trailblazer", "March 7th"] or CHARACTERS[duo[1]]["role"] == "Sustain":
+                        duos_dict[duo]["round_num"][list(str(comp.room).split("-"))[0]].append(comp.round_num)
+                elif sustainCount == 1 or duo[1] in ["Fire Trailblazer", "March 7th"]:
+                    duos_dict[duo]["round_num"][list(str(comp.room).split("-"))[0]].append(comp.round_num)
 
     sorted_duos = (sorted(
         duos_dict.items(),
@@ -628,16 +639,18 @@ def comp_usages_write(comps_dict, filename, floor, info_char, sort_app):
         else:
             comps_dict[star_threshold] = dict(sorted(comps_dict[star_threshold].items(), key=lambda t: t[1]["round"], reverse=False))
         comp_names = []
+        dual_comp_names = []
         # print(list(comps_dict[1]))
         for comp in comps_dict[star_threshold]:
             if info_char and filename not in comp:
                 continue
             if star_threshold == 4:
                 comp_name = comps_dict[star_threshold][comp]["comp_name"]
+                dual_comp_name = comps_dict[star_threshold][comp]["dual_comp_name"]
                 alt_comp_name = comps_dict[star_threshold][comp]["alt_comp_name"]
                 # Only one variation of each comp name is included,
                 # unless if it's used for a character's infographic
-                if comp_name not in comp_names or comp_name == "-" or info_char:
+                if (comp_name not in comp_names and comp_name not in dual_comp_names and dual_comp_name not in comp_names) or comp_name == "-" or info_char:
                     if comps_dict[star_threshold][comp]["app_rate"] >= threshold or (info_char and comps_dict[star_threshold][comp]["app_rate"] > char_app_rate_threshold):
                         temp_comp_name = "-"
                         if alt_comp_name != "-":
@@ -650,11 +663,11 @@ def comp_usages_write(comps_dict, filename, floor, info_char, sort_app):
                             "char_2": comp[1],
                             "char_3": comp[2],
                             "char_4": comp[3],
+                            "app_rate": str(comps_dict[star_threshold][comp]["app_rate"]) + "%",
+                            "avg_round": str(comps_dict[star_threshold][comp]["round"]),
                             # "own_rate": str(comps_dict[star_threshold][comp]["own_rate"]) + "%",
                             # "usage_rate": str(comps_dict[star_threshold][comp]["usage_rate"]) + "%"
                         }
-                        out_comps_append["app_rate"] = str(comps_dict[star_threshold][comp]["app_rate"]) + "%"
-                        out_comps_append["avg_round"] = str(comps_dict[star_threshold][comp]["round"])
 
                         # j = 1
                         # if floor:
@@ -687,7 +700,11 @@ def comp_usages_write(comps_dict, filename, floor, info_char, sort_app):
                                 var_comps.append(out_comps_append)
                         else:
                             out_comps.append(out_comps_append)
-                        comp_names.append(comp_name)
+
+                        if comp_name != "-":
+                            comp_names.append(comp_name)
+                        if dual_comp_name != "-":
+                            dual_comp_names.append(dual_comp_name)
 
                     elif floor:
                         temp_comp_name = "-"

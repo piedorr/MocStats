@@ -18,7 +18,7 @@ check_stats = []
 
 # stat.py
 run_all_chars = False
-run_chars_name = ["Huohuo", "Dan Heng", "Arlan", "Serval"]
+run_chars_name = ["Argenti", "Hanya", "Lynx", "Asta"]
 
 
 

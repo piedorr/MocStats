@@ -124,7 +124,16 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                     continue
                 total_battle += 1
                 # foundchar = resetfind()
-                # for char in player.chambers[chamber].characters:
+                whaleComp = False
+                sustainCount = 0
+                for char in player.chambers[chamber].characters:
+                    if CHARACTERS[char]["availability"] == "Limited 5*":
+                        if char in player.owned:
+                            if player.owned[char]["cons"] > 2:
+                                whaleComp = True
+                    if CHARACTERS[char]["role"] == "Sustain":
+                        sustainCount += 1
+                sustainCount = 1
                 #     findchars(char, foundchar)
                 # if find_archetype(foundchar):
                 # if player.chambers[chamber].characters == ['Kafka', 'Sampo', 'Silver Wolf', 'Bailu']:
@@ -136,11 +145,9 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
 
                         char_name = char
                         appears[star_num][char_name]["flat"] += 1
-                        if CHARACTERS[char]["availability"] in ["Limited 5*"]:
-                            if char in player.owned:
-                                if player.owned[char]["cons"] < 3:
-                                    appears[star_num][char_name]["round"][list(str(chamber).split("-"))[0]].append(player.chambers[chamber].round_num)
-                        else:
+                        if not whaleComp and (sustainCount == 1 or char_name in ["Fire Trailblazer", "March 7th"]):
+                            if CHARACTERS[char]["availability"] == "Limited 5*":
+                                appears[star_num][char_name]["cons_freq"][0]["round"][list(str(chamber).split("-"))[0]].append(player.chambers[chamber].round_num)
                             appears[star_num][char_name]["round"][list(str(chamber).split("-"))[0]].append(player.chambers[chamber].round_num)
                         # In case of character in comp data missing from character data
                         if len(chambers) < 3:
@@ -157,7 +164,12 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                         #     continue
                         appears[star_num][char_name]["owned"] += 1
                         appears[star_num][char_name]["cons_freq"][player.owned[char]["cons"]]["flat"] += 1
-                        appears[star_num][char_name]["cons_freq"][player.owned[char]["cons"]]["round"][list(str(chamber).split("-"))[0]].append(player.chambers[chamber].round_num)
+                        if sustainCount == 1 or char_name in ["Fire Trailblazer", "March 7th"]:
+                            if CHARACTERS[char]["availability"] == "Limited 5*":
+                                if player.owned[char]["cons"] != 0:
+                                    appears[star_num][char_name]["cons_freq"][player.owned[char]["cons"]]["round"][list(str(chamber).split("-"))[0]].append(player.chambers[chamber].round_num)
+                            elif not whaleComp:
+                                appears[star_num][char_name]["cons_freq"][player.owned[char]["cons"]]["round"][list(str(chamber).split("-"))[0]].append(player.chambers[chamber].round_num)
                         appears[star_num][char_name]["cons_avg"] += player.owned[char]["cons"]
 
                         if player.owned[char]["weapon"] != "":
@@ -169,10 +181,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                                     "avg_round": 0.00
                                 }
                             appears[star_num][char_name]["weap_freq"][player.owned[char]["weapon"]]["flat"] += 1
-                            if CHARACTERS[char]["availability"] in ["Limited 5*"]:
-                                if player.owned[char]["cons"] < 3:
-                                    appears[star_num][char_name]["weap_freq"][player.owned[char]["weapon"]]["round"][list(str(chamber).split("-"))[0]].append(player.chambers[chamber].round_num)
-                            else:
+                            if not whaleComp and (sustainCount == 1 or char_name in ["Fire Trailblazer", "March 7th"]):
                                 appears[star_num][char_name]["weap_freq"][player.owned[char]["weapon"]]["round"][list(str(chamber).split("-"))[0]].append(player.chambers[chamber].round_num)
 
                         if player.owned[char]["artifacts"] != "":
@@ -184,10 +193,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                                     "avg_round": 0.00
                                 }
                             appears[star_num][char_name]["arti_freq"][player.owned[char]["artifacts"]]["flat"] += 1
-                            if CHARACTERS[char]["availability"] in ["Limited 5*"]:
-                                if player.owned[char]["cons"] < 3:
-                                    appears[star_num][char_name]["arti_freq"][player.owned[char]["artifacts"]]["round"][list(str(chamber).split("-"))[0]].append(player.chambers[chamber].round_num)
-                            else:
+                            if not whaleComp and (sustainCount == 1 or char_name in ["Fire Trailblazer", "March 7th"]):
                                 appears[star_num][char_name]["arti_freq"][player.owned[char]["artifacts"]]["round"][list(str(chamber).split("-"))[0]].append(player.chambers[chamber].round_num)
 
                         if player.owned[char]["planars"] != "":
@@ -199,10 +205,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                                     "avg_round": 0.00
                                 }
                             appears[star_num][char_name]["planar_freq"][player.owned[char]["planars"]]["flat"] += 1
-                            if CHARACTERS[char]["availability"] in ["Limited 5*"]:
-                                if player.owned[char]["cons"] < 3:
-                                    appears[star_num][char_name]["planar_freq"][player.owned[char]["planars"]]["round"][list(str(chamber).split("-"))[0]].append(player.chambers[chamber].round_num)
-                            else:
+                            if not whaleComp and (sustainCount == 1 or char_name in ["Fire Trailblazer", "March 7th"]):
                                 appears[star_num][char_name]["planar_freq"][player.owned[char]["planars"]]["round"][list(str(chamber).split("-"))[0]].append(player.chambers[chamber].round_num)
 
         if comp_error:
@@ -277,7 +280,10 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                                 avg_round.append(statistics.mean(appears[star_num][char]["cons_freq"][cons]["round"][str(room_num)]))
                             # avg_round += appears[star_num][char]["cons_freq"][cons]["round"][str(room_num)]
                             # avg_round.append(statistics.mean(appears[star_num][char]["cons_freq"][cons]["round"][str(room_num)]))
-                    appears[star_num][char]["cons_freq"][cons]["avg_round"] = round(statistics.mean(avg_round), 2)
+                    if avg_round:
+                        appears[star_num][char]["cons_freq"][cons]["avg_round"] = round(statistics.mean(avg_round), 2)
+                    else:
+                        appears[star_num][char]["cons_freq"][cons]["avg_round"] = 99.99
                 else:
                     appears[star_num][char]["cons_freq"][cons]["percent"] = 0.00
                     appears[star_num][char]["cons_freq"][cons]["avg_round"] = 99.99
