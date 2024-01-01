@@ -16,4 +16,5 @@ If using past data:
 
 
 Run mihomo/stats.py
+Edit nohomo_config.py
 Run mihomo/stat.py

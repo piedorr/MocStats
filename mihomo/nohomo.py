@@ -36,11 +36,11 @@ async def v1():
 	writer.writerow(header)
 
 	for uid in uids:
-		print('{} / {} : {}'.format(cpt, len(uids), uid), end="\r")
 		cpt += 1
 
 		for i in range(20):
 			try:
+				print('{} / {} : {}, {}'.format(cpt, len(uids), uid, i), end="\r")
 				data: StarrailInfoParsedV1 = await client.fetch_user(uid)
 				for character in data.characters:
 					line = []
@@ -177,19 +177,29 @@ async def v1():
 					line.append(char_set)
 
 					writer.writerow(line)
+				time.sleep(0.5)
 				break
 			except asyncio.exceptions.TimeoutError as e:
-				time.sleep(5)
+				time.sleep(20)
 				pass
 			except Exception as e:
-				error_uids.append('{}: {}'.format(uid, e))
-				break
+				if str(e) == "[429] Too Many Requests":
+					print("[429] Too Many Requests")
+					time.sleep(60)
+					pass
+				elif str(e) == "User not found.":
+					break
+				else:
+					# error_uids.append('{}: {}'.format(uid, e))
+					print('{}: {}, {}'.format(uid, e, type(e)))
+					# exit()
+					break
 
 	print('\nFinished')
 
-	if len(error_uids):
-		print('Error with UIDs:')
-		for i in error_uids:
-			print(i)
+	# if len(error_uids):
+	# 	print('Error with UIDs:')
+	# 	for i in error_uids:
+	# 		print(i)
 
 asyncio.run(v1())

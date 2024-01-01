@@ -53,7 +53,7 @@ substats = {}
 
 spiral_rows = {}
 for spiral_row in spiral:
-    if int(''.join(filter(str.isdigit, spiral_row[1]))) > 7:
+    if int(''.join(filter(str.isdigit, spiral_row[1]))) > 9:
         if spiral_row[0] not in spiral_rows:
             spiral_rows[spiral_row[0]] = {}
         # if comp_stats:
@@ -372,8 +372,17 @@ for char in copy_chars:
         #     del stats[char][substatlist[i]]
 
     else:
-        del stats[char]
-        chars.remove(char)
+        for stat in stats[char]:
+            if not stats[char][stat]:
+                stats[char][stat] = 0
+            elif stat != "name" and "sample_size" not in stat:
+                stats[char][stat] = 0
+        for stat in mainstats[char]:
+            i = 0
+            while i < 3:
+                stats[char][stat + "_" + str(i+1)] = "-"
+                stats[char][stat + "_" + str(i+1) + "_app"] = "-"
+                i += 1
 
 if os.path.exists("results_real"):
     file1 = open("results_real/chars.csv", 'w', newline='')
@@ -423,8 +432,8 @@ for char in stats:
         exit()
 
     app_dict = {
-        "10_app": APP["10-1"]["4"][char]["app"],
-        "10_round": ROUND["10-1"]["4"][char]["round"],
+        "12_app": APP["12-1"]["4"][char]["app"],
+        "12_round": ROUND["12-1"]["4"][char]["round"],
     }
     temp_stats.append((CHARACTERS[iter_char] | stats[char]) | app_dict)
     iter_char += 1

@@ -49,7 +49,7 @@ copy_weapons = {}
 
 spiral_rows = {}
 for spiral_row in spiral:
-    if int(''.join(filter(str.isdigit, spiral_row[1]))) > 7:
+    if int(''.join(filter(str.isdigit, spiral_row[1]))) > 9:
         if spiral_row[0] not in spiral_rows:
             spiral_rows[spiral_row[0]] = set()
         spiral_rows[spiral_row[0]].update([spiral_row[5], spiral_row[6], spiral_row[7], spiral_row[8]])

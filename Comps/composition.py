@@ -51,6 +51,8 @@ class Composition:
         self.subdps = []
         self.anemo = []
         self.healer = []
+        self.dot = []
+        self.fua = []
         temp = []
         temp_remove = []
         len_element = {
@@ -76,16 +78,21 @@ class Composition:
                 self.dps.insert(0, character)
             elif character in ["Qingque", "Arlan", "Himeko", "Dan Heng", "Sushang"]:
                 self.dps.append(character)
-            elif character in ["Clara", "Blade", "Jingliu"]:
+            elif character in ["Clara", "Blade", "Jingliu", "Xueyi"]:
                 self.subdps.insert(0, character)
             elif character in ["Welt", "Serval", "Physical Trailblazer", "Sampo", "Herta", "Luka", "Topaz & Numby", "Guinaifen"]:
                 self.subdps.append(character)
-            elif character in ["Bronya", "Silver Wolf", "Asta", "Tingyun", "Pela", "Yukong", "Hanya"]:
+            elif character in ["Bronya", "Silver Wolf", "Asta", "Tingyun", "Pela", "Yukong", "Hanya", "Ruan Mei"]:
                 self.anemo.append(character)
             elif character in ["Natasha", "Luocha", "Bailu", "Lynx", "Huohuo"]:
                 self.healer.insert(0, character)
             elif character in ["March 7th", "Gepard", "Fire Trailblazer", "Fu Xuan"]:
                 self.healer.append(character)
+
+            if character in ["Kafka", "Serval", "Sampo", "Luka", "Guinaifen"]:
+                self.dot.append(character)
+            if character in ["Herta", "Blade", "Kafka", "Topaz & Numby", "Himeko", "Jing Yuan", "Clara", "Xueyi"]:
+                self.fua.append(character)
 
             if CHARACTERS[character]["element"] == "Ice":
                 len_element["Ice"] += 1
@@ -163,6 +170,20 @@ class Composition:
                     archetype = " Hypercarry"
                 elif len(self.healer) > 1:
                     archetype = " Dual Sustain"
+
+            if len(self.dot) >= 1:
+                if len(self.dot) > 2:
+                    self.alt_comp_name = self.characters[0] + " Triple DoT"
+                elif len(self.dot) > 1:
+                    self.alt_comp_name = self.characters[0] + " Dual DoT"
+                # elif len(self.dps) + len(self.subdps) == 1:
+                #     self.alt_comp_name = self.characters[0] + " Solo DoT"
+            elif len(self.fua) > 1:
+                if len(self.fua) > 2:
+                    self.alt_comp_name = self.characters[0] + " Triple Follow-Up"
+                else:
+                    self.alt_comp_name = self.characters[0] + " Follow-Up"
+
             if self.dps or self.subdps or self.anemo:
                 self.comp_name = self.characters[0] + archetype
             else:

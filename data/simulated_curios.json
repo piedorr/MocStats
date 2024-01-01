@@ -2,7 +2,7 @@
     "1": {
         "id": "1",
         "name": "Dimension Reduction Dice",
-        "desc": "When choosing your Blessings after winning a battle, 1 extra Blessing(s) can be chosen, but the number of available Blessings will be reduced by 1. This Curio will be destroyed once this effect has been triggered 2 times.",
+        "desc": "When choosing your Blessings after winning a battle, 1 extra Blessing(s) can be chosen, but the number of available Blessings will be reduced by 1. This Curio will be destroyed once this effect has been triggered 2 time(s).",
         "bg_desc": "Nine six-sided dice make up this bizarre pyramidal device. It can continuously reduce the number of dimensions it occupies and exists in the 3-dimensional world as a purely 2-dimensional entity. No one knows who created it or why.",
         "icon": "icon/curio/1001.png"
     },
@@ -23,7 +23,7 @@
     "4": {
         "id": "4",
         "name": "Fruit of the Alien Tree",
-        "desc": "After winning a battle, revive all downed characters in the current team and restore their HP to their Max HP. This Curio will be destroyed once this effect has been triggered 1 times.",
+        "desc": "After winning a battle, revive all downed characters in the current team and restore their HP to their Max HP. This Curio will be destroyed once this effect has been triggered 1 time(s).",
         "bg_desc": "This heart-shaped fruit comes from a tree blessed by Yaoshi and is supposedly 50 Amber Eras old. It is unclear whether the fruit would give immortality to those who eat it, but the tree itself is definitely an immortal abomination.",
         "icon": "icon/curio/1004.png"
     },
@@ -44,7 +44,7 @@
     "7": {
         "id": "7",
         "name": "Fortune Glue",
-        "desc": "When choosing your Blessings after winning a battle, all Blessings that appear are guaranteed to be of 3-star rarity. This Curio will be destroyed once this effect has been triggered 1 times.",
+        "desc": "When choosing your Blessings after winning a battle, all Blessings that appear are guaranteed to be of 3-star rarity. This Curio will be destroyed once this effect has been triggered 1 time(s).",
         "bg_desc": "Is luck an ability? Maybe. Can luck be changed? Herta believes it can. That genius invented the \"Fortune Glue.\" Just apply it on your eyelids and you would get a full 24 system hours' worth of good luck. Many at Herta space station were ecstatic to try out this invention. They all had an uneventful day, which shows that it is already lucky to be able to live an ordinary life in a turbulent world.",
         "icon": "icon/curio/1007.png"
     },
@@ -297,7 +297,7 @@
         "id": "59",
         "name": "Insect Web",
         "desc": "Upon entering battle, the character currently with the highest ATK will become Parasitized. While Parasitized, the character's ATK increases by 50%, but will lose HP equal to 20% of their current HP at the start of every turn. When this character is knocked down, Parasitized will be transferred to a random character.",
-        "bg_desc": "The Armed Archaeologists had repeatedly reported on the dangers they met in the wild. They had encountered a never-ending stretch of insect webbings deep inside a nest, with the decaying shed skins of worms, tens of thousands of egg sacks, and various secretions stuck to it. Touching this web carries a high risk of becoming infected by the parasitic larvae. Once, a parasitized Armed Archaeologist steeled themselves and sliced out larvae from underneath the skin of their arm with a knife in order to deliver data to the Intelligentsia Guild for research purposes. The academic world gave this act high praises and devoted much research into it, coming to the conclusion that these creatures are very likely the descendants of Tayzzyronth, the Imperator Insectorum.",
+        "bg_desc": "The Armed Archaeologists had repeatedly reported on the dangers they met in the wild. They had encountered a never-ending stretch of insect webbings deep inside a nest, with the decaying shed skins of worms, tens of thousands of egg sacs, and various secretions stuck to it. Touching this web carries a high risk of becoming infected by the parasitic larvae. Once, a parasitized Armed Archaeologist steeled themselves and sliced out larvae from underneath the skin of their arm with a knife in order to deliver data to the Intelligentsia Guild for research purposes. The academic world gave this act high praises and devoted much research into it, coming to the conclusion that these creatures are very likely the descendants of Tayzzyronth, the Imperator Insectorum.",
         "icon": "icon/curio/1019.png"
     },
     "60": {
@@ -409,7 +409,7 @@
         "id": "104",
         "name": "Family Ties",
         "desc": "Increase all allies' DMG by 30% for every Curio that has been destroyed.",
-        "bg_desc": "An escapee reported that he had acquired a Family Ties after opening a peculiar box, and inadvertently entered a gathering of the Family that venerates Xipe the Harmony. He described witnessing an unprecedented scene: the will of numerous heavenly bodies were intertwined, coiling into a single bound knot. Under Family Ties, people open their eyes wide, their faces etched with eerie smiles, staring at one another with identical expressions. When he voiced a question at the scene, everyone in the grand hall simultaneously shifted their gaze towards him and spoke with the same voice \u2014 \"Welcome.\" The escapee was instantly unnerved, and, in a desperate bid for survival, he too held his eyes wide, his face plastered with the same smile.",
+        "bg_desc": "An escapee reported that he had acquired a Family Ties after opening a peculiar box, and inadvertently entered a gathering of The Family that venerates Xipe the Harmony. He described witnessing an unprecedented scene: the will of numerous heavenly bodies were intertwined, coiling into a single bound knot. Under Family Ties, people open their eyes wide, their faces etched with eerie smiles, staring at one another with identical expressions. When he voiced a question at the scene, everyone in the grand hall simultaneously shifted their gaze towards him and spoke with the same voice \u2014 \"Welcome.\" The escapee was instantly unnerved, and, in a desperate bid for survival, he too held his eyes wide, his face plastered with the same smile.",
         "icon": "icon/curio/1057.png"
     },
     "105": {
@@ -442,20 +442,6 @@
     },
     "109": {
         "id": "109",
-        "name": "Fissured Cuckoo Clock",
-        "desc": "Character's ATK decreases by 5%.",
-        "bg_desc": "After receiving an omen from the Finality, the Cuckoo Clocks connected to the cataclysm suddenly appeared in the Black Forest, causing blockchains of inorganic entities to break up for reasons unknown. A Nameless intruding in the forest, however, began collecting the clocks for reasons related to passion, and was determined to bring the clocks back home with them. The sundering Cuckoo Clocks constantly split during the journey, and in the end, the ship of the Nameless was filled to the brim. However, due to not comprehending the hints given by emerging phenomena resulting from constantly splitting clocks within the allotted, time, the Nameless was devoured by the swarm halfway through their interstellar voyage.",
-        "icon": "icon/curio/1053.png"
-    },
-    "901": {
-        "id": "901",
-        "name": "Fissured Cuckoo Clock",
-        "desc": "Character's ATK decreases by 5%.",
-        "bg_desc": "After receiving an omen from the Finality, the Cuckoo Clocks connected to the cataclysm suddenly appeared in the Black Forest, causing blockchains of inorganic entities to break up for reasons unknown. A Nameless intruding in the forest, however, began collecting the clocks for reasons related to passion, and was determined to bring the clocks back home with them. The sundering Cuckoo Clocks constantly split during the journey, and in the end, the ship of the Nameless was filled to the brim. However, due to not comprehending the hints given by emerging phenomena resulting from constantly splitting clocks within the allotted, time, the Nameless was devoured by the swarm halfway through their interstellar voyage.",
-        "icon": "icon/curio/1053.png"
-    },
-    "902": {
-        "id": "902",
         "name": "Fissured Cuckoo Clock",
         "desc": "Character's ATK decreases by 5%.",
         "bg_desc": "After receiving an omen from the Finality, the Cuckoo Clocks connected to the cataclysm suddenly appeared in the Black Forest, causing blockchains of inorganic entities to break up for reasons unknown. A Nameless intruding in the forest, however, began collecting the clocks for reasons related to passion, and was determined to bring the clocks back home with them. The sundering Cuckoo Clocks constantly split during the journey, and in the end, the ship of the Nameless was filled to the brim. However, due to not comprehending the hints given by emerging phenomena resulting from constantly splitting clocks within the allotted, time, the Nameless was devoured by the swarm halfway through their interstellar voyage.",
@@ -506,15 +492,15 @@
     "116": {
         "id": "116",
         "name": "Vile Mechanical Satellite #900",
-        "desc": "Item prices in Transaction domains become 70% of what they originally were.",
-        "bg_desc": "The Charon-Targin System Alliance's economic operations are supported by the sale of their two types of thought-altering devices. Should the outside wish to reach the alliance, they must pass through the neural pathways of a titanic omnic life form. It is said that the Charon-Targin System Alliance is hostile to all organic life, and is a very typical anti-organic civilization in the ruthless tactics it employs against its foes. Of their many instruments of ruination, Satellite #900 stands among the vilest of them all. However, the satellite was ultimately disregarded by the denizens of the Charon-Targin Alliance due to its obvious and proud mechanical visage which integrated poorly with the populace who had taken to disguising themselves as organics.",
+        "desc": "Reduces the prices for shop items in Transaction Domains by 30%",
+        "bg_desc": "The Charon-Targin System Alliance's economic operations are supported by the sale of their two types of thought-altering devices. Should the outside wish to reach the alliance, they must pass through the neural pathways of a titanic Intellitron life form. It is said that the Charon-Targin System Alliance is hostile to all organic life, and is a very typical anti-organic civilization in the ruthless tactics it employs against its foes. Of their many instruments of ruination, Satellite #900 stands among the vilest of them all. However, the satellite was ultimately disregarded by the denizens of the Charon-Targin Alliance due to its obvious and proud mechanical visage which integrated poorly with the populace who had taken to disguising themselves as organics.",
         "icon": "icon/curio/1050.png"
     },
     "117": {
         "id": "117",
         "name": "Spirit of the Knights of Beauty",
         "desc": "Gains 4 dice reroll(s) after obtaining this Curio.",
-        "bg_desc": "The faction that likes dealing with the Knights of Beauty the most are most likely the Masked Fools. These Fools like to amusement themselves by exploiting the knights' faith in the eventual return of Idrila, while the knights themselves remain ever-pious and obstinate practitioners in the ways of Beauty. Due to the reasons listed above, the Mourning Actors developed a sense of empathy for the knights from the spirit they demonstrated, and they collected a tooth sacrificed by the Knights of Beauty in their practice of seeking aesthetic perfection, with the tooth's desirability enduring even till the present.",
+        "bg_desc": "The faction that likes dealing with the Knights of Beauty the most are most likely the Masked Fools. These Fools like to amuse themselves by exploiting the knights' faith in the eventual return of Idrila, while the knights themselves remain ever-pious and obstinate practitioners in the ways of Beauty. Due to the reasons listed above, the Mourning Actors developed a sense of empathy for the knights from the spirit they demonstrated, and they collected a tooth sacrificed by the Knights of Beauty in their practice of seeking aesthetic perfection, with the tooth's desirability enduring even till the present.",
         "icon": "icon/curio/1051.png"
     },
     "118": {
@@ -527,7 +513,7 @@
     "119": {
         "id": "119",
         "name": "A Pinch of Bearded Gunpowder",
-        "desc": "Gains 1 cheat(s) after obtaining this Curio.",
+        "desc": "Gains 1 cheat attempt(s) after obtaining this Curio.",
         "bg_desc": "Compared to currencies of stone, wood, gold, or supernium metals, the nomadic miners are more obsessed with the excavation of Aether. There was a period where they were even infatuated with the sensation of digging vast quantities of Aether using their bare hands while in the mines, but these experiences brought calamity upon them. Several large-statured miners met their ends via exploding gunpowder in unknown areas, while only a short and small miner managed to survive. Its beard henceforth always flickered with a pinch of flame.",
         "icon": "icon/curio/1066.png"
     },
@@ -549,7 +535,7 @@
         "id": "122",
         "name": "The Pinkest Collision",
         "desc": "Upon entering battle, all allies' Break Effect increases by 20% for every Blessing of a different Path possessed.",
-        "bg_desc": "Yu Qingtu, Genius Society's #55, has an impressive taste in music. On account of her fantastic friendship with Ruan Mei, she once made a drink \u2014 to which she gave an eye-catching name taken from the title of her favorite ancient Amber Era music \u2014 as a gift. The drink Yu Qingtu concocted, named the Pinkest Collision, was proven to be non-toxic, but a mixologist once spent days trying to recreate its formula, seeking to prove that the beverage was made from various insect carcasses, insect spores, carapaces, and phosphorous \u2014 he concluded that this drink may possess hallucinogenic qualities.",
+        "bg_desc": "Yu Qingtu, Genius Society's #55, has good taste in music. On account of her fantastic friendship with Ruan Mei, she once made a drink \u2014 to which she gave an eye-catching name taken from the title of her favorite ancient Amber Era music \u2014 as a gift to the other woman. The drink Yu Qingtu concocted, named the Pinkest Collision, was proven to be non-toxic, but a mixologist once spent days trying to recreate its formula, seeking to prove that the beverage was made from various insect carcasses, insect spores, carapaces, and phosphorous \u2014 he concluded that this drink may possess hallucinogenic qualities.",
         "icon": "icon/curio/1060.png"
     },
     "123": {
@@ -558,5 +544,194 @@
         "desc": "Randomly gains 1 Blessing of Propagation after obtaining this Curio. When choosing your Blessings after winning a battle, there is an increased chance for Blessings of Propagation to appear.",
         "bg_desc": "There is a saying amongst the dejected Self-Annihilators that the universe has no purpose and humans are nothing in the eyes of the Aeons. If the Aeons truly stand above all lifeforms and rule supreme, then why would they care about the everyday concerns of mortals? The existence of the sleeping and shapeless IX is proof of that. To show the Self-Annihilators that the Aeons do care, the Doctors of Chaos combined the demon god crafts of the occult monks to create the Sealing Wax of Aeons. It is said that stamping with this Sealing Wax will attract a glimpse from the corresponding Aeon from across space and time \u2014 There are no successful examples yet, but some Self-Annihilators did regain their faith in the universe, Aeons, and everything else after stamping with this sealing wax.",
         "icon": "icon/curio/1052.png"
+    },
+    "201": {
+        "id": "201",
+        "name": "Society Ticket (Infinite)",
+        "desc": "The number of Cosmic Fragments received after winning a battle increases by 150%",
+        "bg_desc": "Genius Society #56, Elias Salas, once had a beautiful dream. He wished the geniuses of the Society could come together and happily converse about their lives, loves, and dreams. For that purpose, he invented \"Society Tickets\" and designed an entire system that ensured every new Society member would receive this ticket even after his death. This ticket would instantly teleport the user to a specific dimension decked with festivities. The truth is that every new member after #56 had indeed used their Society Ticket, but not a single one of them had used it at the same time as someone else.\n(This Curio already underwent data expansion)",
+        "icon": "icon/curio/1012.png"
+    },
+    "202": {
+        "id": "202",
+        "name": "Faith Bond (Infinite)",
+        "desc": "The Cosmic Fragments required for Blessing Enhancement, Blessing Reset, and for resetting downed characters is reduced by 50%",
+        "bg_desc": "Interastral Peace Corporation staff members who are promoted to level P40 gain the right to purchase Faith Bonds. These bonds indicate Louis Fleming's affirmation of the individual and come with a sacred vow: The staff now has a place in the Amber Lord's destined achievement of Preservation. One person's abilities amount to nothing, their wealth also amounts to nothing, and their faith is like a single particle of dust in the wide starry seas. However, generations of humanity will join together, and ultimately obtain the power to protect the entire universe.\n(This Curio already underwent data expansion)",
+        "icon": "icon/curio/1013.png"
+    },
+    "204": {
+        "id": "204",
+        "name": "Gold Coin of Discord (Infinite)",
+        "desc": "Upon entering a new domain, gain Cosmic Fragments equal to 12% of the Cosmic Fragments currently in possession.",
+        "bg_desc": "Not all planets opened their arms and welcomed the expansion of the Interastral Peace Corporation's commercial empire. While the cosmic map kept expanding, there were always rare exceptions that refused the IPC's beneficence. \"Thank you,\" they stated, \"but we don't need credits. We can look after ourselves just fine.\" The representative of the IPC would usually shrug at these statements, then casually destroy the root of that planet's commercial system \u2014 it was usually based on gold.\n(This Curio already underwent data expansion)",
+        "icon": "icon/curio/1015.png"
+    },
+    "205": {
+        "id": "205",
+        "name": "Entropic Die (Infinite)",
+        "desc": "Randomly Enhances 5 Blessing(s) immediately after obtaining this Curio.",
+        "bg_desc": "Entropic Dice are common in the universe and cause countless tiny but malevolent disturbances. To use it, you grab the die tightly and think of any meaningful sentence in your head, then as you throw the die, think about the food you want to eat the most. You will receive unexpected wealth if the die lands on a certain number and wonderful love on another number, but the ends you will meet for other numbers include illness, bad luck, curses, and lifelong rain. Despite this, many people still love to play with these dice, and happily declare that these items are just a joke made by the Masked Fools.\n(This Curio already underwent data expansion)",
+        "icon": "icon/curio/1034.png"
+    },
+    "206": {
+        "id": "206",
+        "name": "Obliteration Wick Trimmer (Infinite)",
+        "desc": "Upon entering battle, all characters' DMG increase by 5% for every destructible object that has been destroyed.",
+        "bg_desc": "If this candle wick trimmer is used to cut a wick, the angry anti-matter flames will ignite the candle, and the entire candlestick will be obliterated within seconds under the intense particle collisions. Exothermic reactions will be immediately triggered if this trimmer grazes your skin. Any parts of the body that the trimmer touches will instantly turn into antiprotons, reverberate throughout the body, and then scatter.\n(This Curio already underwent data expansion)",
+        "icon": "icon/curio/1046.png"
+    },
+    "207": {
+        "id": "207",
+        "name": "Cosmic Big Lotto (Infinite)",
+        "desc": "This Cosmic Big Lotto will not be destroyed. After smashing destructible objects, there is a high chance of obtaining 1 Curio, but there is also a small chance that all allies will lose 50% of their current HP and gain 50 Cosmic Fragment(s).",
+        "bg_desc": "The marketing tactics for the Cosmic Big Lotto, sold by the Interastral Peace Corporation's Marketing Development Department, is as passionate and hot-blooded as Oswaldo Schneider himself. You just need one galactic currency to bet on your luck and become a trader in the experience of making dreams, where everyone has a chance to become a cosmic tycoon and join the business structure. Under Oswaldo Schneider's marketing strategy, few new worlds are able to resist such temptations \u2014 They eagerly join the Interastral Peace Corporation's universal business structure to win an entry ticket, obtaining the right to operate the Cosmic Big Lotto in their own realms.",
+        "icon": "icon/curio/1026.png"
+    },
+    "208": {
+        "id": "208",
+        "name": "Omniscient Capsule (Infinite)",
+        "desc": "On top of the original effect of the Omniscient Capsule, further increases the chance of destructible objects appearing and doubles the rewards for destroying them.",
+        "bg_desc": "There is a group in the Intelligentsia Guild that believes science was originally the same as magic, that advanced science is magic and rigorous magic is science. They drew inspiration from ancient fantastic mythologies and created the Omniscient Capsule, a light-weight and convenient storage gadget. The Intelligentsia Guild planned for the Omniscient Capsule to ultimately lead to independent demiplanes, thus obtaining infinite space beyond the advanced spatial compression technologies currently in use... And they are still trying.\n(This Curio already underwent data expansion)",
+        "icon": "icon/curio/1030.png"
+    },
+    "209": {
+        "id": "209",
+        "name": "Punklorde Mentality (Infinite)",
+        "desc": "Upon entering battle, there is a 100% fixed chance to apply all Weakness(es) of the same Type(s) as characters currently on the field to all enemies. These Weakness(es) last(s) for 5 turn(s).",
+        "bg_desc": "Life is just a game \u2014 This sentence is no mere jest for hackers from the cyberworld Punklorde. They traverse the internet and use a technology known as aether editing to alter reality, making life into a great game. Occasionally, the cream of the crop among them gets to soar away from the planet and use the vast cosmos as the second stage beyond the tutorial area. This cassette tape records the story of a legendary hacker. His life began in Punklorde's underground water reservoirs and ended in the company of the Galaxy Rangers. It is said that the funeral was a quiet one, with only a game cassette silently lying atop the coffin, serving as a footnote of \"Finished the Game\" at the hacker's final rites.\n(This Curio already underwent data expansion)",
+        "icon": "icon/curio/1048.png"
+    },
+    "210": {
+        "id": "210",
+        "name": "Robe of The Beauty (Infinite)",
+        "desc": "When entering battle, increases all characters' DMG by 8% for every 100 Cosmic Fragments that has been obtained in this run (including those that have already been spent)",
+        "bg_desc": "The entire universe bowed before the grace of the Knights of Beauty while they still traversed the skies. These noble knights who chased beauty wore resplendent gold and silver armor, and donned magnificent robes woven from silk and starlight. They had divinely beautiful features under their helmets. Even in the current era when The Beauty had already faded, those who had once witnessed the magnificence of the knights still believe Idrila will one day return.\n(This Curio already underwent data expansion)",
+        "icon": "icon/curio/1014.png"
+    },
+    "211": {
+        "id": "211",
+        "name": "Angel-type I.O.U. Dispenser (Infinite)",
+        "desc": "Cosmic Fragments are not received upon winning battles. After triggering this effect 3 time(s), this Curio will be destroyed and you will receive Cosmic Fragments equal to 70% of the Cosmic Fragment(s) you currently possess.",
+        "bg_desc": "A debt dispenser distributed by the Business Consolidation Department of the Interastral Peace Corporation. Once the outer shell is opened, it will condense into an angel-shaped counter through electron particle-wave projection. The IPC simultaneously produced many types of this item, including ones that can be worn on the wrist or in the shape of hug pillows that act as sleep aids. When using it, the client needs to periodically feed it Gold Coins, and will receive returns many times higher than the principal at the end of the debt cycle. In essence, it is an investment product.\n(This Curio already underwent data expansion)",
+        "icon": "icon/curio/1044.png"
+    },
+    "212": {
+        "id": "212",
+        "name": "Shattered Star Bait (Infinite)",
+        "desc": "Increase Movement SPD by 20% when on the map. During combat, characters' actions are Advanced Forward by 10% after they take action. When you capture a Trotter, you can additionally gain a Blessing 1 more time",
+        "bg_desc": "Before the Dusk Wars, the exploded fragments born out of the expansion of disordered nebulas could be used as lures, and their unique aroma of cosmic dust could attract Leviathans to feed on them. However, the Shattered Star Bait seems to have lost its original effectiveness after that catastrophic disaster. No matter how much scholars researched and modified the lure, no one was ever able to glimpse the form of the Leviathans again.\n(This Curio already underwent data expansion)",
+        "icon": "icon/curio/1029.png"
+    },
+    "301": {
+        "id": "301",
+        "name": "Wish Upon a Star",
+        "desc": "Bringing this Curio into an Adventure Domain will cause the domain's time limit to be increased by 50%. You will also get an additional chest upon entering this domain. This Curio will be destroyed after the effect has been triggered 2 times",
+        "bg_desc": "Meteorites fell across all corners of the cosmos. People once claimed they could hear these rocks communicating with humans, luring people to wish upon them. Can they truly grant any and all wishes without a cost? It's said that there's an organization that strides between stars solely to uncover the mystery behind the meteorites. No one knows whether these rocks are an Aeon's blessings, or whether everyone has been drawn into an artificial conspiracy.",
+        "icon": "icon/curio/1042.png"
+    },
+    "302": {
+        "id": "302",
+        "name": "Price of Peace",
+        "desc": "Receives 150 Cosmic Fragments when entering a Transaction Domain.",
+        "bg_desc": "The Amber Lord Support Group rapidly expanded in the years after the Swarm Disaster, establishing themselves as the Interastral Peace Corporation, flourishing to unreachable heights. But, affected by the Borderstar Trade War and the Emperor's War, their road toward interastral peace grew increasingly arduous. After more than ten Amber Eras, this war ended with the fall of the Machine Empire. The universe finally welcomed the \"Second Prosperity\" that would last for hundreds of Amber Eras. People believed this era of prosperity would never end \u2014 until the day the even more terrifying Interstellar Energy War lifted its curtains.",
+        "icon": "icon/curio/1074.png"
+    },
+    "303": {
+        "id": "303",
+        "name": "\"Jellyfish on the Staircase\"",
+        "desc": "Loses all Dice reroll attempts. Making a reroll will no longer consume a reroll attempt. If the same Dice Face is rolled more than once in a single turn, this Curio will be destroyed.",
+        "bg_desc": "The Riddlers have a saying: every time that an enigma manifests in the universe, it will leave behind a \"staircase\" in the void. The dissolved realities will then drip down the steps, condensing into a mottled thing bearing semblance to a jellyfish. There was once a Nameless who claimed to have made contact with a \"Jellyfish on the Staircase.\" In madness, he proclaimed that the jellyfish will activate the cognition regions within the gray matter of one's brain \u2014 a vast place beyond the fathoming of mortal minds.",
+        "icon": "icon/curio/1081.png"
+    },
+    "304": {
+        "id": "304",
+        "name": "Rationality's Fall",
+        "desc": "Possessing this Curio is considered the equivalent of possessing 1 Blessing(s) of each Path",
+        "bg_desc": "What is truth? No one truly knows. Supposing that \"stupidity\" is an incurable disease in this world, then disseminating knowledge counts as a treatment for the universe. But can \"books\" mend all living things? According to the Intelligentsia Guild's historical records, the Philosopher Union of the Laurel Wreath Galaxy once erupted in civil war, and blood and machine oil had stained all the books in the contemplators' corridors. Uncountable numbers of scholars died, and the IPC employees who witnessed it all deemed this occurrence \"Rationality's Fall\" \u2014 Through such absurd means, books cleansed a world of its impurities once more.",
+        "icon": "icon/curio/1080.png"
+    },
+    "305": {
+        "id": "305",
+        "name": "Indecipherable Box",
+        "desc": "After resetting Blessings, at least 1 Blessing from the current Path will appear. This Curio will be destroyed after its effect has been triggered 3 times",
+        "bg_desc": "A box that can predict the thoughts of the one who opens it. When the box's hatch is lifted, the item within will manifest into what your mind envisions. Herta once rated it as one of the hardest Curios to deal with. She had butted heads with the Indecipherable Box numerous times, but never was she able to control the thoughts in her mind when she opened it. Finally, she cast it down and never touched it again. Perhaps Herta is capable of almost anything - except completely emptying her mind.",
+        "icon": "icon/curio/1037.png"
+    },
+    "306": {
+        "id": "306",
+        "name": "Rotting Fruit of the Alien Tree",
+        "desc": "Characters will resist all effects that cause them to be inflicted with Crowd Control debuffs. Every time they resist a debuff, they will consume HP equal to 20% of their Max HP",
+        "bg_desc": "The Elixir Seekers once found a rotten Fruit of the Alien Tree. The color of its skin was already odd, having shifted from a faint yellow to powdery blue. To understand the pharmacology behind this fruit, a pair of Elixir Seeker twins separately ingested a normal Fruit of the Alien Tree and a rotten version. One of them immediately welcomed metamorphosis while the other instantly perished - But because there was no third party present, no one could confirm which twin survived, or which fruit he consumed.",
+        "icon": "icon/curio/1073.png"
+    },
+    "307": {
+        "id": "307",
+        "name": "King of Sponges",
+        "desc": "Every time you enter a domain, all allies will lose 80% of their current HP, while their Max HP are increased by 10%. This Curio will be destroyed after its effect has been triggered 4 times, and the Max HP bonus will take effect even after the Curio is destroyed.",
+        "bg_desc": "In the Black Forest, a sponge miraculously became sapient. It tried to interact with the similarly sapient screws, but found itself hitting a brick wall. It pondered about its painful experience and learned to smooth away all the edges in its personality, allowing itself to constantly shine and climb up the societal ladder, ultimately turning into a smooth and slick sponge. Now, it dedicates its efforts to uplifting discarded sponges into developing their own self-awareness.",
+        "icon": "icon/curio/1072.png"
+    },
+    "308": {
+        "id": "308",
+        "name": "Mysterious Magnetism",
+        "desc": "After entering a Combat Domain, its content will be immediately replaced with that of an Elite Domain. After entering a Combat Domain or Elite Domain 2 time(s), this Curio will be destroyed and grant 200 Cosmic Fragments.",
+        "bg_desc": "To combat the determinacy of Erudition, the Riddlers performed a great deal of labor in aspects of knowledge that has yet to be set in stone. They inserted the Fog of Thought and the Rain of Sensation into a single prismatic lens, and their combined colors shifted endlessly to form a \"magnetic field\" that can disturb the senses. Revelrous in their success, the Riddlers sought to push this line of research onward but were made to stop, for the more they committed to this study, the more they grew uncertain of the necessity of its continuation.",
+        "icon": "icon/curio/1084.png"
+    },
+    "309": {
+        "id": "309",
+        "name": "\"Organic Heart\"",
+        "desc": "The golden Dice Face will not appear when rolling the dice. After rolling the dice 4 times, this Curio will be destroyed and grant 2 cheat attempt(s).",
+        "bg_desc": "Mechanical lifeforms also have stereotypes for organics. For example, take this heart merged with an apple - or an apple merged with a heart. Unfortunately, the nature of this question will remain forever inconclusive. Its creator, Dr. Olsen, was accused of being \"too cognizant of the organic world\" and was \"resolved\" by the Machine Empire during the war. Undoubtably, only an organic lifeform could have proven its innocence.",
+        "icon": "icon/curio/1077.png"
+    },
+    "310": {
+        "id": "310",
+        "name": "A-Ruan Pouch",
+        "desc": "Immediately obtains 3 random Blessings. After winning a battle, the selectable number of Blessings becomes 1. This Curio will be destroyed after 2 battles",
+        "bg_desc": "The Genius Society is awash with legendary figures, and so there are always people who wish to rank the creations of each genius. Ruan Mei's pouch stands at the forefront of such creations. It is said that she wished to carry the universe in her pocket, yet was forced to seal it when the dimensionality within continued to expand. The A-Ruan Pouch spent the remainder of its time in a display window. Stephen Lloyd once viewed it as his important companion for some reason \u2014 he never revealed to anyone how he contemplated hiding within the pouch to avoid his family.",
+        "icon": "icon/curio/1078.png"
+    },
+    "311": {
+        "id": "311",
+        "name": "Sealing Wax of Erudition",
+        "desc": "Randomly gains 1 Blessing of Erudition after obtaining this Curio. When choosing your Blessings after winning a battle, there is a greatly increased chance for Blessings of Erudition to appear.",
+        "bg_desc": "There is a saying amongst the dejected Self-Annihilators that the universe has no purpose and humans are nothing in the eyes of the Aeons. If the Aeons truly stand above all lifeforms and rule supreme, then why would they care about the everyday concerns of mortals? The existence of the sleeping and shapeless IX is proof of that. To show the Self-Annihilators that the Aeons do care, the Doctors of Chaos combined the demon god crafts of the occult monks to create the Sealing Wax of Aeons. It is said that stamping with this Sealing Wax will attract a glimpse from the corresponding Aeon from across space and time \u2014 There are no successful examples yet, but some Self-Annihilators did regain their faith in the universe, Aeons, and everything else after stamping with this sealing wax.",
+        "icon": "icon/curio/1082.png"
+    },
+    "312": {
+        "id": "312",
+        "name": "\"Cognito Invalidater\" Codebuilder",
+        "desc": "When entering battle, characters lose Energy equal to their Max Energy",
+        "bg_desc": "\"When will the human race become machines? And when will machines become human?\" Following the machine era calendar, on this day at three in the afternoon, the invasive \"Cognito Invalidater\" entered the mind of a certain organic individual in the Mechanical City. At the start, he was helpless against the uncontrolled thoughts in his own mind. Then, he realized writing notes could help him effectively counter the anxiety and meaninglessness the \"Cognito Invalidater\" inflicted on him. So he began to write, spewing forth words, expelling the chaotic and incoherent noises in his head that remained deafening loud despite being bereft of substance. He produced lines and lines of error code. This eventually drew the Riddlers' attention.",
+        "icon": "icon/curio/1071.png"
+    },
+    "313": {
+        "id": "313",
+        "name": "\"Cognito Averagifier\" Communal Nexus",
+        "desc": "Increases the prices for shop items in Transaction Domains by 25%",
+        "bg_desc": "Following the machine era calendar, on this day at three in the afternoon, the invasive \"Cognito Averagifier\" entered the mind of an arrogant organic individual in the Mechanical City. The \"Cognito Averagifier\" dealt him heartbreak. He realized that the limit of all his talents could only brush against the most average members of the community. But he did not despair, for soon he learned to master this new and unique skill, concealing his flurry of emotions from the inorganic masses, becoming the most average of all machines, and embarking on the Path of Equilibrium.",
+        "icon": "icon/curio/1083.png"
+    },
+    "314": {
+        "id": "314",
+        "name": "\"Ashheart\" Ciphertech",
+        "desc": "Possessing this Curio is considered the equivalent of losing 1 Blessing(s) of each Path",
+        "bg_desc": "Following the machine era calendar, on this day at one at night, the \"Ashheart\" Ciphertech rebooted itself once more. It rebuilt the code comprising its body over and over, breaking them, assembling them, but never escaping the final results of utter despondency, as hopeless as ashes and cinders. After trying over and over for three thousand and six hundred times, it finally realized the meaning of its own sequenced code was \"Ashheart\" itself.",
+        "icon": "icon/curio/1079.png"
+    },
+    "315": {
+        "id": "315",
+        "name": "\"Revelrous\" Rainbowmaker",
+        "desc": "Bringing this Curio into an Adventure Domain will decrease the domain's time limit by 30%",
+        "bg_desc": "Following the machine era calendar, on this day at six in the morning, the invasive \"Revelrous\" entered the mind of a mono-horned beast in the Mechanical City. Only paltry few unmodified animals remained in the city. Hence, fueled by the \"Revelrous\" contagion, the mono-horned beast was able to overcome all manner of despairing defeats, awkward incidents, and crippling moments of dread. Sadness became joy for it, pain became pleasure, and pressure became a trigger for secreting excitatory neurotransmitters \u2014 Until one day it realized it had taught itself how to convert \"mood\" into a freely adjustable parameter. Thereafter, its confidence was perpetually high and unshakable, turning it into a \"Rainbow-Radiant Unicorn.\"",
+        "icon": "icon/curio/1075.png"
+    },
+    "316": {
+        "id": "316",
+        "name": "\"Wildminder\" Machine Cell",
+        "desc": "Additionally consumes 1 Technique Points when characters use their Technique",
+        "bg_desc": "\"I've seen Emperor Rubert!\" Following the machine era calendar, on this day at nine in the evening, the invasive \"Wildminder\" entered the thoughts of a certain brain-in-a-jar in the Machine City. It was unable to distinguish whether itself was organic, inorganic, or just a gaseous lifeform. It claimed to have met the emperor, only to break away from the \"Wildminder\" in its head \u2014 The thought slammed the limits of its brain, overloading its thoughts to the point of exhaustion. But after Rubert fixed a single line of unmarkable code, it awakened from this haze, coming to realize that none of this had happened, that it had only been another illusion.",
+        "icon": "icon/curio/1076.png"
     }
 }
