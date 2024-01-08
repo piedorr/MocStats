@@ -38,11 +38,11 @@ run_commands = [
     # "Char usages for each stage",
     # "Char usages for each stage (combined)",
     # "Comp usage 8 - 10",
-    "Comp usages for each stage",
+    # "Comp usages for each stage",
     # "Character specific infographics",
     # "Char usages all stages",
     # "Comp usage all stages",
-    # "Duos check",
+    "Duos check",
 ]
 
 

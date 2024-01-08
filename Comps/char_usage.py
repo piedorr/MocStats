@@ -106,6 +106,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                 "owned": 0,
                 "percent": 0.00,
                 "avg_round": 0.00,
+                "std_dev_round": 0.00,
                 "weap_freq": {},
                 "arti_freq": {},
                 "planar_freq": {},
@@ -145,10 +146,18 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                                 whaleComp = True
                     if CHARACTERS[char]["role"] == "Sustain":
                         sustainCount += 1
-                    if (CHARACTERS[char]["role"] == "Damage Dealer" and char != "Topaz & Numby") or char == "Welt":
+                    if CHARACTERS[char]["role"] == "Damage Dealer":
                         dpsCount += 1
-                    if char in ["Sampo", "Luka", "Guinaifen"] and "Kafka" not in player.chambers[chamber].characters:
-                        dpsCount += 1
+                        if char == "Topaz & Numby":
+                            for char_fua in ["Clara", "Jing Yuan", "Himeko", "Kafka", "Blade", "Herta", "Xueyi"]:
+                                if char_fua in player.chambers[chamber].characters:
+                                    dpsCount -= 1
+                                    break
+                    if "Kafka" not in player.chambers[chamber].characters:
+                        if char in ["Sampo", "Luka", "Guinaifen"]:
+                            dpsCount += 1
+                    elif char == "Serval":
+                        dpsCount -= 1
                 if "Ruan Mei" in player.chambers[chamber].characters:
                     dpsCount = 1
                 dpsCount = 1
@@ -251,22 +260,27 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                 appears[star_num][char]["percent"] = 0.00
             if appears[star_num][char]["flat"] >= 10:
                 avg_round = []
+                std_dev_round = []
                 uses_room = {}
                 for room_num in range(1,13):
                     if (appears[star_num][char]["round"][str(room_num)]):
                         uses_room[room_num] = len(appears[star_num][char]["round"][str(room_num)])
-                        if appears[star_num][char]["flat"] > 1:
+                        if len(appears[star_num][char]["round"][str(room_num)]) > 1:
+                            std_dev_round.append(statistics.stdev(appears[star_num][char]["round"][str(room_num)]))
                             skewness = skew(appears[star_num][char]["round"][str(room_num)], axis=0, bias=True)
                             if abs(skewness) > 0.8:
                                 avg_round.append(trim_mean(appears[star_num][char]["round"][str(room_num)], 0.25))
                             else:
                                 avg_round.append(statistics.mean(appears[star_num][char]["round"][str(room_num)]))
                         else:
+                            std_dev_round.append(0)
                             avg_round.append(statistics.mean(appears[star_num][char]["round"][str(room_num)]))
                         # avg_round.append(statistics.mean(appears[star_num][char]["round"][str(room_num)]))
                         # avg_round += appears[star_num][char]["round"][str(room_num)]
 
                 is_count_cycles = True
+                if not uses_room:
+                    is_count_cycles = False
                 if len(chambers) > 2:
                     if len(uses_room) != len(chambers)/2:
                         is_count_cycles = False
@@ -277,6 +291,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                 # if avg_round:
                 if is_count_cycles:
                     appears[star_num][char]["avg_round"] = round(statistics.mean(avg_round), 2)
+                    appears[star_num][char]["std_dev_round"] = round(statistics.mean(std_dev_round), 2)
                 else:
                     appears[star_num][char]["avg_round"] = 99.99
             else:
@@ -458,6 +473,7 @@ def usages(owns, appears, past_phase, filename, chambers=ROOMS, offset=1):
                 "app": appears[star_num][char]["percent"],
                 "app_flat": appears[star_num][char]["flat"],
                 "round": appears[star_num][char]["avg_round"],
+                "std_dev_round": appears[star_num][char]["std_dev_round"],
                 # "own": owns[star_num][char]["percent"],
                 "own": 0,
                 "usage" : 0,

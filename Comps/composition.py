@@ -91,7 +91,7 @@ class Composition:
 
             if character in ["Kafka", "Serval", "Sampo", "Luka", "Guinaifen"]:
                 self.dot.append(character)
-            if character in ["Herta", "Blade", "Kafka", "Topaz & Numby", "Himeko", "Jing Yuan", "Clara", "Xueyi"]:
+            if character in ["Topaz & Numby", "Clara", "Jing Yuan", "Himeko", "Kafka", "Blade", "Herta", "Xueyi"]:
                 self.fua.append(character)
 
             if CHARACTERS[character]["element"] == "Ice":
@@ -165,11 +165,11 @@ class Composition:
                 else:
                     archetype = " Dual Carry"
                 self.dual_comp_name = self.characters[1] + archetype
-            elif len(self.dps) + len(self.subdps) == 1:
-                if len(self.anemo) > 1:
-                    archetype = " Hypercarry"
-                elif len(self.healer) > 1:
+            else:
+                if len(self.healer) > 1:
                     archetype = " Dual Sustain"
+                elif len(self.anemo) > 0:
+                    archetype = " Hypercarry"
 
             if len(self.dot) >= 1:
                 if len(self.dot) > 2:
@@ -179,10 +179,7 @@ class Composition:
                 # elif len(self.dps) + len(self.subdps) == 1:
                 #     self.alt_comp_name = self.characters[0] + " Solo DoT"
             elif len(self.fua) > 1:
-                if len(self.fua) > 2:
-                    self.alt_comp_name = self.characters[0] + " Triple Follow-Up"
-                else:
-                    self.alt_comp_name = self.characters[0] + " Follow-Up"
+                self.alt_comp_name = self.characters[0] + " Follow-Up"
 
             if self.dps or self.subdps or self.anemo:
                 self.comp_name = self.characters[0] + archetype

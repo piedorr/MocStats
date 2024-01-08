@@ -66,9 +66,14 @@ download = requests.get("https://github.com/Mar-7th/StarRailRes/raw/master/index
 with open("../data/simulated_blessings.json", "w") as out_file:
     out_file.write(json.dumps(json.load(io.StringIO(download)),indent=4))
 
-# download = requests.get("https://github.com/Mar-7th/StarRailRes/raw/master/index_new/en/simulated_curios.json").content.decode('utf-8')
-# with open("../data/simulated_curios.json", "w") as out_file:
-#     out_file.write(json.dumps(json.load(io.StringIO(download)),indent=4))
+download = requests.get("https://github.com/Mar-7th/StarRailRes/raw/master/index_new/en/simulated_curios.json").content.decode('utf-8')
+curio_json = json.load(io.StringIO(download))
+curio_json["901"] = curio_json["109"].copy()
+curio_json["902"] = curio_json["109"].copy()
+curio_json["901"]["id"] = "901"
+curio_json["902"]["id"] = "902"
+with open("../data/simulated_curios.json", "w") as out_file:
+    out_file.write(json.dumps(curio_json,indent=4))
 
 # download = requests.get("https://github.com/Mar-7th/StarRailRes/raw/master/index_new/en/simulated_blocks.json").content.decode('utf-8')
 # with open("../data/simulated_blocks.json", "w") as out_file:

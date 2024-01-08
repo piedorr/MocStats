@@ -733,5 +733,19 @@
         "desc": "Additionally consumes 1 Technique Points when characters use their Technique",
         "bg_desc": "\"I've seen Emperor Rubert!\" Following the machine era calendar, on this day at nine in the evening, the invasive \"Wildminder\" entered the thoughts of a certain brain-in-a-jar in the Machine City. It was unable to distinguish whether itself was organic, inorganic, or just a gaseous lifeform. It claimed to have met the emperor, only to break away from the \"Wildminder\" in its head \u2014 The thought slammed the limits of its brain, overloading its thoughts to the point of exhaustion. But after Rubert fixed a single line of unmarkable code, it awakened from this haze, coming to realize that none of this had happened, that it had only been another illusion.",
         "icon": "icon/curio/1076.png"
+    },
+    "901": {
+        "id": "901",
+        "name": "Fissured Cuckoo Clock",
+        "desc": "Character's ATK decreases by 5%.",
+        "bg_desc": "After receiving an omen from the Finality, the Cuckoo Clocks connected to the cataclysm suddenly appeared in the Black Forest, causing blockchains of inorganic entities to break up for reasons unknown. A Nameless intruding in the forest, however, began collecting the clocks for reasons related to passion, and was determined to bring the clocks back home with them. The sundering Cuckoo Clocks constantly split during the journey, and in the end, the ship of the Nameless was filled to the brim. However, due to not comprehending the hints given by emerging phenomena resulting from constantly splitting clocks within the allotted, time, the Nameless was devoured by the swarm halfway through their interstellar voyage.",
+        "icon": "icon/curio/1053.png"
+    },
+    "902": {
+        "id": "902",
+        "name": "Fissured Cuckoo Clock",
+        "desc": "Character's ATK decreases by 5%.",
+        "bg_desc": "After receiving an omen from the Finality, the Cuckoo Clocks connected to the cataclysm suddenly appeared in the Black Forest, causing blockchains of inorganic entities to break up for reasons unknown. A Nameless intruding in the forest, however, began collecting the clocks for reasons related to passion, and was determined to bring the clocks back home with them. The sundering Cuckoo Clocks constantly split during the journey, and in the end, the ship of the Nameless was filled to the brim. However, due to not comprehending the hints given by emerging phenomena resulting from constantly splitting clocks within the allotted, time, the Nameless was devoured by the swarm halfway through their interstellar voyage.",
+        "icon": "icon/curio/1053.png"
     }
 }
