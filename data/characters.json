@@ -2381,5 +2381,57 @@
         "role": "Amplifier",
         "alt_name": null,
         "out_name": false
+    },
+    "Dr. Ratio": {
+        "id": "1305",
+        "name": "Dr. Ratio",
+        "tag": "drratio",
+        "rarity": 5,
+        "path": "Rogue",
+        "element": "Imaginary",
+        "max_sp": 140,
+        "ranks": [
+            "130501",
+            "130502",
+            "130503",
+            "130504",
+            "130505",
+            "130506"
+        ],
+        "skills": [
+            "130501",
+            "130502",
+            "130503",
+            "130504",
+            "130506",
+            "130507"
+        ],
+        "skill_trees": [
+            "1305001",
+            "1305002",
+            "1305003",
+            "1305004",
+            "1305007",
+            "1305101",
+            "1305102",
+            "1305103",
+            "1305201",
+            "1305202",
+            "1305203",
+            "1305204",
+            "1305205",
+            "1305206",
+            "1305207",
+            "1305208",
+            "1305209",
+            "1305210"
+        ],
+        "icon": "icon/character/1305.png",
+        "preview": "image/character_preview/1305.png",
+        "portrait": "image/character_portrait/1305.png",
+        "availability": "Limited 5*",
+        "role": "Damage Dealer",
+        "alt_name": null,
+        "out_name": false
     }
 }

@@ -3,8 +3,10 @@ import json
 with open('../data/characters.json') as char_file:
     CHARACTERS = json.load(char_file)
 
-RECENT_PHASE = "1.6.1"
-past_phase = "1.5.2"
+RECENT_PHASE = "1.6.2"
+past_phase = "1"
+global pf_mode
+pf_mode = True
 char_infographics = ["Ruan Mei", "Blade", "March 7th", "Xueyi", "Tingyun"]
 char_infographics = char_infographics[3]
 
@@ -29,12 +31,12 @@ skip_random = False
 archetype = "all"
 whaleCheck = False
 whaleSigWeap = False
-sigWeaps = []
+sigWeaps = ["Night on the Milky Way", "In the Night", "Something Irreplaceable", "But the Battle Isn't Over", "In the Name of the World", "Moment of Victory", "Patience Is All You Need", "Incessant Rain", "Echoes of the Coffin", "The Unreachable Side", "Before Dawn", "She Already Shut Her Eyes", "Sleep Like the Dead", "Time Waits for No One", "I Shall Be My Own Sword", "Brighter Than the Sun", "Worrisome, Blissful", "Night of Fright", "An Instant Before A Gaze", "Past Self in Mirror", "Baptism of Pure Thought", "Earthly Escapade", "Reforged Remembrance"]
 standWeaps = []
 
 # Char infographics should be separated from overall comp rankings
 run_commands = [
-    # "Char usages 8 - 10",
+    "Char usages 8 - 10",
     # "Char usages for each stage",
     # "Char usages for each stage (combined)",
     # "Comp usage 8 - 10",
@@ -42,7 +44,7 @@ run_commands = [
     # "Character specific infographics",
     # "Char usages all stages",
     # "Comp usage all stages",
-    "Duos check",
+    # "Duos check",
 ]
 
 

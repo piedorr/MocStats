@@ -9,10 +9,13 @@ import matplotlib.pyplot as plt
 import warnings
 from scipy.stats import skew, trim_mean
 from archetypes import *
-from comp_rates_config import RECENT_PHASE
+from comp_rates_config import RECENT_PHASE, pf_mode
 
 warnings.filterwarnings("ignore", category=RuntimeWarning)
-ROOMS = ["1-1", "1-2", "2-1", "2-2", "3-1", "3-2", "4-1", "4-2", "5-1", "5-2", "6-1", "6-2", "7-1", "7-2", "8-1", "8-2", "9-1", "9-2", "10-1", "10-2", "11-1", "11-2", "12-1", "12-2"]
+if pf_mode:
+    ROOMS = ["1-1", "1-2", "2-1", "2-2", "3-1", "3-2", "4-1", "4-2"]
+else:
+    ROOMS = ["1-1", "1-2", "2-1", "2-2", "3-1", "3-2", "4-1", "4-2", "5-1", "5-2", "6-1", "6-2", "7-1", "7-2", "8-1", "8-2", "9-1", "9-2", "10-1", "10-2", "11-1", "11-2", "12-1", "12-2"]
 global gear_app_threshold
 gear_app_threshold = 0
 with open('../data/characters.json') as char_file:
@@ -139,6 +142,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                     if set(duo_dps).issubset(player.chambers[chamber].characters):
                         foundDuo = duo_dps
                         break
+
                 for char in player.chambers[chamber].characters:
                     if CHARACTERS[char]["availability"] == "Limited 5*":
                         if char in player.owned:
@@ -158,16 +162,19 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                             dpsCount += 1
                     elif char == "Serval":
                         dpsCount -= 1
+                if sustainCount == 0 and pf_mode:
+                    sustainCount = 1
                 if "Ruan Mei" in player.chambers[chamber].characters:
                     dpsCount = 1
                 dpsCount = 1
+
                 # findchars(char, foundchar)
                 # if find_archetype(foundchar):
                 # if player.chambers[chamber].characters == ['Kafka', 'Sampo', 'Silver Wolf', 'Bailu']:
                 if True:
                     for char in player.chambers[chamber].characters:
                         # to print the amount of players using a character, for char infographics
-                        if len(chambers) > 2:
+                        if len(chambers) > 2 or (pf_mode and chambers == ["4-1", "4-2"]):
                             players_chars[star_num][char].add(player.player)
 
                         char_name = char
@@ -181,7 +188,10 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                                 appears[star_num][char_name]["cons_freq"][0]["round"][list(str(chamber).split("-"))[0]].append(player.chambers[chamber].round_num)
                             appears[star_num][char_name]["round"][list(str(chamber).split("-"))[0]].append(player.chambers[chamber].round_num)
                         # In case of character in comp data missing from character data
-                        if len(chambers) < 3:
+                        if pf_mode:
+                            if chambers != ["4-1", "4-2"]:
+                                continue
+                        elif len(chambers) < 3:
                             continue
                         if char not in player.owned or star_num != 4:
                             # print("Comp data missing from character data: " + str(player.player) + ", " + str(char))
@@ -281,7 +291,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                 is_count_cycles = True
                 if not uses_room:
                     is_count_cycles = False
-                if len(chambers) > 2:
+                if len(chambers) > 2 or (pf_mode and chambers == ["4-1", "4-2"]):
                     if len(uses_room) != len(chambers)/2:
                         is_count_cycles = False
                 for room_num in uses_room:
@@ -292,15 +302,25 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                 if is_count_cycles:
                     appears[star_num][char]["avg_round"] = round(statistics.mean(avg_round), 2)
                     appears[star_num][char]["std_dev_round"] = round(statistics.mean(std_dev_round), 2)
+                    if pf_mode:
+                        appears[star_num][char]["avg_round"] = round(appears[star_num][char]["avg_round"] / 1000, 2)
+                        appears[star_num][char]["std_dev_round"] = round(appears[star_num][char]["std_dev_round"] / 1000, 2)
                 else:
                     appears[star_num][char]["avg_round"] = 99.99
+                    if pf_mode:
+                        appears[star_num][char]["avg_round"] = 0
             else:
                 appears[star_num][char]["avg_round"] = 99.99
+                if pf_mode:
+                    appears[star_num][char]["avg_round"] = 0
 
             # if (chambers == ["1-1", "1-2", "2-1", "2-2", "3-1", "3-2", "4-1", "4-2", "5-1", "5-2", "6-1", "6-2", "7-1", "7-2", "8-1", "8-2", "9-1", "9-2", "10-1", "10-2", "11-1", "11-2", "12-1", "12-2"]):
             appears[star_num][char]["sample"] = len(players_chars[star_num][char])
 
-            if len(chambers) < 3:
+            if pf_mode:
+                if chambers != ["4-1", "4-2"]:
+                    continue
+            elif len(chambers) < 3:
                 continue
             if star_num != 4:
                 continue
@@ -331,11 +351,17 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                             # avg_round.append(statistics.mean(appears[star_num][char]["cons_freq"][cons]["round"][str(room_num)]))
                     if avg_round:
                         appears[star_num][char]["cons_freq"][cons]["avg_round"] = round(statistics.mean(avg_round), 2)
+                        if pf_mode:
+                            appears[star_num][char]["cons_freq"][cons]["avg_round"] = round(appears[star_num][char]["cons_freq"][cons]["avg_round"] / 1000, 2)
                     else:
                         appears[star_num][char]["cons_freq"][cons]["avg_round"] = 99.99
+                        if pf_mode:
+                            appears[star_num][char]["cons_freq"][cons]["avg_round"] = 0
                 else:
                     appears[star_num][char]["cons_freq"][cons]["percent"] = 0.00
                     appears[star_num][char]["cons_freq"][cons]["avg_round"] = 99.99
+                    if pf_mode:
+                        appears[star_num][char]["cons_freq"][cons]["avg_round"] = 0
 
             # Calculate weapons
             sorted_weapons = (sorted(
@@ -368,11 +394,17 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                             # avg_round.append(statistics.mean(appears[star_num][char]["weap_freq"][weapon]["round"][str(room_num)]))
                     if avg_round:
                         appears[star_num][char]["weap_freq"][weapon]["avg_round"] = round(statistics.mean(avg_round), 2)
+                        if pf_mode:
+                            appears[star_num][char]["weap_freq"][weapon]["avg_round"] = round(appears[star_num][char]["weap_freq"][weapon]["avg_round"] / 1000, 2)
                     else:
                         appears[star_num][char]["weap_freq"][weapon]["avg_round"] = 99.99
+                        if pf_mode:
+                            appears[star_num][char]["weap_freq"][weapon]["avg_round"] = 0
                 else:
                     appears[star_num][char]["weap_freq"][weapon]["percent"] = 0
                     appears[star_num][char]["weap_freq"][weapon]["avg_round"] = 99.99
+                    if pf_mode:
+                        appears[star_num][char]["weap_freq"][weapon]["avg_round"] = 0
 
             # Remove flex artifacts
             if "Flex" in appears[star_num][char]["arti_freq"]:
@@ -407,11 +439,17 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                             # avg_round.append(statistics.mean(appears[star_num][char]["arti_freq"][arti]["round"][str(room_num)]))
                     if avg_round:
                         appears[star_num][char]["arti_freq"][arti]["avg_round"] = round(statistics.mean(avg_round), 2)
+                        if pf_mode:
+                            appears[star_num][char]["arti_freq"][arti]["avg_round"] = round(appears[star_num][char]["arti_freq"][arti]["avg_round"] / 1000, 2)
                     else:
                         appears[star_num][char]["arti_freq"][arti]["avg_round"] = 99.99
+                        if pf_mode:
+                            appears[star_num][char]["arti_freq"][arti]["avg_round"] = 0
                 else:
                     appears[star_num][char]["arti_freq"][arti]["percent"] = 0
                     appears[star_num][char]["arti_freq"][arti]["avg_round"] = 99.99
+                    if pf_mode:
+                        appears[star_num][char]["arti_freq"][arti]["avg_round"] = 0
 
             # Remove flex artifacts
             if "Flex" in appears[star_num][char]["planar_freq"]:
@@ -446,11 +484,17 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                             # avg_round.append(statistics.mean(appears[star_num][char]["planar_freq"][planar]["round"][str(room_num)]))
                     if avg_round:
                         appears[star_num][char]["planar_freq"][planar]["avg_round"] = round(statistics.mean(avg_round), 2)
+                        if pf_mode:
+                            appears[star_num][char]["planar_freq"][planar]["avg_round"] = round(appears[star_num][char]["planar_freq"][planar]["avg_round"] / 1000, 2)
                     else:
                         appears[star_num][char]["planar_freq"][planar]["avg_round"] = 99.99
+                        if pf_mode:
+                            appears[star_num][char]["planar_freq"][planar]["avg_round"] = 0
                 else:
                     appears[star_num][char]["planar_freq"][planar]["percent"] = 0
                     appears[star_num][char]["planar_freq"][planar]["avg_round"] = 99.99
+                    if pf_mode:
+                        appears[star_num][char]["planar_freq"][planar]["avg_round"] = 0
     return appears
 
 def usages(owns, appears, past_phase, filename, chambers=ROOMS, offset=1):
@@ -494,7 +538,7 @@ def usages(owns, appears, past_phase, filename, chambers=ROOMS, offset=1):
             # rate = round(appears[star_num][char]["flat"] / (owns[star_num][char]["flat"] * offset / 100.0), 2)
             rates.append(uses[star_num][char]["app"])
 
-            if len(chambers) > 2:
+            if len(chambers) > 2 or (pf_mode and chambers == ["4-1", "4-2"]):
                 stage = "all"
             else:
                 stage = chambers[0]
@@ -516,7 +560,10 @@ def usages(owns, appears, past_phase, filename, chambers=ROOMS, offset=1):
                     "usage": "-",
                 }
 
-            if len(chambers) < 3:
+            if pf_mode:
+                if chambers != ["4-1", "4-2"]:
+                    continue
+            elif len(chambers) < 3:
                 continue
             if star_num != 4:
                 continue

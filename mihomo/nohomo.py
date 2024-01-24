@@ -187,6 +187,10 @@ async def v1():
 					print("[429] Too Many Requests")
 					time.sleep(60)
 					pass
+				elif str(e) == "Cannot connect to host api.mihomo.me:443 ssl:default [getaddrinfo failed]":
+					print("Cannot connect")
+					time.sleep(10)
+					pass
 				elif str(e) == "User not found.":
 					break
 				else:

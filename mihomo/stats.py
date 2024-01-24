@@ -29,10 +29,14 @@ with open("output1.csv", 'r') as f:
 #         print(i[0])
 # exit()
 
+pf_filename = ""
+if pf_mode:
+    pf_filename = "_pf"
+
 if os.path.exists("../data/raw_csvs_real/"):
-    f = open("../data/raw_csvs_real/" + phase_num + ".csv", 'r')
+    f = open("../data/raw_csvs_real/" + phase_num + pf_filename + ".csv", 'r')
 else:
-    f = open("../data/raw_csvs/" + phase_num + ".csv", 'r')
+    f = open("../data/raw_csvs/" + phase_num + pf_filename + ".csv", 'r')
 reader = csv.reader(f, delimiter=',')
 headers = next(reader)
 spiral = list(reader)
@@ -53,7 +57,7 @@ substats = {}
 
 spiral_rows = {}
 for spiral_row in spiral:
-    if int(''.join(filter(str.isdigit, spiral_row[1]))) > 9:
+    if int(''.join(filter(str.isdigit, spiral_row[1]))) > 9 or (pf_mode and int(''.join(filter(str.isdigit, spiral_row[1]))) > 3):
         if spiral_row[0] not in spiral_rows:
             spiral_rows[spiral_row[0]] = {}
         # if comp_stats:
@@ -431,10 +435,12 @@ for char in stats:
         print(CHARACTERS[iter_char]["char"])
         exit()
 
-    app_dict = {
-        "12_app": APP["12-1"]["4"][char]["app"],
-        "12_round": ROUND["12-1"]["4"][char]["round"],
-    }
+    app_dict = {}
+    if not(pf_mode):
+        app_dict = {
+            "12_app": APP["12-1"]["4"][char]["app"],
+            "12_round": ROUND["12-1"]["4"][char]["round"],
+        }
     temp_stats.append((CHARACTERS[iter_char] | stats[char]) | app_dict)
     iter_char += 1
 with open('../char_results/all2.json', 'w') as char_file:

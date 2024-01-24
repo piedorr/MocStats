@@ -7,6 +7,7 @@ sys.path.append('../Comps/')
 skip_self = False
 skip_random = False
 print_chart = False
+pf_mode = True
 
 # stats.py
 # comp_stats = ['Bailu', 'Jing Yuan', 'Tingyun', 'Yukong']

@@ -159,7 +159,9 @@ class Composition:
             #             self.comp_name = "Faux-Mono " + elem
             # if self.comp_name == "-":
             archetype = ""
-            if len(self.dps) + len(self.subdps) > 1:
+            if len(self.healer) == 0:
+                archetype = " No Sustain"
+            elif len(self.dps) + len(self.subdps) > 1:
                 if len(self.dps) + len(self.subdps) > 2:
                     archetype = " Triple Carry"
                 else:
@@ -178,7 +180,7 @@ class Composition:
                     self.alt_comp_name = self.characters[0] + " Dual DoT"
                 # elif len(self.dps) + len(self.subdps) == 1:
                 #     self.alt_comp_name = self.characters[0] + " Solo DoT"
-            elif len(self.fua) > 1:
+            elif len(self.fua) > 1 and "Topaz & Numby" in self.characters:
                 self.alt_comp_name = self.characters[0] + " Follow-Up"
 
             if self.dps or self.subdps or self.anemo:
