@@ -442,6 +442,7 @@ for char in stats:
             "12_round": ROUND["12-1"]["4"][char]["round"],
         }
     temp_stats.append((CHARACTERS[iter_char] | stats[char]) | app_dict)
+    # temp_stats.append((CHARACTERS[iter_char]) | app_dict)
     iter_char += 1
 with open('../char_results/all2.json', 'w') as char_file:
     char_file.write(json.dumps(temp_stats,indent=2))

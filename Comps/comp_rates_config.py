@@ -3,11 +3,11 @@ import json
 with open('../data/characters.json') as char_file:
     CHARACTERS = json.load(char_file)
 
-RECENT_PHASE = "1.6.2"
-past_phase = "1"
+RECENT_PHASE = "1.6.3"
+past_phase = "1.6.1"
 global pf_mode
-pf_mode = True
-char_infographics = ["Ruan Mei", "Blade", "March 7th", "Xueyi", "Tingyun"]
+pf_mode = False
+char_infographics = ["Sushang", "Hook", "Natasha", "Dr. Ratio", "Kafka"]
 char_infographics = char_infographics[3]
 
 # threshold for comps in character infographics, non-inclusive

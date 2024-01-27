@@ -153,7 +153,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                     if CHARACTERS[char]["role"] == "Damage Dealer":
                         dpsCount += 1
                         if char == "Topaz & Numby":
-                            for char_fua in ["Clara", "Jing Yuan", "Himeko", "Kafka", "Blade", "Herta", "Xueyi"]:
+                            for char_fua in ["Dr. Ratio", "Clara", "Jing Yuan", "Himeko", "Kafka", "Blade", "Herta", "Xueyi"]:
                                 if char_fua in player.chambers[chamber].characters:
                                     dpsCount -= 1
                                     break
@@ -166,7 +166,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                     sustainCount = 1
                 if "Ruan Mei" in player.chambers[chamber].characters:
                     dpsCount = 1
-                dpsCount = 1
+                # dpsCount = 1
 
                 # findchars(char, foundchar)
                 # if find_archetype(foundchar):
@@ -179,7 +179,8 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
 
                         char_name = char
                         if foundDuo:
-                            if foundDuo[0] == char_name:
+                            # if foundDuo[0] == char_name:
+                            if char_name in foundDuo:
                                 dpsCount = 1
 
                         appears[star_num][char_name]["flat"] += 1
@@ -259,6 +260,8 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
             raise ValueError("There are missing comps from character data.")
 
         total = total_battle * offset/200.0
+        all_rounds = []
+        count_all_rounds = 0
         for char in appears[star_num]:
             # # to print the amount of players using a character
             # print(str(char) + ": " + str(len(players_chars[star_num][char])))
@@ -274,6 +277,9 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                 uses_room = {}
                 for room_num in range(1,13):
                     if (appears[star_num][char]["round"][str(room_num)]):
+                        for round_num_iter in appears[star_num][char]["round"][str(room_num)]:
+                            count_all_rounds += 1
+                            all_rounds.append(["1/26/2024", room_num, char, round_num_iter, count_all_rounds])
                         uses_room[room_num] = len(appears[star_num][char]["round"][str(room_num)])
                         if len(appears[star_num][char]["round"][str(room_num)]) > 1:
                             std_dev_round.append(statistics.stdev(appears[star_num][char]["round"][str(room_num)]))
@@ -495,6 +501,11 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                     appears[star_num][char]["planar_freq"][planar]["avg_round"] = 99.99
                     if pf_mode:
                         appears[star_num][char]["planar_freq"][planar]["avg_round"] = 0
+        if len(chambers) > 2 and star_num == 4:
+            csv_writer = csv.writer(open("../char_results/all_rounds.csv", 'w', newline=''))
+            for char in all_rounds:
+                csv_writer.writerow(char)
+            # exit()
     return appears
 
 def usages(owns, appears, past_phase, filename, chambers=ROOMS, offset=1):

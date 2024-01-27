@@ -111,13 +111,12 @@ def main():
     }
 
     for stage in avg_round:
-        if avg_round[stage]:
-            sample_size[stage] = {
-                "avg_round": round(statistics.mean(avg_round[stage]), 2),
-                "3_star": three_star_sample[stage]
-            }
-            if sample_size[stage]["avg_round"] > max_weight:
-                max_weight = sample_size[stage]["avg_round"]
+        sample_size[stage] = {
+            "avg_round": round(statistics.mean(avg_round[stage] if avg_round[stage] else [0]), 2),
+            "3_star": three_star_sample[stage]
+        }
+        if sample_size[stage]["avg_round"] > max_weight:
+            max_weight = sample_size[stage]["avg_round"]
 
     # global stage_weight
     # stage_weight = {}
@@ -253,6 +252,7 @@ def main():
                         continue
                     rounds[room][star_num][char] = {
                         "round": char_chambers[room][star_num][char]["round"],
+                        # "prev_round": prev_chambers[room][str(star_num)][char],
                         "rarity": char_chambers[room][star_num][char]["rarity"],
                         "diff": char_chambers[room][star_num][char]["diff_rounds"]
                     }
@@ -293,6 +293,7 @@ def main():
                         continue
                     rounds[room][star_num][char] = {
                         "round": char_chambers[room][star_num][char]["round"],
+                        # "prev_round": prev_chambers[room][str(star_num)][char],
                         "rarity": char_chambers[room][star_num][char]["rarity"],
                         "diff": char_chambers[room][star_num][char]["diff_rounds"]
                     }
@@ -449,7 +450,6 @@ def used_comps(players, comps, rooms, filename, whaleCheck, whaleSigWeap, sigWea
                         "dual_comp_name": comp.dual_comp_name,
                         "star_num": comp.star_num,
                         "round_num": {"1": [], "2": [], "3": [], "4": [], "5": [], "6": [], "7": [], "8": [], "9": [], "10": [], "11": [], "12": []},
-                        "deepwood": 0,
                         "whale_count": set(),
                         "players": set(),
                     }
@@ -464,21 +464,21 @@ def used_comps(players, comps, rooms, filename, whaleCheck, whaleSigWeap, sigWea
                 comps_dict[star_threshold][comp_tuple]["uses"] += 1
                 # comps_dict[star_threshold][comp_tuple]["round_num"][list(str(comp.room).split("-"))[0]].append(comp.round_num)
                 comps_dict[star_threshold][comp_tuple]["players"].add(comp.player)
-                for i in range (4):
-                    if comp_tuple[i] in players[phase][comp.player].owned:
-                        if players[phase][comp.player].owned[comp_tuple[i]]["weapon"] in comps_dict[star_threshold][comp_tuple][comp_tuple[i]]["weapon"]:
-                            comps_dict[star_threshold][comp_tuple][comp_tuple[i]]["weapon"][players[phase][comp.player].owned[comp_tuple[i]]["weapon"]] += 1
-                        else:
-                            comps_dict[star_threshold][comp_tuple][comp_tuple[i]]["weapon"][players[phase][comp.player].owned[comp_tuple[i]]["weapon"]] = 1
-                        if players[phase][comp.player].owned[comp_tuple[i]]["artifacts"] != "":
-                            if players[phase][comp.player].owned[comp_tuple[i]]["artifacts"] in comps_dict[star_threshold][comp_tuple][comp_tuple[i]]["artifacts"]:
-                                comps_dict[star_threshold][comp_tuple][comp_tuple[i]]["artifacts"][players[phase][comp.player].owned[comp_tuple[i]]["artifacts"]] += 1
-                            else:
-                                comps_dict[star_threshold][comp_tuple][comp_tuple[i]]["artifacts"][players[phase][comp.player].owned[comp_tuple[i]]["artifacts"]] = 1
-                        comps_dict[star_threshold][comp_tuple][comp_tuple[i]]["cons"][str(players[phase][comp.player].owned[comp_tuple[i]]["cons"])] += 1
                 if whaleComp:
                     comps_dict[star_threshold][comp_tuple]["whale_count"].add(comp.player)
                 else:
+                    for i in range (4):
+                        if comp_tuple[i] in players[phase][comp.player].owned:
+                            if players[phase][comp.player].owned[comp_tuple[i]]["weapon"] in comps_dict[star_threshold][comp_tuple][comp_tuple[i]]["weapon"]:
+                                comps_dict[star_threshold][comp_tuple][comp_tuple[i]]["weapon"][players[phase][comp.player].owned[comp_tuple[i]]["weapon"]] += 1
+                            else:
+                                comps_dict[star_threshold][comp_tuple][comp_tuple[i]]["weapon"][players[phase][comp.player].owned[comp_tuple[i]]["weapon"]] = 1
+                            if players[phase][comp.player].owned[comp_tuple[i]]["artifacts"] != "":
+                                if players[phase][comp.player].owned[comp_tuple[i]]["artifacts"] in comps_dict[star_threshold][comp_tuple][comp_tuple[i]]["artifacts"]:
+                                    comps_dict[star_threshold][comp_tuple][comp_tuple[i]]["artifacts"][players[phase][comp.player].owned[comp_tuple[i]]["artifacts"]] += 1
+                                else:
+                                    comps_dict[star_threshold][comp_tuple][comp_tuple[i]]["artifacts"][players[phase][comp.player].owned[comp_tuple[i]]["artifacts"]] = 1
+                            comps_dict[star_threshold][comp_tuple][comp_tuple[i]]["cons"][str(players[phase][comp.player].owned[comp_tuple[i]]["cons"])] += 1
                     comps_dict[star_threshold][comp_tuple]["round_num"][list(str(comp.room).split("-"))[0]].append(comp.round_num)
     chamber_num = list(str(filename).split("-"))
     if len(chamber_num) > 1:
@@ -507,8 +507,6 @@ def used_comps(players, comps, rooms, filename, whaleCheck, whaleSigWeap, sigWea
     #         print()
     if whaleCheck:
         print("Whale percentage: " + str(whaleCount/total_comps))
-    # print("Tighnari with deepwood: " + str(deepwoodTighnari))
-    # print(deepwoodEquipChars)
     return comps_dict
 
 def rank_usages(comps_dict, rooms, owns_offset=1):
@@ -559,8 +557,6 @@ def rank_usages(comps_dict, rooms, owns_offset=1):
             comps_dict[star_threshold][comp]["usage_rate"] = 0
             # own = int(100.0 * comps_dict[star_threshold][comp]["owns"] / (total_comps * owns_offset) * 100 + .5) / 100.0
             comps_dict[star_threshold][comp]["own_rate"] = 0
-            # deepwood = int(100.0 * comps_dict[star_threshold][comp]["deepwood"] / comps_dict[star_threshold][comp]["uses"] * 100 + .5) / 100.0
-            # comps_dict[star_threshold][comp]["deepwood_rate"] = deepwood
             rates.append(app)
             # rounds.append(avg_round)
         rates.sort(reverse=True)
@@ -577,8 +573,6 @@ def rank_usages(comps_dict, rooms, owns_offset=1):
     #     print("   Own: " + str(comps_dict[4][comp_tuple]["own_rate"]))
     #     print("   Usage: " + str(comps_dict[4][comp_tuple]["usage_rate"]))
     #     print("   5* Count: " + str(comps_dict[4][comp_tuple]["5* count"]))
-    #     # print("   Deepwood Holders: " + str(comps_dict[4][comp_tuple]["deepwood"]))
-    #     # print("   Deepwood Rate: " + str(comps_dict[4][comp_tuple]["deepwood_rate"]))
     #     if comps_dict[4][comp_tuple]["5* count"] <= 1:
     #         print("   F2P App: " + str(comps_dict[4][comp_tuple]["app_rate"]))
     #     print()
@@ -917,12 +911,12 @@ def duo_write(duos_dict, usage, filename, archetype, check_duo):
                     out_duos_append["char_" + str(i + 1)] = duos_dict[char][i][0]
                     out_duos_append["app_rate_" + str(i + 1)] = str(duos_dict[char][i][1]) + "%"
                     out_duos_append["avg_round_" + str(i + 1)] = duos_dict[char][i][2]
-                    # out_duos_append["app_flat_" + str(i + 1)] = duos_dict[char][i][3]
+                    out_duos_append["app_flat_" + str(i + 1)] = duos_dict[char][i][3]
                 else:
                     out_duos_append["char_" + str(i + 1)] = "-"
                     out_duos_append["app_rate_" + str(i + 1)] = "0.00%"
                     out_duos_append["avg_round_" + str(i + 1)] = 0.00
-                    # out_duos_append["app_flat_" + str(i + 1)] = 0
+                    out_duos_append["app_flat_" + str(i + 1)] = 0
             out_duos.append(out_duos_append)
     if pf_mode:
         out_duos = sorted(out_duos, key=lambda t: t["round"], reverse = True)
@@ -939,29 +933,37 @@ def duo_write(duos_dict, usage, filename, archetype, check_duo):
         out_duos_check[duos["char"]] = {}
         out_duos_exclu[duos["char"]] = {}
         if count == 0:
-            csv_writer.writerow(duos.keys())
+            # csv_writer.writerow(duos.keys())
+            temp_duos = ["char", "round"]
+            for i in range(10):
+                temp_duos += ["char_" + str(i + 1), "app_rate_" + str(i + 1), "avg_round_" + str(i + 1)]
+            csv_writer.writerow(temp_duos)
             count += 1
-        csv_writer.writerow(duos.values())
+        # csv_writer.writerow(duos.values())
+        temp_duos = [duos["char"], duos["round"]]
+        for i in range(10):
+            temp_duos += [duos["char_" + str(i + 1)], duos["app_rate_" + str(i + 1)], duos["avg_round_" + str(i + 1)]]
+        csv_writer.writerow(temp_duos)
         # duos.pop("round")
         for i in range(duo_dict_len):
             duos["app_rate_" + str(i + 1)] = float(duos["app_rate_" + str(i + 1)][:-1])
-            # if (duos["app_rate_" + str(i + 1)] >= 1 and duos["app_flat_" + str(i + 1)] >= 10 and (
-            #     (duos["avg_round_" + str(i + 1)] < usage[4][duos["char_" + str(i + 1)]]["round"]) or
-            #     (duos["avg_round_" + str(i + 1)] < usage[4][duos["char"]]["round"]))
-            #     and usage[4][duos["char_" + str(i + 1)]]["round"] != 99.99
-            #     and usage[4][duos["char_" + str(i + 1)]]["round"] != 0):
-            #     # out_duos_exclu[duos["char"]][duos["char_" + str(i + 1)]] = {
-            #     #     "app": duos["app_rate_" + str(i + 1)],
-            #     #     "avg_round": duos["avg_round_" + str(i + 1)]
-            #     # }
-            #     # duos.pop("char_" + str(i + 1))
-            #     # duos.pop("app_rate_" + str(i + 1))
-            #     # duos.pop("avg_round_" + str(i + 1))
-            #     # continue
-            #     out_duos_check[duos["char"]][duos["char_" + str(i + 1)]] = {
-            #         "app": duos["app_rate_" + str(i + 1)],
-            #         "avg_round": duos["avg_round_" + str(i + 1)]
-            #     }
+            if (duos["app_rate_" + str(i + 1)] >= 1 and duos["app_flat_" + str(i + 1)] >= 10 and (
+                (duos["avg_round_" + str(i + 1)] < usage[4][duos["char_" + str(i + 1)]]["round"]) or
+                (duos["avg_round_" + str(i + 1)] < usage[4][duos["char"]]["round"]))
+                and usage[4][duos["char_" + str(i + 1)]]["round"] != 99.99
+                and usage[4][duos["char_" + str(i + 1)]]["round"] != 0):
+                # out_duos_exclu[duos["char"]][duos["char_" + str(i + 1)]] = {
+                #     "app": duos["app_rate_" + str(i + 1)],
+                #     "avg_round": duos["avg_round_" + str(i + 1)]
+                # }
+                # duos.pop("char_" + str(i + 1))
+                # duos.pop("app_rate_" + str(i + 1))
+                # duos.pop("avg_round_" + str(i + 1))
+                # continue
+                out_duos_check[duos["char"]][duos["char_" + str(i + 1)]] = {
+                    "app": duos["app_rate_" + str(i + 1)],
+                    "avg_round": duos["avg_round_" + str(i + 1)]
+                }
     if check_duo:
         char_names = list(CHARACTERS.keys())
         out_dd = {}
@@ -975,8 +977,8 @@ def duo_write(duos_dict, usage, filename, archetype, check_duo):
                     if (char_i in ["Serval", "Sampo", "Luka", "Guinaifen"] and char_j == "Kafka"
                         or char_j in ["Serval", "Sampo", "Luka", "Guinaifen"] and char_i == "Kafka"):
                         continue
-                    if (char_i in ["Clara", "Jing Yuan", "Himeko", "Kafka", "Blade", "Herta", "Xueyi"] and char_j == "Topaz & Numby"
-                        or char_j in ["Clara", "Jing Yuan", "Himeko", "Kafka", "Blade", "Herta", "Xueyi"] and char_i == "Topaz & Numby"):
+                    if (char_i in ["Dr. Ratio", "Clara", "Jing Yuan", "Himeko", "Kafka", "Blade", "Herta", "Xueyi"] and char_j == "Topaz & Numby"
+                        or char_j in ["Dr. Ratio", "Clara", "Jing Yuan", "Himeko", "Kafka", "Blade", "Herta", "Xueyi"] and char_i == "Topaz & Numby"):
                         continue
                     if char_i in out_duos_check[char_j]:
                         out_dd_list.append([char_j, char_i])
@@ -1036,6 +1038,7 @@ def char_usages_write(chars_dict, filename, floor, archetype):
             "char": char,
             "app_rate": str(chars_dict[char]["app"]) + "%",
             "avg_round": str(chars_dict[char]["round"]),
+            # "prev_avg_round": str(prev_round.get(char, 99.99)),
             "std_dev_round": str(chars_dict[char]["std_dev_round"]),
             # "usage_rate": str(chars_dict[char]["usage"]) + "%",
             # "own_rate": str(chars_dict[char]["own"]) + "%",
