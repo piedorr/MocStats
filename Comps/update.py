@@ -62,6 +62,10 @@ download = requests.get("https://github.com/Mar-7th/StarRailRes/raw/master/index
 with open("../data/relics.json", "w") as out_file:
     out_file.write(json.dumps(json.load(io.StringIO(download)),indent=4))
 
+download = requests.get("https://github.com/Mar-7th/StarRailRes/raw/master/index_new/en/light_cones.json").content.decode('utf-8')
+with open("../data/light_cones.json", "w") as out_file:
+    out_file.write(json.dumps(json.load(io.StringIO(download)),indent=4))
+
 download = requests.get("https://github.com/Mar-7th/StarRailRes/raw/master/index_new/en/simulated_blessings.json").content.decode('utf-8')
 with open("../data/simulated_blessings.json", "w") as out_file:
     out_file.write(json.dumps(json.load(io.StringIO(download)),indent=4))

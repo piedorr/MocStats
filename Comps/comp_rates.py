@@ -413,7 +413,7 @@ def used_comps(players, comps, rooms, filename, whaleCheck, whaleSigWeap, sigWea
                 #     sustainCount += 1
                 # if (CHARACTERS[comp_tuple[char]]["role"] == "Damage Dealer" and comp_tuple[char] != "Topaz & Numby") or comp_tuple[char] == "Welt":
                 #     dpsCount += 1
-                # if comp_tuple[char] in ["Sampo", "Luka", "Guinaifen"] and "Kafka" not in comp_tuple:
+                # if comp_tuple[char] in ["Sampo", "Black Swan", "Luka", "Guinaifen"] and "Kafka" not in comp_tuple:
                 #     dpsCount += 1
                 # if set(["Blade", "Jingliu"]).issubset(comp_tuple):
                 #     dpsCount = 1
@@ -544,7 +544,7 @@ def rank_usages(comps_dict, rooms, owns_offset=1):
             if avg_round:
                 avg_round = round(statistics.mean(avg_round), 2)
                 if pf_mode:
-                    avg_round = round(avg_round / 1000, 2)
+                    avg_round = round(avg_round)
             else:
                 avg_round = 99.99
                 if pf_mode:
@@ -629,7 +629,7 @@ def used_duos(players, comps, rooms, usage, archetype, check_duo, phase=RECENT_P
             is_triple_dps = False
             # comp_diff_duo = list(set(comp.characters) - set(duo))
             # for char_diff_duo in comp_diff_duo:
-            #     if CHARACTERS[char_diff_duo]["role"] == "Damage Dealer" or char_diff_duo in ["Sampo", "Luka", "Guinaifen", "Ruan Mei"]:
+            #     if CHARACTERS[char_diff_duo]["role"] == "Damage Dealer" or char_diff_duo in ["Sampo", "Black Swan", "Luka", "Guinaifen", "Ruan Mei"]:
             #         is_triple_dps = True
             #         break
 
@@ -680,7 +680,7 @@ def used_duos(players, comps, rooms, usage, archetype, check_duo, phase=RECENT_P
             if avg_round:
                 duos_dict[duo]["round_num"] = round(statistics.mean(avg_round), 2)
                 if pf_mode:
-                    duos_dict[duo]["round_num"] = round(duos_dict[duo]["round_num"] / 1000, 2)
+                    duos_dict[duo]["round_num"] = round(duos_dict[duo]["round_num"])
             else:
                 duos_dict[duo]["round_num"] = 99.99
                 if pf_mode:
@@ -764,7 +764,9 @@ def comp_usages_write(comps_dict, filename, floor, info_char, sort_app):
                             "char_3": comp[2],
                             "char_4": comp[3],
                             "app_rate": str(comps_dict[star_threshold][comp]["app_rate"]) + "%",
-                            "avg_round": str(comps_dict[star_threshold][comp]["round"]),
+                            "avg_round": str(
+                                round(comps_dict[star_threshold][comp]["round"] / 1000, 2) if pf_mode else comps_dict[star_threshold][comp]["round"]
+                            ),
                             # "own_rate": str(comps_dict[star_threshold][comp]["own_rate"]) + "%",
                             # "usage_rate": str(comps_dict[star_threshold][comp]["usage_rate"]) + "%"
                         }
@@ -940,9 +942,9 @@ def duo_write(duos_dict, usage, filename, archetype, check_duo):
             csv_writer.writerow(temp_duos)
             count += 1
         # csv_writer.writerow(duos.values())
-        temp_duos = [duos["char"], duos["round"]]
+        temp_duos = [duos["char"], round(duos["round"] / 1000, 2) if pf_mode else duos["round"]]
         for i in range(10):
-            temp_duos += [duos["char_" + str(i + 1)], duos["app_rate_" + str(i + 1)], duos["avg_round_" + str(i + 1)]]
+            temp_duos += [duos["char_" + str(i + 1)], duos["app_rate_" + str(i + 1)], round(duos["avg_round_" + str(i + 1)] / 1000, 2) if pf_mode else duos["avg_round_" + str(i + 1)]]
         csv_writer.writerow(temp_duos)
         # duos.pop("round")
         for i in range(duo_dict_len):
@@ -971,11 +973,11 @@ def duo_write(duos_dict, usage, filename, archetype, check_duo):
         csv_writer = csv.writer(open("../char_results/duo_check.csv", 'w', newline=''))
         for char_i in char_names:
             for char_j in char_names:
-                is_char_i_dps = CHARACTERS[char_i]["role"] == "Damage Dealer" or char_i in ["Sampo", "Luka", "Guinaifen"]
-                is_char_j_dps = CHARACTERS[char_j]["role"] == "Damage Dealer" or char_j in ["Sampo", "Luka", "Guinaifen"]
+                is_char_i_dps = CHARACTERS[char_i]["role"] == "Damage Dealer" or char_i in ["Sampo", "Black Swan", "Luka", "Guinaifen"]
+                is_char_j_dps = CHARACTERS[char_j]["role"] == "Damage Dealer" or char_j in ["Sampo", "Black Swan", "Luka", "Guinaifen"]
                 if is_char_i_dps and is_char_j_dps:
-                    if (char_i in ["Serval", "Sampo", "Luka", "Guinaifen"] and char_j == "Kafka"
-                        or char_j in ["Serval", "Sampo", "Luka", "Guinaifen"] and char_i == "Kafka"):
+                    if (char_i in ["Serval", "Sampo", "Black Swan", "Luka", "Guinaifen"] and char_j == "Kafka"
+                        or char_j in ["Serval", "Sampo", "Black Swan", "Luka", "Guinaifen"] and char_i == "Kafka"):
                         continue
                     if (char_i in ["Dr. Ratio", "Clara", "Jing Yuan", "Himeko", "Kafka", "Blade", "Herta", "Xueyi"] and char_j == "Topaz & Numby"
                         or char_j in ["Dr. Ratio", "Clara", "Jing Yuan", "Himeko", "Kafka", "Blade", "Herta", "Xueyi"] and char_i == "Topaz & Numby"):
@@ -1026,6 +1028,7 @@ def duo_write(duos_dict, usage, filename, archetype, check_duo):
 
 def char_usages_write(chars_dict, filename, floor, archetype):
     out_chars = []
+    out_chars_csv = []
     weap_len = 10
     arti_len = 10
     planar_len = 5
@@ -1143,19 +1146,10 @@ def char_usages_write(chars_dict, filename, floor, archetype):
             out_chars_append["cons_avg"] = chars_dict[char]["cons_avg"]
             out_chars_append["sample"] = chars_dict[char]["sample"]
         out_chars.append(out_chars_append)
+        out_chars_csv.append(out_chars_append.copy())
         if char == filename:
             break
 
-    if archetype != "all":
-        filename = filename + "_" + archetype
-    csv_writer = csv.writer(open("../char_results/" + filename + ".csv", 'w', newline=''))
-    count = 0
-    for chars in out_chars:
-        if count == 0:
-            header = chars.keys()
-            csv_writer.writerow(header)
-            count += 1
-        csv_writer.writerow(chars.values())
     iterate_value_app = ["app_rate", "diff"]
     iterate_value_round = ["avg_round", "std_dev_round", "diff_rounds"]
     iterate_name_arti = []
@@ -1180,7 +1174,8 @@ def char_usages_write(chars_dict, filename, floor, archetype):
                 out_chars[i][value] = 0.00
         for value in iterate_value_round:
             if out_chars[i][value].replace(".", "").replace("-", "").isnumeric():
-                out_chars[i][value] = float(out_chars[i][value])
+                out_chars[i][value] = round(float(out_chars[i][value]))
+                out_chars_csv[i][value] = str(round(float(out_chars_csv[i][value]) / 1000, 2))
             else:
                 out_chars[i][value] = 99.99
                 if pf_mode:
@@ -1194,6 +1189,17 @@ def char_usages_write(chars_dict, filename, floor, archetype):
                     out_chars[i][value] = 0
     with open("../char_results/" + filename + ".json", "w") as out_file:
         out_file.write(json.dumps(out_chars,indent=2))
+
+    if archetype != "all":
+        filename = filename + "_" + archetype
+    csv_writer = csv.writer(open("../char_results/" + filename + ".csv", 'w', newline=''))
+    count = 0
+    for chars in out_chars_csv:
+        if count == 0:
+            header = chars.keys()
+            csv_writer.writerow(header)
+            count += 1
+        csv_writer.writerow(chars.values())
 
 def name_filter(comp, mode="out"):
     filtered = []

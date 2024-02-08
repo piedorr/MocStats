@@ -7,12 +7,10 @@ import msvcrt
 import time
 import _thread
 
-from mihomo import Language, MihomoAPI
-from mihomo.models import StarrailInfoParsed
-from mihomo.models.v1 import StarrailInfoParsedV1
+from mihomo import Language, MihomoApi, FormattedApiInfo
 from nohomo_config import *
 
-client = MihomoAPI(language=Language.EN)
+client = MihomoApi()
 
 print(len(uids))
 
@@ -41,7 +39,7 @@ async def v1():
 		for i in range(20):
 			try:
 				print('{} / {} : {}, {}'.format(cpt, len(uids), uid, i), end="\r")
-				data: StarrailInfoParsedV1 = await client.fetch_user(uid)
+				data: FormattedApiInfo = await client.get_parsed_api_data(str(uid))
 				for character in data.characters:
 					line = []
 					line.append(uid)
@@ -65,7 +63,7 @@ async def v1():
 						"Ultimate": 0,
 						"Talent": 0
 					}
-					for skill in character.traces:
+					for skill in character.skills:
 						if skill.type_text in skills and skill.max_level > 1:
 							skills[skill.type_text] = skill.level
 					for skill in skills.values():
@@ -88,14 +86,14 @@ async def v1():
 
 					for stat in character.attributes:
 						if stat.name in desired_stats:
-							if stat.is_percent:
+							if stat.percent:
 								desired_stats[stat.name] = stat.value*100
 							else:
 								desired_stats[stat.name] = stat.value
 
 					for stat in character.additions:
 						if stat.name in desired_stats:
-							if stat.is_percent:
+							if stat.percent:
 								desired_stats[stat.name] += stat.value*100
 							else:
 								desired_stats[stat.name] += stat.value
@@ -139,8 +137,8 @@ async def v1():
 								artifacts[relic.set_name] = 1
 							else:
 								artifacts[relic.set_name] += 1
-						for stat in relic.sub_affixes:
-							if stat.is_percent:
+						for stat in relic.sub_affix:
+							if stat.percent:
 								substats[stat.name] += stat.value*100
 							else:
 								substats["Flat " + stat.name] += stat.value

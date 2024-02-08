@@ -3,10 +3,13 @@ import json
 with open('../data/characters.json') as char_file:
     CHARACTERS = json.load(char_file)
 
-RECENT_PHASE = "1.6.3"
-past_phase = "1.6.1"
+with open('../data/light_cones.json') as char_file:
+    LIGHT_CONES = json.load(char_file)
+
+RECENT_PHASE = "2.0.1"
+past_phase = "1.6.2_pf"
 global pf_mode
-pf_mode = False
+pf_mode = True
 char_infographics = ["Sushang", "Hook", "Natasha", "Dr. Ratio", "Kafka"]
 char_infographics = char_infographics[3]
 
@@ -31,16 +34,14 @@ skip_random = False
 archetype = "all"
 whaleCheck = False
 whaleSigWeap = False
-sigWeaps = ["Night on the Milky Way", "In the Night", "Something Irreplaceable", "But the Battle Isn't Over", "In the Name of the World", "Moment of Victory", "Patience Is All You Need", "Incessant Rain", "Echoes of the Coffin", "The Unreachable Side", "Before Dawn", "She Already Shut Her Eyes", "Sleep Like the Dead", "Time Waits for No One", "I Shall Be My Own Sword", "Brighter Than the Sun", "Worrisome, Blissful", "Night of Fright", "An Instant Before A Gaze", "Past Self in Mirror", "Baptism of Pure Thought", "Earthly Escapade", "Reforged Remembrance"]
-standWeaps = []
 
 # Char infographics should be separated from overall comp rankings
 run_commands = [
-    "Char usages 8 - 10",
+    # "Char usages 8 - 10",
     # "Char usages for each stage",
     # "Char usages for each stage (combined)",
-    # "Comp usage 8 - 10",
-    # "Comp usages for each stage",
+    "Comp usage 8 - 10",
+    "Comp usages for each stage",
     # "Character specific infographics",
     # "Char usages all stages",
     # "Comp usage all stages",
@@ -48,6 +49,12 @@ run_commands = [
 ]
 
 
+sigWeaps = []
+standWeaps = ["Night on the Milky Way", "Something Irreplaceable", "But the Battle Isn't Over", "In the Name of the World", "Moment of Victory", "Time Waits for No One", "Sleep Like the Dead"]
+for light_cone in LIGHT_CONES:
+    if light_cone[:2] == "23":
+        if LIGHT_CONES[light_cone]["name"] not in standWeaps:
+            sigWeaps += [LIGHT_CONES[light_cone]["name"]]
 
 alt_comps = "Character specific infographics" in run_commands
 if alt_comps and char_app_rate_threshold > app_rate_threshold:

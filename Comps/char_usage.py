@@ -158,7 +158,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                                     dpsCount -= 1
                                     break
                     if "Kafka" not in player.chambers[chamber].characters:
-                        if char in ["Sampo", "Luka", "Guinaifen"]:
+                        if char in ["Sampo", "Black Swan", "Luka", "Guinaifen"]:
                             dpsCount += 1
                     elif char == "Serval":
                         dpsCount -= 1
@@ -309,8 +309,8 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                     appears[star_num][char]["avg_round"] = round(statistics.mean(avg_round), 2)
                     appears[star_num][char]["std_dev_round"] = round(statistics.mean(std_dev_round), 2)
                     if pf_mode:
-                        appears[star_num][char]["avg_round"] = round(appears[star_num][char]["avg_round"] / 1000, 2)
-                        appears[star_num][char]["std_dev_round"] = round(appears[star_num][char]["std_dev_round"] / 1000, 2)
+                        appears[star_num][char]["avg_round"] = round(appears[star_num][char]["avg_round"])
+                        appears[star_num][char]["std_dev_round"] = round(appears[star_num][char]["std_dev_round"])
                 else:
                     appears[star_num][char]["avg_round"] = 99.99
                     if pf_mode:
@@ -358,7 +358,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                     if avg_round:
                         appears[star_num][char]["cons_freq"][cons]["avg_round"] = round(statistics.mean(avg_round), 2)
                         if pf_mode:
-                            appears[star_num][char]["cons_freq"][cons]["avg_round"] = round(appears[star_num][char]["cons_freq"][cons]["avg_round"] / 1000, 2)
+                            appears[star_num][char]["cons_freq"][cons]["avg_round"] = round(appears[star_num][char]["cons_freq"][cons]["avg_round"])
                     else:
                         appears[star_num][char]["cons_freq"][cons]["avg_round"] = 99.99
                         if pf_mode:
@@ -401,7 +401,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                     if avg_round:
                         appears[star_num][char]["weap_freq"][weapon]["avg_round"] = round(statistics.mean(avg_round), 2)
                         if pf_mode:
-                            appears[star_num][char]["weap_freq"][weapon]["avg_round"] = round(appears[star_num][char]["weap_freq"][weapon]["avg_round"] / 1000, 2)
+                            appears[star_num][char]["weap_freq"][weapon]["avg_round"] = round(appears[star_num][char]["weap_freq"][weapon]["avg_round"])
                     else:
                         appears[star_num][char]["weap_freq"][weapon]["avg_round"] = 99.99
                         if pf_mode:
@@ -446,7 +446,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                     if avg_round:
                         appears[star_num][char]["arti_freq"][arti]["avg_round"] = round(statistics.mean(avg_round), 2)
                         if pf_mode:
-                            appears[star_num][char]["arti_freq"][arti]["avg_round"] = round(appears[star_num][char]["arti_freq"][arti]["avg_round"] / 1000, 2)
+                            appears[star_num][char]["arti_freq"][arti]["avg_round"] = round(appears[star_num][char]["arti_freq"][arti]["avg_round"])
                     else:
                         appears[star_num][char]["arti_freq"][arti]["avg_round"] = 99.99
                         if pf_mode:
@@ -491,7 +491,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                     if avg_round:
                         appears[star_num][char]["planar_freq"][planar]["avg_round"] = round(statistics.mean(avg_round), 2)
                         if pf_mode:
-                            appears[star_num][char]["planar_freq"][planar]["avg_round"] = round(appears[star_num][char]["planar_freq"][planar]["avg_round"] / 1000, 2)
+                            appears[star_num][char]["planar_freq"][planar]["avg_round"] = round(appears[star_num][char]["planar_freq"][planar]["avg_round"])
                     else:
                         appears[star_num][char]["planar_freq"][planar]["avg_round"] = 99.99
                         if pf_mode:

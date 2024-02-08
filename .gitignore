@@ -301,6 +301,7 @@ mihomo/images
 mihomo/artistats.py
 mihomo/nohomo_f.py
 mihomo/output*
+mihomo/data
 char_results
 comp_results
 rogue_results
