@@ -78,7 +78,7 @@ class Composition:
                 self.dps.insert(0, character)
             elif character in ["Qingque", "Arlan", "Himeko", "Dan Heng", "Sushang"]:
                 self.dps.append(character)
-            elif character in ["Clara", "Blade", "Jingliu", "Xueyi", "Black Swan"]:
+            elif character in ["Clara", "Blade", "Jingliu", "Xueyi", "Misha", "Black Swan"]:
                 self.subdps.insert(0, character)
             elif character in ["Welt", "Serval", "Physical Trailblazer", "Sampo", "Herta", "Luka", "Topaz & Numby", "Guinaifen"]:
                 self.subdps.append(character)
@@ -150,7 +150,7 @@ class Composition:
                 archetype = " No Sustain"
                 self.alt_comp_name = self.characters[0] + " No Sustain"
             elif len(self.dps) + len(self.subdps) > 1:
-                if len(self.dps) + len(self.subdps) > 2:
+                if len(self.dps) + len(self.subdps) > 2 and "Follow-Up" not in self.alt_comp_name:
                     archetype = " Triple Carry"
                 else:
                     archetype = " Dual Carry"

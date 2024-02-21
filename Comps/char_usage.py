@@ -260,9 +260,9 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
             raise ValueError("There are missing comps from character data.")
 
         total = total_battle * offset/200.0
-        all_rounds = []
-        count_all_rounds = 0
+        all_rounds = {}
         for char in appears[star_num]:
+            all_rounds[char] = {}
             # # to print the amount of players using a character
             # print(str(char) + ": " + str(len(players_chars[star_num][char])))
             if total > 0:
@@ -276,10 +276,14 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                 std_dev_round = []
                 uses_room = {}
                 for room_num in range(1,13):
+                    if room_num >= 10:
+                        all_rounds[char][room_num] = {}
+                        for i in range(31):
+                            all_rounds[char][room_num][i] = 0
                     if (appears[star_num][char]["round"][str(room_num)]):
-                        for round_num_iter in appears[star_num][char]["round"][str(room_num)]:
-                            count_all_rounds += 1
-                            all_rounds.append(["1/26/2024", room_num, char, round_num_iter, count_all_rounds])
+                        if room_num >= 10:
+                            for round_num_iter in appears[star_num][char]["round"][str(room_num)]:
+                                all_rounds[char][room_num][round_num_iter] += 1
                         uses_room[room_num] = len(appears[star_num][char]["round"][str(room_num)])
                         if len(appears[star_num][char]["round"][str(room_num)]) > 1:
                             std_dev_round.append(statistics.stdev(appears[star_num][char]["round"][str(room_num)]))
@@ -504,7 +508,9 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
         if len(chambers) > 2 and star_num == 4:
             csv_writer = csv.writer(open("../char_results/all_rounds.csv", 'w', newline=''))
             for char in all_rounds:
-                csv_writer.writerow(char)
+                for room_num in all_rounds[char]:
+                    for round_num_iter in all_rounds[char][room_num]:
+                        csv_writer.writerow(["2/21/2024", char, room_num, round_num_iter, all_rounds[char][room_num][round_num_iter]])
             # exit()
     return appears
 

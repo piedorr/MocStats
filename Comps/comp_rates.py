@@ -749,7 +749,7 @@ def comp_usages_write(comps_dict, filename, floor, info_char, sort_app):
                     elif comp_name in top_comps_app:
                         if comps_dict[star_threshold][comp]["is_count_round"] and comps_dict[star_threshold][comp]["app_rate"] < top_comps_app[comp_name]/5:
                             continue
-                    if (sort_app or comps_dict[star_threshold][comp]["is_count_round"]) and (comps_dict[star_threshold][comp]["app_rate"] >= threshold
+                    if comps_dict[star_threshold][comp]["is_count_round"] and (comps_dict[star_threshold][comp]["app_rate"] >= threshold
                         or (info_char and comps_dict[star_threshold][comp]["app_rate"] > char_app_rate_threshold)):
                         temp_comp_name = "-"
                         if alt_comp_name != "-":
@@ -1175,7 +1175,7 @@ def char_usages_write(chars_dict, filename, floor, archetype):
         for value in iterate_value_round:
             if out_chars[i][value].replace(".", "").replace("-", "").isnumeric():
                 out_chars[i][value] = round(float(out_chars[i][value]))
-                out_chars_csv[i][value] = str(round(float(out_chars_csv[i][value]) / 1000, 2))
+                out_chars_csv[i][value] = str(round(float(out_chars_csv[i][value]) / 1000 if pf_mode else float(out_chars_csv[i][value]), 2))
             else:
                 out_chars[i][value] = 99.99
                 if pf_mode:
