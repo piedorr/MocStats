@@ -45,7 +45,6 @@ def main():
     reader = csv.reader(stats)
     col_names_comps = next(reader)
     all_comps = []
-    avg_round = {"1": [], "2": [], "3": [], "4": [], "5": [], "6": [], "7": [], "8": [], "9": [], "10": [], "11": [], "12": []}
     three_star_sample = {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0, "7": 0, "8": 0, "9": 0, "10": 0, "11": 0, "12": 0}
     uid_freq_comp = {}
     self_freq_comp = {}
@@ -87,7 +86,6 @@ def main():
                 #     else:
                 #         dps_freq_comp[line[0]].add(frozenset([comp.dps[0]]))
                 all_comps.append(comp)
-                avg_round[stage].append(int(line[3]))
                 if int(line[4]) == 3:
                     three_star_sample[stage] += 1
 
@@ -102,7 +100,15 @@ def main():
     # exit()
 
     global sample_size
-    sample_size = {}
+    sample_size = {"1": {}, "2": {}, "3": {}, "4": {}, "5": {}, "6": {}, "7": {}, "8": {}, "9": {}, "10": {}, "11": {}, "12": {}}
+    global avg_round_stage
+    avg_round_stage = {"1": [], "2": [], "3": [], "4": [], "5": [], "6": [], "7": [], "8": [], "9": [], "10": [], "11": [], "12": []}
+    global valid_duo_dps
+    if os.path.exists("../char_results/duo_check.csv"):
+        with open("../char_results/duo_check.csv", 'r') as f:
+            valid_duo_dps = list(csv.reader(f, delimiter=','))
+    else:
+        valid_duo_dps = []
     max_weight = 0
     sample_size["all"] = {
         "total": len(uid_freq_comp),
@@ -110,18 +116,10 @@ def main():
         "random": len(uid_freq_comp) - len(self_freq_comp)
     }
 
-    for stage in avg_round:
-        sample_size[stage] = {
-            "avg_round": round(statistics.mean(avg_round[stage] if avg_round[stage] else [0]), 2),
-            "3_star": three_star_sample[stage]
-        }
-        if sample_size[stage]["avg_round"] > max_weight:
-            max_weight = sample_size[stage]["avg_round"]
-
     # global stage_weight
     # stage_weight = {}
-    # for stage in avg_round:
-    #     stage_weight[stage] = max_weight / sample_size[stage]["avg_round"]
+    # for stage in avg_round_stage:
+    #     stage_weight[stage] = max_weight / sample_size[stage]["avg_round_stage"]
     #     sample_size[stage]["weight"] = stage_weight[stage]
 
     if os.path.exists("../data/raw_csvs_real/"):
@@ -184,6 +182,10 @@ def main():
         three_double_stages = [["10-1", "10-2"], ["11-1", "11-2"], ["12-1", "12-2"]]
         all_stages = ["1-1", "1-2", "2-1", "2-2", "3-1", "3-2", "4-1", "4-2", "5-1", "5-2", "6-1", "6-2", "7-1", "7-2", "8-1", "8-2", "9-1", "9-2", "10-1", "10-2", "11-1", "11-2", "12-1", "12-2"]
         all_double_stages = [["1-1", "1-2"], ["2-1", "2-2"], ["3-1", "3-2"], ["4-1", "4-2"], ["5-1", "5-2"], ["6-1", "6-2"], ["7-1", "7-2"], ["8-1", "8-2"], ["9-1", "9-2"], ["10-1", "10-2"], ["11-1", "11-2"], ["12-1", "12-2"]]
+        # three_stages = ["8-1", "8-2", "9-1", "9-2", "10-1", "10-2"]
+        # three_double_stages = [["8-1", "8-2"], ["9-1", "9-2"], ["10-1", "10-2"]]
+        # all_stages = ["1-1", "1-2", "2-1", "2-2", "3-1", "3-2", "4-1", "4-2", "5-1", "5-2", "6-1", "6-2", "7-1", "7-2", "8-1", "8-2", "9-1", "9-2", "10-1", "10-2"]
+        # all_double_stages = [["1-1", "1-2"], ["2-1", "2-2"], ["3-1", "3-2"], ["4-1", "4-2"], ["5-1", "5-2"], ["6-1", "6-2"], ["7-1", "7-2"], ["8-1", "8-2"], ["9-1", "9-2"], ["10-1", "10-2"]]
 
     if "Char usages all stages" in run_commands:
         usage_low = char_usages(all_players, archetype, past_phase, all_stages, filename="all", floor=True)
@@ -409,23 +411,32 @@ def used_comps(players, comps, rooms, filename, whaleCheck, whaleSigWeap, sigWea
                 # if comp_tuple[char] not in total_char_comps:
                 #     total_char_comps[comp_tuple[char]] = 0
                 # total_char_comps[comp_tuple[char]] += 1
-                # if CHARACTERS[comp_tuple[char]]["role"] == "Sustain":
-                #     sustainCount += 1
-                # if (CHARACTERS[comp_tuple[char]]["role"] == "Damage Dealer" and comp_tuple[char] != "Topaz & Numby") or comp_tuple[char] == "Welt":
-                #     dpsCount += 1
-                # if comp_tuple[char] in ["Sampo", "Black Swan", "Luka", "Guinaifen"] and "Kafka" not in comp_tuple:
-                #     dpsCount += 1
-                # if set(["Blade", "Jingliu"]).issubset(comp_tuple):
-                #     dpsCount = 1
+                if CHARACTERS[comp_tuple[char]]["role"] == "Sustain":
+                    sustainCount += 1
+                if CHARACTERS[comp_tuple[char]]["role"] == "Damage Dealer":
+                    dpsCount += 1
+                    if comp_tuple[char] == "Topaz & Numby":
+                        for char_fua in range (4):
+                            if comp_tuple[char_fua] in ["Dr. Ratio", "Clara", "Jing Yuan", "Himeko", "Kafka", "Blade", "Herta", "Xueyi"]:
+                                dpsCount -= 1
+                                break
+                if "Kafka" not in comp_tuple:
+                    if comp_tuple[char] in ["Sampo", "Black Swan", "Luka", "Guinaifen"]:
+                        dpsCount += 1
+                elif comp_tuple[char] == "Serval":
+                    dpsCount -= 1
+                for duo_dps in valid_duo_dps:
+                    if set(duo_dps).issubset(comp_tuple):
+                        dpsCount = 1
+                        break
 
             if whaleComp:
                 whaleCount += 1
                 if whaleCheck:
                     continue
-            # if "Ruan Mei" in comp_tuple:
-            #     dpsCount = 1
-            # if not sustainCount:
-            #     sustainless = True
+            if "Ruan Mei" in comp_tuple:
+                dpsCount = 1
+            # sustainless = not sustainCount
             # if sustainCount > 1:
             #     for char in range (4):
             #         if comp_tuple[char] not in dual_sustain:
@@ -480,6 +491,15 @@ def used_comps(players, comps, rooms, filename, whaleCheck, whaleSigWeap, sigWea
                                     comps_dict[star_threshold][comp_tuple][comp_tuple[i]]["artifacts"][players[phase][comp.player].owned[comp_tuple[i]]["artifacts"]] = 1
                             comps_dict[star_threshold][comp_tuple][comp_tuple[i]]["cons"][str(players[phase][comp.player].owned[comp_tuple[i]]["cons"])] += 1
                     comps_dict[star_threshold][comp_tuple]["round_num"][list(str(comp.room).split("-"))[0]].append(comp.round_num)
+                    if star_threshold == 4 and sustainCount == 1 and dpsCount == 1:
+                        avg_round_stage[list(str(comp.room).split("-"))[0]].append(comp.round_num)
+
+    for stage in avg_round_stage:
+        sample_size[stage]["avg_round"] = round(statistics.mean(avg_round_stage[stage] if avg_round_stage[stage] else [0]), 2)
+            # "3_star": three_star_sample[stage]
+        # if sample_size[stage]["avg_round_stage"] > max_weight:
+        #     max_weight = sample_size[stage]["avg_round_stage"]
+
     chamber_num = list(str(filename).split("-"))
     if len(chamber_num) > 1:
         if chamber_num[1] == "1":
@@ -706,7 +726,7 @@ def char_usages(players,
     # # Print the list of weapons and artifacts used for a character
     # if floor:
     #     print(app[RECENT_PHASE][filename])
-    if (not pf_mode and rooms == ["10-1", "10-2", "11-1", "11-2", "12-1", "12-2"]) or (pf_mode and rooms == ["4-1", "4-2"]):
+    if (not pf_mode and len(rooms) == 6) or (pf_mode and rooms == ["4-1", "4-2"]):
         char_usages_write(chars_dict[4], filename, floor, archetype)
     return chars_dict
 
@@ -982,6 +1002,10 @@ def duo_write(duos_dict, usage, filename, archetype, check_duo):
                     if (char_i in ["Dr. Ratio", "Clara", "Jing Yuan", "Himeko", "Kafka", "Blade", "Herta", "Xueyi"] and char_j == "Topaz & Numby"
                         or char_j in ["Dr. Ratio", "Clara", "Jing Yuan", "Himeko", "Kafka", "Blade", "Herta", "Xueyi"] and char_i == "Topaz & Numby"):
                         continue
+                    if char_j not in out_duos_check:
+                        continue
+                    if char_i not in out_duos_check:
+                        continue
                     if char_i in out_duos_check[char_j]:
                         out_dd_list.append([char_j, char_i])
                         if char_j in out_duos_check[char_i]:
@@ -1174,7 +1198,7 @@ def char_usages_write(chars_dict, filename, floor, archetype):
                 out_chars[i][value] = 0.00
         for value in iterate_value_round:
             if out_chars[i][value].replace(".", "").replace("-", "").isnumeric():
-                out_chars[i][value] = round(float(out_chars[i][value]))
+                out_chars[i][value] = round(float(out_chars[i][value])) if pf_mode else float(out_chars[i][value])
                 out_chars_csv[i][value] = str(round(float(out_chars_csv[i][value]) / 1000 if pf_mode else float(out_chars_csv[i][value]), 2))
             else:
                 out_chars[i][value] = 99.99

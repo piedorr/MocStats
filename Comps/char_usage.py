@@ -278,7 +278,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                 for room_num in range(1,13):
                     if room_num >= 10:
                         all_rounds[char][room_num] = {}
-                        for i in range(31):
+                        for i in range(41):
                             all_rounds[char][room_num][i] = 0
                     if (appears[star_num][char]["round"][str(room_num)]):
                         if room_num >= 10:

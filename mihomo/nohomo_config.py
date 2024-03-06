@@ -19,7 +19,7 @@ check_stats = []
 
 # stat.py
 run_all_chars = False
-run_chars_name = ["Black Swan", "Dan Heng • Imbibitor Lunae", "Guinaifen", "Yukong", "Misha"]
+run_chars_name = ["Black Swan", "Dan Heng • Imbibitor Lunae", "Guinaifen", "Tingyun", "Misha"]
 
 
 

@@ -290,7 +290,7 @@
         "guide_material": [],
         "guide_evaluation": [],
         "availability": "Limited 5*",
-        "role": "Debuffer",
+        "role": "Amplifier",
         "alt_name": null,
         "out_name": false
     },
@@ -787,7 +787,7 @@
     "Pela": {
         "id": "1106",
         "name": "Pela",
-        "role": "Debuffer",
+        "role": "Amplifier",
         "alt_name": null,
         "out_name": false,
         "tag": "pela",
@@ -907,7 +907,7 @@
     "Sampo": {
         "id": "1108",
         "name": "Sampo",
-        "role": "Debuffer",
+        "role": "Amplifier",
         "alt_name": null,
         "out_name": false,
         "tag": "sampo",
@@ -1800,7 +1800,7 @@
         "guide_material": [],
         "guide_evaluation": [],
         "availability": "4*",
-        "role": "Debuffer",
+        "role": "Amplifier",
         "alt_name": null,
         "out_name": false
     },
@@ -2064,7 +2064,7 @@
         "preview": "image/character_preview/1210.png",
         "portrait": "image/character_portrait/1210.png",
         "availability": "4*",
-        "role": "Debuffer",
+        "role": "Amplifier",
         "alt_name": null,
         "out_name": false
     },
@@ -2482,7 +2482,7 @@
         "preview": "image/character_preview/1307.png",
         "portrait": "image/character_portrait/1307.png",
         "availability": "Limited 5*",
-        "role": "Debuffer",
+        "role": "Damage Dealer",
         "alt_name": null,
         "out_name": false
     },
@@ -2535,6 +2535,58 @@
         "portrait": "image/character_portrait/1312.png",
         "availability": "4*",
         "role": "Damage Dealer",
+        "alt_name": null,
+        "out_name": false
+    },
+    "Sparkle": {
+        "id": "1306",
+        "name": "Sparkle",
+        "tag": "sparkle",
+        "rarity": 5,
+        "path": "Shaman",
+        "element": "Quantum",
+        "max_sp": 110,
+        "ranks": [
+            "130601",
+            "130602",
+            "130603",
+            "130604",
+            "130605",
+            "130606"
+        ],
+        "skills": [
+            "130601",
+            "130602",
+            "130603",
+            "130604",
+            "130606",
+            "130607"
+        ],
+        "skill_trees": [
+            "1306001",
+            "1306002",
+            "1306003",
+            "1306004",
+            "1306007",
+            "1306101",
+            "1306102",
+            "1306103",
+            "1306201",
+            "1306202",
+            "1306203",
+            "1306204",
+            "1306205",
+            "1306206",
+            "1306207",
+            "1306208",
+            "1306209",
+            "1306210"
+        ],
+        "icon": "icon/character/1306.png",
+        "preview": "image/character_preview/1306.png",
+        "portrait": "image/character_portrait/1306.png",
+        "availability": "Limited 5*",
+        "role": "Amplifier",
         "alt_name": null,
         "out_name": false
     }
