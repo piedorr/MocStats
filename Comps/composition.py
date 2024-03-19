@@ -25,7 +25,7 @@ class Composition:
         char_elemeent_list: returns the list of character's elements.
     """
 
-    def __init__(self, uid, comp_chars, phase, round_num, star_num, room, info_char):
+    def __init__(self, uid, comp_chars, phase, round_num, star_num, room, info_char, buff):
         """Composition constructor. Takes in:
             A player, as a UID string
             A composition, as a length-four list of character strings
@@ -38,6 +38,7 @@ class Composition:
         self.round_num = int(round_num)
         self.star_num = int(star_num)
         self.char_structs(comp_chars, info_char)
+        self.buff = buff
         # self.comp_elements()
 
     def char_structs(self, comp_chars, info_char):
@@ -82,7 +83,7 @@ class Composition:
                 self.subdps.insert(0, character)
             elif character in ["Welt", "Serval", "Physical Trailblazer", "Sampo", "Herta", "Luka", "Topaz & Numby", "Guinaifen"]:
                 self.subdps.append(character)
-            elif character in ["Bronya", "Silver Wolf", "Asta", "Tingyun", "Pela", "Yukong", "Hanya", "Ruan Mei"]:
+            elif character in ["Bronya", "Silver Wolf", "Asta", "Tingyun", "Pela", "Yukong", "Hanya", "Ruan Mei","Sparkle"]:
                 self.anemo.append(character)
             elif character in ["Natasha", "Luocha", "Bailu", "Lynx", "Huohuo"]:
                 self.healer.insert(0, character)

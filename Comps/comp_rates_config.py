@@ -6,10 +6,10 @@ with open('../data/characters.json') as char_file:
 with open('../data/light_cones.json') as char_file:
     LIGHT_CONES = json.load(char_file)
 
-RECENT_PHASE = "2.0.2"
-past_phase = "1.6.3"
+RECENT_PHASE = "2.0.3"
+past_phase = "2.0.1_pf"
 global pf_mode
-pf_mode = False
+pf_mode = True
 char_infographics = ["Sushang", "Hook", "Natasha", "Dr. Ratio", "Kafka"]
 char_infographics = char_infographics[3]
 
@@ -41,7 +41,7 @@ run_commands = [
     # "Char usages 8 - 10",
     # "Char usages for each stage",
     # "Char usages for each stage (combined)",
-    "Comp usage 8 - 10",
+    # "Comp usage 8 - 10",
     "Comp usages for each stage",
     # "Character specific infographics",
     # "Char usages all stages",

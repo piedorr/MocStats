@@ -441,6 +441,11 @@ for char in stats:
             "12_app": APP["12-1"]["4"][char]["app"],
             "12_round": ROUND["12-1"]["4"][char]["round"],
         }
+    else:
+        app_dict = {
+            "4_app": APP["4-1"]["4"][char]["app"],
+            "4_round": ROUND["4-1"]["4"][char]["round"],
+        }
     temp_stats.append((CHARACTERS[iter_char] | stats[char]) | app_dict)
     # temp_stats.append((CHARACTERS[iter_char]) | app_dict)
     iter_char += 1

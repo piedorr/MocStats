@@ -45,7 +45,13 @@ def main():
     reader = csv.reader(stats)
     col_names_comps = next(reader)
     all_comps = []
-    three_star_sample = {"1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0, "7": 0, "8": 0, "9": 0, "10": 0, "11": 0, "12": 0}
+    if pf_mode:
+        all_chambers = ["1", "2", "3", "4"]
+    else:
+        all_chambers = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]
+    three_star_sample = {}
+    for chamber_num in all_chambers:
+        three_star_sample[chamber_num] = 0
     uid_freq_comp = {}
     self_freq_comp = {}
     dps_freq_comp = {}
@@ -76,7 +82,7 @@ def main():
             comp_chars_temp = comp_chars(line)
             if comp_chars_temp:
                 comp = Composition(line[0], comp_chars_temp, RECENT_PHASE, line[3], line[4],
-                                   stage + "-" + str(line[2]), alt_comps)
+                                   stage + "-" + str(line[2]), alt_comps, line[9] if pf_mode else "")
                 # if int(stage) > 7:
                 #     if line[0] not in dps_freq_comp:
                 #         dps_freq_comp[line[0]] = set()
@@ -100,9 +106,13 @@ def main():
     # exit()
 
     global sample_size
-    sample_size = {"1": {}, "2": {}, "3": {}, "4": {}, "5": {}, "6": {}, "7": {}, "8": {}, "9": {}, "10": {}, "11": {}, "12": {}}
+    sample_size = {}
+    for chamber_num in all_chambers:
+        sample_size[chamber_num] = {}
     global avg_round_stage
-    avg_round_stage = {"1": [], "2": [], "3": [], "4": [], "5": [], "6": [], "7": [], "8": [], "9": [], "10": [], "11": [], "12": []}
+    avg_round_stage = {}
+    for chamber_num in all_chambers:
+        avg_round_stage[chamber_num] = []
     global valid_duo_dps
     if os.path.exists("../char_results/duo_check.csv"):
         with open("../char_results/duo_check.csv", 'r') as f:
@@ -421,7 +431,7 @@ def used_comps(players, comps, rooms, filename, whaleCheck, whaleSigWeap, sigWea
                                 dpsCount -= 1
                                 break
                 if "Kafka" not in comp_tuple:
-                    if comp_tuple[char] in ["Sampo", "Black Swan", "Luka", "Guinaifen"]:
+                    if comp_tuple[char] in ["Black Swan", "Sampo", "Luka", "Guinaifen"]:
                         dpsCount += 1
                 elif comp_tuple[char] == "Serval":
                     dpsCount -= 1
@@ -434,7 +444,7 @@ def used_comps(players, comps, rooms, filename, whaleCheck, whaleSigWeap, sigWea
                 whaleCount += 1
                 if whaleCheck:
                     continue
-            if "Ruan Mei" in comp_tuple:
+            if "Ruan Mei" in comp_tuple or pf_mode:
                 dpsCount = 1
             # sustainless = not sustainCount
             # if sustainCount > 1:
@@ -493,6 +503,10 @@ def used_comps(players, comps, rooms, filename, whaleCheck, whaleSigWeap, sigWea
                     comps_dict[star_threshold][comp_tuple]["round_num"][list(str(comp.room).split("-"))[0]].append(comp.round_num)
                     if star_threshold == 4 and sustainCount == 1 and dpsCount == 1:
                         avg_round_stage[list(str(comp.room).split("-"))[0]].append(comp.round_num)
+                        if pf_mode:
+                            if "buff_" + comp.buff not in sample_size[list(str(comp.room).split("-"))[0]]:
+                                sample_size[list(str(comp.room).split("-"))[0]]["buff_" + comp.buff] = 0
+                            sample_size[list(str(comp.room).split("-"))[0]]["buff_" + comp.buff] += 1
 
     for stage in avg_round_stage:
         sample_size[stage]["avg_round"] = round(statistics.mean(avg_round_stage[stage] if avg_round_stage[stage] else [0]), 2)
@@ -506,6 +520,8 @@ def used_comps(players, comps, rooms, filename, whaleCheck, whaleSigWeap, sigWea
             sample_size[chamber_num[0]]["total"] = total_comps
             sample_size[chamber_num[0]]["self_report"] = total_self_comps
             sample_size[chamber_num[0]]["random"] = total_comps - total_self_comps
+        if total_comps == 0:
+            del sample_size[chamber_num[0]]
     # print(error_uids)
     # print("Less than four: " + str(lessFour))
     # print("Less than four: " + str(len(lessFour)/total_comps))
@@ -996,8 +1012,8 @@ def duo_write(duos_dict, usage, filename, archetype, check_duo):
                 is_char_i_dps = CHARACTERS[char_i]["role"] == "Damage Dealer" or char_i in ["Sampo", "Black Swan", "Luka", "Guinaifen"]
                 is_char_j_dps = CHARACTERS[char_j]["role"] == "Damage Dealer" or char_j in ["Sampo", "Black Swan", "Luka", "Guinaifen"]
                 if is_char_i_dps and is_char_j_dps:
-                    if (char_i in ["Serval", "Sampo", "Black Swan", "Luka", "Guinaifen"] and char_j == "Kafka"
-                        or char_j in ["Serval", "Sampo", "Black Swan", "Luka", "Guinaifen"] and char_i == "Kafka"):
+                    if (char_i in ["Black Swan", "Serval", "Sampo", "Luka", "Guinaifen"] and char_j in ["Black Swan", "Kafka"]
+                        or char_j in ["Black Swan", "Serval", "Sampo", "Luka", "Guinaifen"] and char_i in ["Black Swan", "Kafka"]):
                         continue
                     if (char_i in ["Dr. Ratio", "Clara", "Jing Yuan", "Himeko", "Kafka", "Blade", "Herta", "Xueyi"] and char_j == "Topaz & Numby"
                         or char_j in ["Dr. Ratio", "Clara", "Jing Yuan", "Himeko", "Kafka", "Blade", "Herta", "Xueyi"] and char_i == "Topaz & Numby"):
@@ -1093,10 +1109,10 @@ def char_usages_write(chars_dict, filename, floor, archetype):
                 if i < len(list(chars_dict[char]["artifacts"])):
                     arti_name = list(chars_dict[char]["artifacts"])[i]
                     out_chars_append["artifact_" + str(i + 1)] = arti_name
-                    arti_name = arti_name.split(", ")
-                    out_chars_append["artifact_" + str(i + 1) + "_1"] = arti_name[0]
+                    arti_name = arti_name.replace("Watchmaker,", "Watchmaker").split(", ")
+                    out_chars_append["artifact_" + str(i + 1) + "_1"] = arti_name[0].replace("Watchmaker", "Watchmaker,")
                     if len(arti_name) > 1:
-                        out_chars_append["artifact_" + str(i + 1) + "_2"] = arti_name[1]
+                        out_chars_append["artifact_" + str(i + 1) + "_2"] = arti_name[1].replace("Watchmaker", "Watchmaker,")
                     else:
                         out_chars_append["artifact_" + str(i + 1) + "_2"] = ""
                     out_chars_append["artifact_" + str(i + 1) + "_app"] = str(list(chars_dict[char]["artifacts"].values())[i]["percent"]) + "%"
