@@ -6,10 +6,10 @@ with open('../data/characters.json') as char_file:
 with open('../data/light_cones.json') as char_file:
     LIGHT_CONES = json.load(char_file)
 
-RECENT_PHASE = "2.0.3"
-past_phase = "2.0.1_pf"
+RECENT_PHASE = "2.0.4"
+past_phase = "2.0.2"
 global pf_mode
-pf_mode = True
+pf_mode = False
 char_infographics = ["Sushang", "Hook", "Natasha", "Dr. Ratio", "Kafka"]
 char_infographics = char_infographics[3]
 

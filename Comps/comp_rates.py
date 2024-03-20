@@ -520,8 +520,8 @@ def used_comps(players, comps, rooms, filename, whaleCheck, whaleSigWeap, sigWea
             sample_size[chamber_num[0]]["total"] = total_comps
             sample_size[chamber_num[0]]["self_report"] = total_self_comps
             sample_size[chamber_num[0]]["random"] = total_comps - total_self_comps
-        if total_comps == 0:
-            del sample_size[chamber_num[0]]
+        # if total_comps == 0:
+        #     del sample_size[chamber_num[0]]
     # print(error_uids)
     # print("Less than four: " + str(lessFour))
     # print("Less than four: " + str(len(lessFour)/total_comps))
