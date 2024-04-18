@@ -75,17 +75,19 @@ class Composition:
             if CHARACTERS[character]["availability"] in ["Limited 5*", "5*"]:
                 fives.append(character)
 
-            if character in ["Seele", "Yanqing", "Hook", "Jing Yuan", "Kafka", "Dan Heng • Imbibitor Lunae", "Argenti", "Dr. Ratio"]:
+            if character in ["Seele", "Yanqing", "Hook", "Jing Yuan", "Dan Heng • Imbibitor Lunae", "Argenti", "Dr. Ratio", "Acheron"]:
                 self.dps.insert(0, character)
-            elif character in ["Qingque", "Arlan", "Himeko", "Dan Heng", "Sushang"]:
+            elif character in ["Kafka", "Qingque", "Arlan", "Dan Heng", "Sushang"]:
                 self.dps.append(character)
-            elif character in ["Clara", "Blade", "Jingliu", "Xueyi", "Misha", "Black Swan"]:
+            elif character in ["Jingliu", "Himeko"]:
                 self.subdps.insert(0, character)
-            elif character in ["Welt", "Serval", "Physical Trailblazer", "Sampo", "Herta", "Luka", "Topaz & Numby", "Guinaifen"]:
+            elif character in ["Clara", "Blade", "Xueyi", "Misha", "Black Swan"]:
                 self.subdps.append(character)
+            elif character in ["Welt", "Serval", "Physical Trailblazer", "Sampo", "Herta", "Luka", "Topaz & Numby", "Guinaifen"]:
+                self.anemo.insert(0, character)
             elif character in ["Bronya", "Silver Wolf", "Asta", "Tingyun", "Pela", "Yukong", "Hanya", "Ruan Mei","Sparkle"]:
                 self.anemo.append(character)
-            elif character in ["Natasha", "Luocha", "Bailu", "Lynx", "Huohuo"]:
+            elif character in ["Natasha", "Luocha", "Bailu", "Lynx", "Huohuo","Gallagher"]:
                 self.healer.insert(0, character)
             elif character in ["March 7th", "Gepard", "Fire Trailblazer", "Fu Xuan"]:
                 self.healer.append(character)

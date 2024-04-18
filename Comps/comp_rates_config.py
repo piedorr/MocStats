@@ -6,10 +6,10 @@ with open('../data/characters.json') as char_file:
 with open('../data/light_cones.json') as char_file:
     LIGHT_CONES = json.load(char_file)
 
-RECENT_PHASE = "2.0.4"
-past_phase = "2.0.2"
+RECENT_PHASE = "2.1.1"
+past_phase = "2.0.3_pf"
 global pf_mode
-pf_mode = False
+pf_mode = True
 char_infographics = ["Sushang", "Hook", "Natasha", "Dr. Ratio", "Kafka"]
 char_infographics = char_infographics[3]
 
@@ -23,7 +23,7 @@ global app_rate_threshold_round
 global f2p_app_rate_threshold
 app_rate_threshold = 0.1
 app_rate_threshold_round = 0
-json_threshold = 0.1
+json_threshold = 0
 f2p_app_rate_threshold = 0.1
 skew_num = 0.8
 duo_dict_len = 30
@@ -41,7 +41,7 @@ run_commands = [
     # "Char usages 8 - 10",
     # "Char usages for each stage",
     # "Char usages for each stage (combined)",
-    # "Comp usage 8 - 10",
+    "Comp usage 8 - 10",
     "Comp usages for each stage",
     # "Character specific infographics",
     # "Char usages all stages",

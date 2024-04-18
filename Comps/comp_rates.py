@@ -576,6 +576,8 @@ def rank_usages(comps_dict, rooms, owns_offset=1):
                             comps_dict[star_threshold][comp]["is_count_round"] = False
                 else:
                     comps_dict[star_threshold][comp]["is_count_round"] = False
+            elif len(rooms) == 1 and comps_dict[star_threshold][comp]["uses"] < 5:
+                comps_dict[star_threshold][comp]["is_count_round"] = False
 
             if avg_round:
                 avg_round = round(statistics.mean(avg_round), 2)
@@ -881,7 +883,8 @@ def comp_usages_write(comps_dict, filename, floor, info_char, sort_app):
                     outvar_comps_append["avg_round"] = str(comps_dict[star_threshold][comp]["round"])
                     outvar_comps.append(outvar_comps_append)
                 if not info_char and (
-                    comps_dict[star_threshold][comp]["app_rate"] >= json_threshold or pf_mode or (not pf_mode and filename not in ["1-1", "1-2", "2-1", "2-2", "3-1", "3-2", "4-1", "4-2", "5-1", "5-2"])
+                    # comps_dict[star_threshold][comp]["app_rate"] >= json_threshold or pf_mode or (not pf_mode and filename not in ["1-1", "1-2", "2-1", "2-2", "3-1", "3-2", "4-1", "4-2", "5-1", "5-2"])
+                    comps_dict[star_threshold][comp]["is_count_round"] and (comps_dict[star_threshold][comp]["app_rate"] >= json_threshold)
                 ):
                     out = name_filter(comp, mode="out")
                     out_json_dict = {
@@ -1109,10 +1112,10 @@ def char_usages_write(chars_dict, filename, floor, archetype):
                 if i < len(list(chars_dict[char]["artifacts"])):
                     arti_name = list(chars_dict[char]["artifacts"])[i]
                     out_chars_append["artifact_" + str(i + 1)] = arti_name
-                    arti_name = arti_name.replace("Watchmaker,", "Watchmaker").split(", ")
-                    out_chars_append["artifact_" + str(i + 1) + "_1"] = arti_name[0].replace("Watchmaker", "Watchmaker,")
+                    arti_name = arti_name.replace("Watchmaker,", "Watchmaker").replace("Sigonia,", "Sigonia").split(", ")
+                    out_chars_append["artifact_" + str(i + 1) + "_1"] = arti_name[0].replace("Watchmaker", "Watchmaker,").replace("Sigonia", "Sigonia,")
                     if len(arti_name) > 1:
-                        out_chars_append["artifact_" + str(i + 1) + "_2"] = arti_name[1].replace("Watchmaker", "Watchmaker,")
+                        out_chars_append["artifact_" + str(i + 1) + "_2"] = arti_name[1].replace("Watchmaker", "Watchmaker,").replace("Sigonia", "Sigonia,")
                     else:
                         out_chars_append["artifact_" + str(i + 1) + "_2"] = ""
                     out_chars_append["artifact_" + str(i + 1) + "_app"] = str(list(chars_dict[char]["artifacts"].values())[i]["percent"]) + "%"
