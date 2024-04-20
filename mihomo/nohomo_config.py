@@ -7,7 +7,7 @@ sys.path.append('../Comps/')
 skip_self = False
 skip_random = False
 print_chart = False
-pf_mode = True
+pf_mode = False
 
 # stats.py
 # comp_stats = ['Bailu', 'Jing Yuan', 'Tingyun', 'Yukong']
@@ -18,7 +18,7 @@ check_char_name = "Yanqing"
 check_stats = []
 
 # stat.py
-run_all_chars = False
+run_all_chars = True
 run_chars_name = ["Jing Yuan", "Dan Heng • Imbibitor Lunae", "Guinaifen", "Tingyun", "Misha"]
 
 

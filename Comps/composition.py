@@ -89,7 +89,7 @@ class Composition:
                 self.anemo.append(character)
             elif character in ["Natasha", "Luocha", "Bailu", "Lynx", "Huohuo","Gallagher"]:
                 self.healer.insert(0, character)
-            elif character in ["March 7th", "Gepard", "Fire Trailblazer", "Fu Xuan"]:
+            elif character in ["March 7th", "Gepard", "Fire Trailblazer", "Fu Xuan", "Aventurine"]:
                 self.healer.append(character)
 
             if character in ["Kafka", "Black Swan", "Serval", "Sampo", "Luka", "Guinaifen"]:
@@ -113,6 +113,10 @@ class Composition:
                 len_element["Physical"] += 1
         self.fivecount = len(fives)
         self.characters = self.dps + self.subdps + self.anemo + self.healer
+
+        if "Acheron" in self.dps and "Black Swan" in self.subdps:
+            self.subdps.remove("Black Swan")
+            self.anemo.insert(0, "Black Swan")
 
         """Name structure creator.
         """

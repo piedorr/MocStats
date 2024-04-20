@@ -301,12 +301,13 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                 is_count_cycles = True
                 if not uses_room:
                     is_count_cycles = False
-                if len(chambers) > 2 or (pf_mode and chambers == ["4-1", "4-2"]):
+                elif len(chambers) > 2 or (pf_mode and chambers == ["4-1", "4-2"]):
                     if len(uses_room) != len(chambers)/2:
                         is_count_cycles = False
                 for room_num in uses_room:
                     if uses_room[room_num] < 10:
                         is_count_cycles = False
+                        break
 
                 # if avg_round:
                 if is_count_cycles:

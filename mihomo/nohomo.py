@@ -33,29 +33,43 @@ async def v1():
 	writer = csv.writer(open(filename + '.csv', 'w', encoding='UTF8', newline=''))
 	writer.writerow(header)
 
+	header = ['uid', 'phase', 'name', 'level', 'cons', 'weapon', 'element', 'artifacts', 'relics']
+	writer_chars = csv.writer(open(filename + '_char.csv', 'w', encoding='UTF8', newline=''))
+	writer_chars.writerow(header)
+
 	for uid in uids:
 		cpt += 1
 
-		for i in range(20):
+		for i in range(5):
 			try:
 				print('{} / {} : {}, {}'.format(cpt, len(uids), uid, i), end="\r")
 				data: FormattedApiInfo = await client.get_parsed_api_data(str(uid))
 				for character in data.characters:
 					line = []
+					line_chars = []
 					line.append(uid)
+					line_chars.append(uid)
+					line_chars.append("2.2b")
 					line.append(data.player.level)
 					if (str(character.id) in trailblazer_ids):
 						line.append("Trailblazer")
+						line_chars.append("Trailblazer")
 					else:
 						line.append(character.name)
+						line_chars.append(character.name)
 					line.append(character.level)
+					line_chars.append(character.level)
+					line_chars.append(character.rank)
 					line.append(character.element.name)
 					if character.light_cone != None:
 						line.append(character.light_cone.name)
+						line_chars.append(character.light_cone.name)
 						line.append(character.light_cone.level)
 					else:
 						line.append("")
+						line_chars.append("")
 						line.append("")
+					line_chars.append(character.element.name)
 
 					skills = {
 						"Basic ATK": 0,
@@ -167,18 +181,25 @@ async def v1():
 						else:
 							char_set = "Flex"
 					line.append(char_set)
+					line_chars.append(char_set)
 
 					char_set = None
 					for set in ornaments:
 						if ornaments[set] == 2:
 							char_set = set
 					line.append(char_set)
+					line_chars.append(char_set)
 
 					writer.writerow(line)
+					writer_chars.writerow(line_chars)
 				time.sleep(0.5)
 				break
 			except asyncio.exceptions.TimeoutError as e:
-				time.sleep(20)
+				time.sleep(10)
+				pass
+			except AttributeError:
+				# print(str(uid) + " Too Many Requests")
+				time.sleep(10)
 				pass
 			except Exception as e:
 				if str(e) == "[429] Too Many Requests":

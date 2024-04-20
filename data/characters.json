@@ -2698,5 +2698,57 @@
         "role": "Damage Dealer",
         "alt_name": null,
         "out_name": false
+    },
+    "Aventurine": {
+        "id": "1304",
+        "name": "Aventurine",
+        "tag": "aventurine",
+        "rarity": 5,
+        "path": "Knight",
+        "element": "Imaginary",
+        "max_sp": 110,
+        "ranks": [
+            "130401",
+            "130402",
+            "130403",
+            "130404",
+            "130405",
+            "130406"
+        ],
+        "skills": [
+            "130401",
+            "130402",
+            "130403",
+            "130404",
+            "130406",
+            "130407"
+        ],
+        "skill_trees": [
+            "1304001",
+            "1304002",
+            "1304003",
+            "1304004",
+            "1304007",
+            "1304101",
+            "1304102",
+            "1304103",
+            "1304201",
+            "1304202",
+            "1304203",
+            "1304204",
+            "1304205",
+            "1304206",
+            "1304207",
+            "1304208",
+            "1304209",
+            "1304210"
+        ],
+        "icon": "icon/character/1304.png",
+        "preview": "image/character_preview/1304.png",
+        "portrait": "image/character_portrait/1304.png",
+        "availability": "Limited 5*",
+        "role": "Sustain",
+        "alt_name": null,
+        "out_name": false
     }
 }

@@ -6,10 +6,10 @@ with open('../data/characters.json') as char_file:
 with open('../data/light_cones.json') as char_file:
     LIGHT_CONES = json.load(char_file)
 
-RECENT_PHASE = "2.1.1"
-past_phase = "2.0.3_pf"
+RECENT_PHASE = "2.1.2"
+past_phase = "2.0.4"
 global pf_mode
-pf_mode = True
+pf_mode = False
 char_infographics = ["Sushang", "Hook", "Natasha", "Dr. Ratio", "Kafka"]
 char_infographics = char_infographics[3]
 
@@ -38,11 +38,11 @@ whaleSigWeap = False
 # Char infographics should be separated from overall comp rankings
 run_commands = [
     # "Duos check",
-    # "Char usages 8 - 10",
-    # "Char usages for each stage",
-    # "Char usages for each stage (combined)",
-    "Comp usage 8 - 10",
-    "Comp usages for each stage",
+    "Char usages 8 - 10",
+    "Char usages for each stage",
+    "Char usages for each stage (combined)",
+    # "Comp usage 8 - 10",
+    # "Comp usages for each stage",
     # "Character specific infographics",
     # "Char usages all stages",
     # "Comp usage all stages",
