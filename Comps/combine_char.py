@@ -4,7 +4,7 @@ import re
 # moc_phase = input("MoC phase: ")
 # pf_phase = input("PF phase: ")
 moc_phase = "2.1.2"
-pf_phase = "2.1.1"
+pf_phase = "2.1.3"
 
 with open('../data/characters.json') as char_file:
     CHARACTERS = json.load(char_file)
