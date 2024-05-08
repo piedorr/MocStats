@@ -1,20 +1,26 @@
 In case of new character/relics:
     Run Comps/update.py
+    If relic has comma: search watchmaker in comp_rates.py
     Add comp role at composition.py line 62
+    If fua or dot, check comp_rates.py and char_usages.py
 
 
 Change past_phase in Comps/comp_rates_config.py
+Change pf_mode line 12
 Change run_commands in the same file, line 32
 Run Comps/comp_rates.py
-Run Comps/swarm_rates.py
 
 If collecting new data:
+    check update https://github.com/Mar-7th/mihomo.py
     Update mihomo: pip install -U git+https://github.com/KT-Yeh/mihomo.git
     Run mihomo/nohomo.py
 If using past data:
     Copy mihomo/results/{version}_output.csv to mihomo/output1.csv
-
-
-Run mihomo/stats.py
-Edit nohomo_config.py
-Run mihomo/stat.py
+After done scanning:
+    Run Comps/combine_raw_chars.py
+    Run Comps/comp_rates.py
+    Run Comps/hash.py
+    Change mihomo/nohomo_config pf_mode
+    Run mihomo/stats.py
+    Edit nohomo_config.py line 21
+    Run mihomo/stat.py
