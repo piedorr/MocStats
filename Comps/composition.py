@@ -85,7 +85,7 @@ class Composition:
                 self.subdps.append(character)
             elif character in ["Welt", "Serval", "Physical Trailblazer", "Sampo", "Herta", "Luka", "Topaz & Numby", "Guinaifen"]:
                 self.anemo.insert(0, character)
-            elif character in ["Bronya", "Silver Wolf", "Asta", "Tingyun", "Pela", "Yukong", "Hanya", "Ruan Mei","Sparkle"]:
+            elif character in ["Bronya", "Silver Wolf", "Asta", "Tingyun", "Pela", "Yukong", "Hanya", "Ruan Mei","Sparkle", "Robin", "Imaginary Trailblazer"]:
                 self.anemo.append(character)
             elif character in ["Natasha", "Luocha", "Bailu", "Lynx", "Huohuo","Gallagher"]:
                 self.healer.insert(0, character)

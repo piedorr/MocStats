@@ -117,17 +117,14 @@ for char in chars2:
                     # else:
                     #     chars1[char_name]["availability"] = "Standard 5*"
 
-            print("Role? 0: DPS, 1: Debuffer, 2: Amplifier, 3: Sustain")
+            print("Role? 0: DPS, 1: Amplifier, 2: Sustain")
             role_char = input()
             match str(role_char):
                 case "0":
                     chars1[char_name]["role"] = "Damage Dealer"
                 case "1":
-                    chars1[char_name]["role"] = "Debuffer"
-                case "2":
                     chars1[char_name]["role"] = "Amplifier"
-                case "3":
-
+                case "2":
                     chars1[char_name]["role"] = "Sustain"
             chars1[char_name]["alt_name"] = None
             chars1[char_name]["out_name"] = False

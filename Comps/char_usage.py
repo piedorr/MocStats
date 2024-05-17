@@ -174,7 +174,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                 if True:
                     for char in player.chambers[chamber].characters:
                         # to print the amount of players using a character, for char infographics
-                        if len(chambers) > 2 or (pf_mode and chambers == ["4-1", "4-2"]):
+                        if chambers == ["12-1", "12-2"] or (pf_mode and chambers == ["4-1", "4-2"]):
                             players_chars[star_num][char].add(player.player)
 
                         char_name = char
@@ -192,7 +192,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                         if pf_mode:
                             if chambers != ["4-1", "4-2"]:
                                 continue
-                        elif len(chambers) < 3:
+                        elif chambers != ["12-1", "12-2"]:
                             continue
                         if char not in player.owned or star_num != 4:
                             # print("Comp data missing from character data: " + str(player.player) + ", " + str(char))
@@ -301,7 +301,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                 is_count_cycles = True
                 if not uses_room:
                     is_count_cycles = False
-                elif len(chambers) > 2 or (pf_mode and chambers == ["4-1", "4-2"]):
+                elif chambers == ["12-1", "12-2"] or (pf_mode and chambers == ["4-1", "4-2"]):
                     if len(uses_room) != len(chambers)/2:
                         is_count_cycles = False
                 for room_num in uses_room:
@@ -331,7 +331,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
             if pf_mode:
                 if chambers != ["4-1", "4-2"]:
                     continue
-            elif len(chambers) < 3:
+            elif chambers != ["12-1", "12-2"]:
                 continue
             if star_num != 4:
                 continue
@@ -506,7 +506,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                     appears[star_num][char]["planar_freq"][planar]["avg_round"] = 99.99
                     if pf_mode:
                         appears[star_num][char]["planar_freq"][planar]["avg_round"] = 0
-        if len(chambers) > 2 and star_num == 4:
+        if chambers == ["12-1", "12-2"] and star_num == 4:
             csv_writer = csv.writer(open("../char_results/all_rounds.csv", 'w', newline=''))
             for char in all_rounds:
                 for room_num in all_rounds[char]:
@@ -556,7 +556,7 @@ def usages(owns, appears, past_phase, filename, chambers=ROOMS, offset=1):
             # rate = round(appears[star_num][char]["flat"] / (owns[star_num][char]["flat"] * offset / 100.0), 2)
             rates.append(uses[star_num][char]["app"])
 
-            if len(chambers) > 2 or (pf_mode and chambers == ["4-1", "4-2"]):
+            if chambers == ["12-1", "12-2"] or (pf_mode and chambers == ["4-1", "4-2"]):
                 stage = "all"
             else:
                 stage = chambers[0]
@@ -581,7 +581,7 @@ def usages(owns, appears, past_phase, filename, chambers=ROOMS, offset=1):
             if pf_mode:
                 if chambers != ["4-1", "4-2"]:
                     continue
-            elif len(chambers) < 3:
+            elif chambers != ["12-1", "12-2"]:
                 continue
             if star_num != 4:
                 continue

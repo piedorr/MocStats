@@ -57,7 +57,7 @@ substats = {}
 
 spiral_rows = {}
 for spiral_row in spiral:
-    if int(''.join(filter(str.isdigit, spiral_row[1]))) > 9 or (pf_mode and int(''.join(filter(str.isdigit, spiral_row[1]))) > 3):
+    if int(''.join(filter(str.isdigit, spiral_row[1]))) > 11 or (pf_mode and int(''.join(filter(str.isdigit, spiral_row[1]))) > 3):
         if spiral_row[0] not in spiral_rows:
             spiral_rows[spiral_row[0]] = {}
         # if comp_stats:

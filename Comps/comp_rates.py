@@ -185,15 +185,18 @@ def main():
     if pf_mode:
         three_stages = ["4-1", "4-2"]
         three_double_stages = [["4-1", "4-2"]]
+        one_stage = ["4-1", "4-2"]
         all_stages = ["1-1", "1-2", "2-1", "2-2", "3-1", "3-2", "4-1", "4-2"]
         all_double_stages = [["1-1", "1-2"], ["2-1", "2-2"], ["3-1", "3-2"], ["4-1", "4-2"]]
     else:
         three_stages = ["10-1", "10-2", "11-1", "11-2", "12-1", "12-2"]
         three_double_stages = [["10-1", "10-2"], ["11-1", "11-2"], ["12-1", "12-2"]]
+        one_stage = ["12-1", "12-2"]
         all_stages = ["1-1", "1-2", "2-1", "2-2", "3-1", "3-2", "4-1", "4-2", "5-1", "5-2", "6-1", "6-2", "7-1", "7-2", "8-1", "8-2", "9-1", "9-2", "10-1", "10-2", "11-1", "11-2", "12-1", "12-2"]
         all_double_stages = [["1-1", "1-2"], ["2-1", "2-2"], ["3-1", "3-2"], ["4-1", "4-2"], ["5-1", "5-2"], ["6-1", "6-2"], ["7-1", "7-2"], ["8-1", "8-2"], ["9-1", "9-2"], ["10-1", "10-2"], ["11-1", "11-2"], ["12-1", "12-2"]]
         # three_stages = ["8-1", "8-2", "9-1", "9-2", "10-1", "10-2"]
         # three_double_stages = [["8-1", "8-2"], ["9-1", "9-2"], ["10-1", "10-2"]]
+        # one_stage = ["10-1", "10-2"]
         # all_stages = ["1-1", "1-2", "2-1", "2-2", "3-1", "3-2", "4-1", "4-2", "5-1", "5-2", "6-1", "6-2", "7-1", "7-2", "8-1", "8-2", "9-1", "9-2", "10-1", "10-2"]
         # all_double_stages = [["1-1", "1-2"], ["2-1", "2-2"], ["3-1", "3-2"], ["4-1", "4-2"], ["5-1", "5-2"], ["6-1", "6-2"], ["7-1", "7-2"], ["8-1", "8-2"], ["9-1", "9-2"], ["10-1", "10-2"]]
 
@@ -207,8 +210,8 @@ def main():
         duo_usages(all_comps, all_players, usage, archetype, three_stages, check_duo=True)
 
     if "Char usages 8 - 10" in run_commands:
-        usage = char_usages(all_players, archetype, past_phase, three_stages, filename="all", floor=True)
-        duo_usages(all_comps, all_players, usage, archetype, three_stages, check_duo=False)
+        usage = char_usages(all_players, archetype, past_phase, one_stage, filename="all", floor=True)
+        duo_usages(all_comps, all_players, usage, archetype, one_stage, check_duo=False)
         # appearances = {}
         # rounds = {}
         # for star_num in usage:
@@ -324,13 +327,13 @@ def main():
         print("done comp all: ", (cur_time - start_time), "s")
 
     if "Comp usage 8 - 10" in run_commands:
-        comp_usages(all_comps, all_players, whaleCheck, whaleSigWeap, sigWeaps, three_stages, filename="top", floor=True)
+        comp_usages(all_comps, all_players, whaleCheck, whaleSigWeap, sigWeaps, one_stage, filename="top", floor=True)
         cur_time = time.time()
         print("done comp 8 - 10: ", (cur_time - start_time), "s")
 
     if "Comp usages for each stage" in run_commands:
-        for room in all_stages:
-        # for room in three_stages:
+        # for room in all_stages:
+        for room in three_stages:
             comp_usages(all_comps, all_players, whaleCheck, whaleSigWeap, sigWeaps, [room], filename=room, offset=2)
 
         with open("../char_results/demographic.json", "w") as out_file:
@@ -339,7 +342,7 @@ def main():
         print("done comp stage: ", (cur_time - start_time), "s")
 
     if "Character specific infographics" in run_commands:
-        comp_usages(all_comps, all_players, whaleCheck, whaleSigWeap, sigWeaps, three_stages, filename=char_infographics, info_char=True, floor=True)
+        comp_usages(all_comps, all_players, whaleCheck, whaleSigWeap, sigWeaps, one_stage, filename=char_infographics, info_char=True, floor=True)
         cur_time = time.time()
         print("done char infographics: ", (cur_time - start_time), "s")
 
@@ -569,14 +572,14 @@ def rank_usages(comps_dict, rooms, owns_offset=1):
                     # avg_round += comps_dict[star_threshold][comp]["round_num"][str(room_num)]
 
             comps_dict[star_threshold][comp]["is_count_round"] = True
-            if (len(rooms)/2 > 1) or pf_mode and rooms == ["4-1", "4-2"]:
+            if (rooms == ["12-1", "12-2"]) or pf_mode and rooms == ["4-1", "4-2"]:
                 if len(uses_room) == len(rooms)/2:
                     for room_num in uses_room:
-                        if uses_room[room_num] < 5:
+                        if uses_room[room_num] < 10:
                             comps_dict[star_threshold][comp]["is_count_round"] = False
                 else:
                     comps_dict[star_threshold][comp]["is_count_round"] = False
-            elif len(rooms) == 1 and comps_dict[star_threshold][comp]["uses"] < 5:
+            elif len(rooms) == 1 and comps_dict[star_threshold][comp]["uses"] < 10:
                 comps_dict[star_threshold][comp]["is_count_round"] = False
 
             if avg_round:
@@ -744,7 +747,7 @@ def char_usages(players,
     # # Print the list of weapons and artifacts used for a character
     # if floor:
     #     print(app[RECENT_PHASE][filename])
-    if (not pf_mode and len(rooms) == 6) or (pf_mode and rooms == ["4-1", "4-2"]):
+    if (not pf_mode and rooms == ["12-1", "12-2"]) or (pf_mode and rooms == ["4-1", "4-2"]):
         char_usages_write(chars_dict[4], filename, floor, archetype)
     return chars_dict
 
@@ -781,7 +784,7 @@ def comp_usages_write(comps_dict, filename, floor, info_char, sort_app):
                 alt_comp_name = comps_dict[star_threshold][comp]["alt_comp_name"]
                 # Only one variation of each comp name is included,
                 # unless if it's used for a character's infographic
-                if (comp_name not in comp_names and comp_name not in dual_comp_names and dual_comp_name not in comp_names and comps_dict[star_threshold][comp]["round"] != 99.99 and comps_dict[star_threshold][comp]["round"] != 0) or comp_name == "-" or info_char:
+                if ("No Sustain" not in comp_name and comp_name not in comp_names and comp_name not in dual_comp_names and dual_comp_name not in comp_names and comps_dict[star_threshold][comp]["round"] != 99.99 and comps_dict[star_threshold][comp]["round"] != 0) or comp_name == "-" or info_char:
                     if sort_app:
                         top_comps_app[comp_name] = comps_dict[star_threshold][comp]["app_rate"]
                     elif comp_name in top_comps_app:
