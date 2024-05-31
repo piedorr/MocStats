@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import warnings
 from scipy.stats import skew, trim_mean
 from archetypes import *
-from comp_rates_config import RECENT_PHASE, pf_mode
+from comp_rates_config import RECENT_PHASE, pf_mode, whaleOnly
 
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 if pf_mode:
@@ -166,6 +166,8 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                     sustainCount = 1
                 if "Ruan Mei" in player.chambers[chamber].characters:
                     dpsCount = 1
+                if whaleOnly and not whaleComp:
+                    continue
                 # dpsCount = 1
 
                 # findchars(char, foundchar)
@@ -184,7 +186,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                                 dpsCount = 1
 
                         appears[star_num][char_name]["flat"] += 1
-                        if not whaleComp and (sustainCount == 1 or char_name in ["Fire Trailblazer", "March 7th"]) and dpsCount == 1:
+                        if whaleComp == whaleOnly and (sustainCount == 1 or char_name in ["Fire Trailblazer", "March 7th"]) and dpsCount == 1:
                             if CHARACTERS[char]["availability"] == "Limited 5*":
                                 appears[star_num][char_name]["cons_freq"][0]["round"][list(str(chamber).split("-"))[0]].append(player.chambers[chamber].round_num)
                             appears[star_num][char_name]["round"][list(str(chamber).split("-"))[0]].append(player.chambers[chamber].round_num)

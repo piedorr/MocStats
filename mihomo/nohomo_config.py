@@ -7,7 +7,7 @@ sys.path.append('../Comps/')
 skip_self = False
 skip_random = False
 print_chart = False
-pf_mode = False
+pf_mode = True
 
 # stats.py
 # comp_stats = ['Bailu', 'Jing Yuan', 'Tingyun', 'Yukong']
@@ -19,12 +19,14 @@ check_stats = []
 
 # stat.py
 run_all_chars = False
-run_chars_name = ["Topaz & Numby", "Robin", "March 7th", "Xueyi", "Hanya"]
+run_chars_name = ["Fu Xuan", "Pela", "Luka", "Boothill", "Hook"]
 
 
 
 from comp_rates_config import RECENT_PHASE, skew_num
 phase_num = RECENT_PHASE
+if pf_mode:
+    phase_num = phase_num + "_pf"
 
 f = open('../data/relics.json')
 relics_data = json.load(f)

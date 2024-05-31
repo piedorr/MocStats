@@ -75,7 +75,7 @@ class Composition:
             if CHARACTERS[character]["availability"] in ["Limited 5*", "5*"]:
                 fives.append(character)
 
-            if character in ["Seele", "Yanqing", "Hook", "Jing Yuan", "Dan Heng • Imbibitor Lunae", "Argenti", "Dr. Ratio", "Acheron"]:
+            if character in ["Seele", "Yanqing", "Hook", "Jing Yuan", "Dan Heng • Imbibitor Lunae", "Argenti", "Dr. Ratio", "Acheron", "Boothill"]:
                 self.dps.insert(0, character)
             elif character in ["Kafka", "Qingque", "Arlan", "Dan Heng", "Sushang"]:
                 self.dps.append(character)
@@ -114,7 +114,7 @@ class Composition:
         self.fivecount = len(fives)
         self.characters = self.dps + self.subdps + self.anemo + self.healer
 
-        if "Acheron" in self.dps and "Black Swan" in self.subdps:
+        if ("Acheron" in self.dps or "Kafka" in self.dps) and "Black Swan" in self.subdps:
             self.subdps.remove("Black Swan")
             self.anemo.insert(0, "Black Swan")
 
@@ -138,7 +138,7 @@ class Composition:
                     self.alt_comp_name = self.characters[0] + " Dual DoT"
                 # elif len(self.dps) + len(self.subdps) == 1:
                 #     self.alt_comp_name = self.characters[0] + " Solo DoT"
-            elif len(self.fua) > 1 and "Topaz & Numby" in self.characters:
+            elif len(self.fua) > 1:
                 self.alt_comp_name = self.characters[0] + " Follow-Up"
 
             # if len_element["Quantum"] == 4:

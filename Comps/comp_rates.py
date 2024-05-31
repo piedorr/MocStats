@@ -70,10 +70,13 @@ def main():
                 skip_uid = True
                 # print("duplicate UID in comp: " + line[0])
             # elif int(''.join(filter(str.isdigit, line[1]))) > 5 and int(line[4]) == 3:
-            elif (not pf_mode and int(''.join(filter(str.isdigit, line[1]))) > 11) or (pf_mode and int(''.join(filter(str.isdigit, line[1]))) > 3):
+            elif (not pf_mode and int(''.join(filter(str.isdigit, line[1]))) > 11) or (
+                pf_mode and int(''.join(filter(str.isdigit, line[1]))) > 3 and int(line[4]) == 3):
                 uid_freq_comp[line[0]] = 1
                 if line[0] in self_uids:
                     self_freq_comp[line[0]] = 1
+            else:
+                skip_uid = True
         # else:
         #     uid_freq_comp[line[0]] += 1
         last_uid = line[0]
@@ -211,7 +214,8 @@ def main():
 
     if "Char usages 8 - 10" in run_commands:
         usage = char_usages(all_players, archetype, past_phase, one_stage, filename="all", floor=True)
-        duo_usages(all_comps, all_players, usage, archetype, one_stage, check_duo=False)
+        if not whaleOnly:
+            duo_usages(all_comps, all_players, usage, archetype, one_stage, check_duo=False)
         # appearances = {}
         # rounds = {}
         # for star_num in usage:
@@ -271,10 +275,11 @@ def main():
                         "rarity": char_chambers[room][star_num][char]["rarity"],
                         "diff": char_chambers[room][star_num][char]["diff_rounds"]
                     }
-        with open("../char_results/appearance.json", "w") as out_file:
-            out_file.write(json.dumps(appearances,indent=2))
-        with open("../char_results/rounds.json", "w") as out_file:
-            out_file.write(json.dumps(rounds,indent=2))
+        if not whaleOnly:
+            with open("../char_results/appearance.json", "w") as out_file:
+                out_file.write(json.dumps(appearances,indent=2))
+            with open("../char_results/rounds.json", "w") as out_file:
+                out_file.write(json.dumps(rounds,indent=2))
         cur_time = time.time()
         print("done char stage: ", (cur_time - start_time), "s")
 
@@ -312,41 +317,43 @@ def main():
                         "rarity": char_chambers[room][star_num][char]["rarity"],
                         "diff": char_chambers[room][star_num][char]["diff_rounds"]
                     }
-        with open("../char_results/appearance_combine.json", "w") as out_file:
-            out_file.write(json.dumps(appearances,indent=2))
-        with open("../char_results/rounds_combine.json", "w") as out_file:
-            out_file.write(json.dumps(rounds,indent=2))
+        if not whaleOnly:
+            with open("../char_results/appearance_combine.json", "w") as out_file:
+                out_file.write(json.dumps(appearances,indent=2))
+            with open("../char_results/rounds_combine.json", "w") as out_file:
+                out_file.write(json.dumps(rounds,indent=2))
         cur_time = time.time()
         print("done char stage (combine): ", (cur_time - start_time), "s")
 
     global all_comps_json
     all_comps_json = {}
     if "Comp usage all stages" in run_commands:
-        comp_usages(all_comps, all_players, whaleCheck, whaleSigWeap, sigWeaps, all_stages, filename="all", floor=True)
+        comp_usages(all_comps, all_players, all_stages, filename="all", floor=True)
         cur_time = time.time()
         print("done comp all: ", (cur_time - start_time), "s")
 
     if "Comp usage 8 - 10" in run_commands:
-        comp_usages(all_comps, all_players, whaleCheck, whaleSigWeap, sigWeaps, one_stage, filename="top", floor=True)
+        comp_usages(all_comps, all_players, one_stage, filename="top", floor=True)
         cur_time = time.time()
         print("done comp 8 - 10: ", (cur_time - start_time), "s")
 
     if "Comp usages for each stage" in run_commands:
         # for room in all_stages:
         for room in three_stages:
-            comp_usages(all_comps, all_players, whaleCheck, whaleSigWeap, sigWeaps, [room], filename=room, offset=2)
+            comp_usages(all_comps, all_players, [room], filename=room, offset=2)
 
-        with open("../char_results/demographic.json", "w") as out_file:
-            out_file.write(json.dumps(sample_size,indent=2))
+        if not whaleOnly:
+            with open("../char_results/demographic.json", "w") as out_file:
+                out_file.write(json.dumps(sample_size,indent=2))
         cur_time = time.time()
         print("done comp stage: ", (cur_time - start_time), "s")
 
     if "Character specific infographics" in run_commands:
-        comp_usages(all_comps, all_players, whaleCheck, whaleSigWeap, sigWeaps, one_stage, filename=char_infographics, info_char=True, floor=True)
+        comp_usages(all_comps, all_players, one_stage, filename=char_infographics, info_char=True, floor=True)
         cur_time = time.time()
         print("done char infographics: ", (cur_time - start_time), "s")
 
-    if "Comp usage 8 - 10" in run_commands and "Comp usages for each stage" in run_commands:
+    if "Comp usage 8 - 10" in run_commands and "Comp usages for each stage" in run_commands and not whaleOnly:
         with open("../comp_results/json/all_comps.json", "w") as out_file:
             out_file.write(json.dumps(all_comps_json,indent=2))
 
@@ -360,11 +367,8 @@ def main():
         # waiting time
         time.sleep(2)
 
-def comp_usages(comps, 
-                players, 
-                whaleCheck,
-                whaleSigWeap,
-                sigWeaps,
+def comp_usages(comps,
+                players,
                 rooms,
                 filename="comp_usages",
                 offset=1,
@@ -372,12 +376,12 @@ def comp_usages(comps,
                 floor=False):
     global top_comps_app
     top_comps_app = {}
-    comps_dict = used_comps(players, comps, rooms, filename, whaleCheck, whaleSigWeap, sigWeaps, floor=floor, offset=offset)
+    comps_dict = used_comps(players, comps, rooms, filename, floor=floor, offset=offset)
     rank_usages(comps_dict, rooms, owns_offset=offset)
     comp_usages_write(comps_dict, filename, floor, info_char, True)
     comp_usages_write(comps_dict, filename, floor, info_char, False)
 
-def used_comps(players, comps, rooms, filename, whaleCheck, whaleSigWeap, sigWeaps, phase=RECENT_PHASE, floor=False, offset=1):
+def used_comps(players, comps, rooms, filename, phase=RECENT_PHASE, floor=False, offset=1):
     # Returns the dictionary of all the comps used and how many times they were used
     comps_dict = [{},{},{},{},{}]
     error_uids = []
@@ -445,8 +449,8 @@ def used_comps(players, comps, rooms, filename, whaleCheck, whaleSigWeap, sigWea
 
             if whaleComp:
                 whaleCount += 1
-                if whaleCheck:
-                    continue
+            if whaleOnly and not whaleComp:
+                continue
             if "Ruan Mei" in comp_tuple or pf_mode:
                 dpsCount = 1
             # sustainless = not sustainCount
@@ -490,7 +494,7 @@ def used_comps(players, comps, rooms, filename, whaleCheck, whaleSigWeap, sigWea
                 comps_dict[star_threshold][comp_tuple]["players"].add(comp.player)
                 if whaleComp:
                     comps_dict[star_threshold][comp_tuple]["whale_count"].add(comp.player)
-                else:
+                if whaleComp == whaleOnly:
                     for i in range (4):
                         if comp_tuple[i] in players[phase][comp.player].owned:
                             if players[phase][comp.player].owned[comp_tuple[i]]["weapon"] in comps_dict[star_threshold][comp_tuple][comp_tuple[i]]["weapon"]:
@@ -544,7 +548,7 @@ def used_comps(players, comps, rooms, filename, whaleCheck, whaleSigWeap, sigWea
     #         print("Char: " + str(char))
     #         print("    Dual DPS: " + str(dual_percent))
     #         print()
-    if whaleCheck:
+    if whaleOnly:
         print("Whale percentage: " + str(whaleCount/total_comps))
     return comps_dict
 
@@ -784,7 +788,9 @@ def comp_usages_write(comps_dict, filename, floor, info_char, sort_app):
                 alt_comp_name = comps_dict[star_threshold][comp]["alt_comp_name"]
                 # Only one variation of each comp name is included,
                 # unless if it's used for a character's infographic
-                if ("No Sustain" not in comp_name and comp_name not in comp_names and comp_name not in dual_comp_names and dual_comp_name not in comp_names and comps_dict[star_threshold][comp]["round"] != 99.99 and comps_dict[star_threshold][comp]["round"] != 0) or comp_name == "-" or info_char:
+                if ((pf_mode or (not pf_mode and "No Sustain" not in comp_name)) and
+                    comp_name not in comp_names and comp_name not in dual_comp_names and dual_comp_name not in comp_names and alt_comp_name not in comp_names and
+                    comps_dict[star_threshold][comp]["round"] != 99.99 and comps_dict[star_threshold][comp]["round"] != 0) or comp_name == "-" or info_char:
                     if sort_app:
                         top_comps_app[comp_name] = comps_dict[star_threshold][comp]["app_rate"]
                     elif comp_name in top_comps_app:
@@ -848,6 +854,8 @@ def comp_usages_write(comps_dict, filename, floor, info_char, sort_app):
                             comp_names.append(comp_name)
                         if dual_comp_name != "-":
                             dual_comp_names.append(dual_comp_name)
+                        if alt_comp_name != "-":
+                            comp_names.append(alt_comp_name)
 
                     # elif floor:
                     #     temp_comp_name = "-"
@@ -912,8 +920,8 @@ def comp_usages_write(comps_dict, filename, floor, info_char, sort_app):
     if not(sort_app):
         filename = filename + "_rounds"
 
-    # if not(whaleCheck):
-    #     filename = filename + "_C1"
+    if whaleOnly:
+        filename = filename + "_C1"
 
     # if floor and not info_char:
     #     # csv_writer = csv.writer(open("../comp_results/f2p_app_" + filename + ".csv", 'w', newline=''))
@@ -1196,6 +1204,11 @@ def char_usages_write(chars_dict, filename, floor, archetype):
         if char == filename:
             break
 
+    if archetype != "all":
+        filename = filename + "_" + archetype
+    if whaleOnly:
+        filename = filename + "_C1"
+
     iterate_value_app = ["app_rate", "diff"]
     iterate_value_round = ["avg_round", "std_dev_round", "diff_rounds"]
     iterate_name_arti = []
@@ -1233,11 +1246,10 @@ def char_usages_write(chars_dict, filename, floor, archetype):
                 out_chars[i][value] = 99.99
                 if pf_mode:
                     out_chars[i][value] = 0
-    with open("../char_results/" + filename + ".json", "w") as out_file:
-        out_file.write(json.dumps(out_chars,indent=2))
+    if not whaleOnly:
+        with open("../char_results/" + filename + ".json", "w") as out_file:
+            out_file.write(json.dumps(out_chars,indent=2))
 
-    if archetype != "all":
-        filename = filename + "_" + archetype
     csv_writer = csv.writer(open("../char_results/" + filename + ".csv", 'w', newline=''))
     count = 0
     for chars in out_chars_csv:
