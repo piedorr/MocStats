@@ -25,7 +25,7 @@ class Composition:
         char_elemeent_list: returns the list of character's elements.
     """
 
-    def __init__(self, uid, comp_chars, phase, round_num, star_num, room, info_char, buff):
+    def __init__(self, uid, comp_chars, phase, round_num, star_num, room, info_char, buff, comp_chars_cons):
         """Composition constructor. Takes in:
             A player, as a UID string
             A composition, as a length-four list of character strings
@@ -37,16 +37,17 @@ class Composition:
         self.room = room
         self.round_num = int(round_num)
         self.star_num = int(star_num)
-        self.char_structs(comp_chars, info_char)
+        self.char_structs(comp_chars, info_char, comp_chars_cons)
         self.buff = buff
         # self.comp_elements()
 
-    def char_structs(self, comp_chars, info_char):
+    def char_structs(self, comp_chars, info_char, comp_chars_cons):
         """Character structure creator.
         Makes a presence dict that maps character names to bools, and
         a list (alphabetically ordered) of the character names.
         """
         self.char_presence = {}
+        self.char_cons = {}
         fives = []
         self.dps = []
         self.subdps = []
@@ -65,6 +66,8 @@ class Composition:
             "Lightning": 0,
             "Physical": 0,
         }
+        for char_iter in range(len(comp_chars)):
+            self.char_cons[comp_chars[char_iter]] = int(comp_chars_cons[char_iter])
         comp_chars.sort()
         for character in comp_chars:
             if "Dan Heng â€¢ Imbibitor Lunae" in character:
@@ -156,6 +159,8 @@ class Composition:
             if len(self.healer) == 0:
                 archetype = " No Sustain"
                 self.alt_comp_name = self.characters[0] + " No Sustain"
+            elif "Imaginary Trailblazer" in self.characters:
+                archetype = " Super Break"
             elif len(self.dps) + len(self.subdps) > 1:
                 if len(self.dps) + len(self.subdps) > 2 and "Follow-Up" not in self.alt_comp_name:
                     archetype = " Triple Carry"

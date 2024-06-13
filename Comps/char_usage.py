@@ -115,7 +115,8 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                 "planar_freq": {},
                 "cons_freq": {},
                 "cons_avg": 0.00,
-                "sample": 0
+                "sample": 0,
+                "sample_app_flat": 0
             }
             for i in range (7):
                 appears[star_num][character]["cons_freq"][i] = {
@@ -145,9 +146,11 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
 
                 for char in player.chambers[chamber].characters:
                     if CHARACTERS[char]["availability"] == "Limited 5*":
-                        if char in player.owned:
-                            if player.owned[char]["cons"] > 0:
-                                whaleComp = True
+                        # if char in player.owned:
+                        #     if player.owned[char]["cons"] > 0:
+                        #         whaleComp = True
+                        if player.chambers[chamber].char_cons[char] > 0:
+                            whaleComp = True
                     if CHARACTERS[char]["role"] == "Sustain":
                         sustainCount += 1
                     if CHARACTERS[char]["role"] == "Damage Dealer":
@@ -162,7 +165,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                             dpsCount += 1
                     elif char == "Serval":
                         dpsCount -= 1
-                if sustainCount == 0 and pf_mode:
+                if sustainCount == 0 and (pf_mode or whaleOnly):
                     sustainCount = 1
                 if "Ruan Mei" in player.chambers[chamber].characters:
                     dpsCount = 1
@@ -273,7 +276,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                 )
             else:
                 appears[star_num][char]["percent"] = 0.00
-            if appears[star_num][char]["flat"] >= 10:
+            if appears[star_num][char]["flat"] >= 8:
                 avg_round = []
                 std_dev_round = []
                 uses_room = {}
@@ -304,12 +307,24 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                 if not uses_room:
                     is_count_cycles = False
                 elif chambers == ["12-1", "12-2"] or (pf_mode and chambers == ["4-1", "4-2"]):
+                    appears[star_num][char]["sample_app_flat"] = uses_room[room_num]
                     if len(uses_room) != len(chambers)/2:
                         is_count_cycles = False
                 for room_num in uses_room:
-                    if uses_room[room_num] < 10:
-                        is_count_cycles = False
-                        break
+                    if whaleOnly:
+                        if uses_room[room_num] < 8:
+                            is_count_cycles = False
+                            break
+                        elif not(pf_mode) and round(statistics.mean(avg_round), 2) <= 7 and uses_room[room_num] <= 15:
+                            is_count_cycles = False
+                            break
+                    else:
+                        if uses_room[room_num] < 8:
+                            is_count_cycles = False
+                            break
+                        elif not(pf_mode) and round(statistics.mean(avg_round), 2) <= 9 and uses_room[room_num] <= 15:
+                            is_count_cycles = False
+                            break
 
                 # if avg_round:
                 if is_count_cycles:
@@ -553,7 +568,8 @@ def usages(owns, appears, past_phase, filename, chambers=ROOMS, offset=1):
                 "planars_round" : {},
                 "cons_usage": {},
                 "cons_avg": appears[star_num][char]["cons_avg"],
-                "sample": appears[star_num][char]["sample"]
+                "sample": appears[star_num][char]["sample"],
+                "sample_app_flat": appears[star_num][char]["sample_app_flat"]
             }
             # rate = round(appears[star_num][char]["flat"] / (owns[star_num][char]["flat"] * offset / 100.0), 2)
             rates.append(uses[star_num][char]["app"])

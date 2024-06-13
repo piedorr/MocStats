@@ -69,8 +69,7 @@ def main():
             if line[0] in uid_freq_comp:
                 skip_uid = True
                 # print("duplicate UID in comp: " + line[0])
-            # elif int(''.join(filter(str.isdigit, line[1]))) > 5 and int(line[4]) == 3:
-            elif (not pf_mode and int(''.join(filter(str.isdigit, line[1]))) > 11) or (
+            elif (not pf_mode and int(''.join(filter(str.isdigit, line[1]))) > 11 and int(line[4]) == 3) or (
                 pf_mode and int(''.join(filter(str.isdigit, line[1]))) > 3 and int(line[4]) == 3):
                 uid_freq_comp[line[0]] = 1
                 if line[0] in self_uids:
@@ -82,10 +81,21 @@ def main():
         last_uid = line[0]
         if not skip_uid:
             stage = ''.join(filter(str.isdigit, line[1]))
-            comp_chars_temp = comp_chars(line)
+            comp_chars_temp = []
+            for i in range(5, 9):
+                if line[i] != "":
+                    comp_chars_temp.append(line[i])
+            cons_chars_temp = []
+            for i in range(9, 13):
+                if pf_mode:
+                    if line[i + 1] != "":
+                        cons_chars_temp.append(line[i])
+                else:
+                    if line[i] != "":
+                        cons_chars_temp.append(line[i])
             if comp_chars_temp:
                 comp = Composition(line[0], comp_chars_temp, RECENT_PHASE, line[3], line[4],
-                                   stage + "-" + str(line[2]), alt_comps, line[9] if pf_mode else "")
+                                   stage + "-" + str(line[2]), alt_comps, line[9] if pf_mode else "", cons_chars_temp)
                 # if int(stage) > 7:
                 #     if line[0] not in dps_freq_comp:
                 #         dps_freq_comp[line[0]] = set()
@@ -417,14 +427,16 @@ def used_comps(players, comps, rooms, filename, phase=RECENT_PHASE, floor=False,
             dpsCount = 0
             for char in range (4):
                 if CHARACTERS[comp_tuple[char]]["availability"] == "Limited 5*":
-                    if comp_tuple[char] in players[phase][comp.player].owned:
-                    # if comp_tuple[char] in players[phase][comp.player].owned and comp_tuple[char] == "Blade":
-                        if (
-                            players[phase][comp.player].owned[comp_tuple[char]]["cons"] > 0
-                        # ) or (
-                        #     whaleSigWeap and players[phase][comp.player].owned[comp_tuple[char]]["weapon"] in sigWeaps
-                        ):
-                            whaleComp = True
+                    # if comp_tuple[char] in players[phase][comp.player].owned:
+                    # # if comp_tuple[char] in players[phase][comp.player].owned and comp_tuple[char] == "Blade":
+                    #     if (
+                    #         players[phase][comp.player].owned[comp_tuple[char]]["cons"] > 0
+                    #     # ) or (
+                    #     #     whaleSigWeap and players[phase][comp.player].owned[comp_tuple[char]]["weapon"] in sigWeaps
+                    #     ):
+                    #         whaleComp = True
+                    if comp.char_cons[comp_tuple[char]] > 0:
+                        whaleComp = True
                 # if comp_tuple[char] not in total_char_comps:
                 #     total_char_comps[comp_tuple[char]] = 0
                 # total_char_comps[comp_tuple[char]] += 1
@@ -576,15 +588,24 @@ def rank_usages(comps_dict, rooms, owns_offset=1):
                     # avg_round += comps_dict[star_threshold][comp]["round_num"][str(room_num)]
 
             comps_dict[star_threshold][comp]["is_count_round"] = True
+            comps_dict[star_threshold][comp]["is_count_round_print"] = True
             if (rooms == ["12-1", "12-2"]) or pf_mode and rooms == ["4-1", "4-2"]:
-                if len(uses_room) == len(rooms)/2:
-                    for room_num in uses_room:
+                for room_num in uses_room:
+                    if whaleOnly:
                         if uses_room[room_num] < 10:
                             comps_dict[star_threshold][comp]["is_count_round"] = False
-                else:
+                    elif uses_room[room_num] < 15:
+                        comps_dict[star_threshold][comp]["is_count_round"] = False
+                    if uses_room[room_num] < 2:
+                        comps_dict[star_threshold][comp]["is_count_round_print"] = False
+            elif len(rooms) == 1:
+                if whaleOnly:
+                    if comps_dict[star_threshold][comp]["uses"] < 10:
+                        comps_dict[star_threshold][comp]["is_count_round"] = False
+                elif comps_dict[star_threshold][comp]["uses"] < 15:
                     comps_dict[star_threshold][comp]["is_count_round"] = False
-            elif len(rooms) == 1 and comps_dict[star_threshold][comp]["uses"] < 10:
-                comps_dict[star_threshold][comp]["is_count_round"] = False
+                if comps_dict[star_threshold][comp]["uses"] < 2:
+                    comps_dict[star_threshold][comp]["is_count_round_print"] = False
 
             if avg_round:
                 avg_round = round(statistics.mean(avg_round), 2)
@@ -657,9 +678,11 @@ def used_duos(players, comps, rooms, usage, archetype, check_duo, phase=RECENT_P
         for char in comp.characters:
             findchars(char, foundchar)
             if CHARACTERS[char]["availability"] == "Limited 5*":
-                if char in players[phase][comp.player].owned:
-                    if players[phase][comp.player].owned[char]["cons"] > 0:
-                        whaleComp = True
+                # if char in players[phase][comp.player].owned:
+                #     if players[phase][comp.player].owned[char]["cons"] > 0:
+                #         whaleComp = True
+                if comp.char_cons[char] > 0:
+                    whaleComp = True
             if CHARACTERS[char]["role"] == "Sustain":
                 sustainCount += 1
         if not find_archetype(foundchar):
@@ -895,7 +918,7 @@ def comp_usages_write(comps_dict, filename, floor, info_char, sort_app):
                     outvar_comps.append(outvar_comps_append)
                 if not info_char and (
                     # comps_dict[star_threshold][comp]["app_rate"] >= json_threshold or pf_mode or (not pf_mode and filename not in ["1-1", "1-2", "2-1", "2-2", "3-1", "3-2", "4-1", "4-2", "5-1", "5-2"])
-                    comps_dict[star_threshold][comp]["is_count_round"] and (comps_dict[star_threshold][comp]["app_rate"] >= json_threshold)
+                    comps_dict[star_threshold][comp]["is_count_round_print"] and (comps_dict[star_threshold][comp]["app_rate"] >= json_threshold)
                 ):
                     out = name_filter(comp, mode="out")
                     out_json_dict = {
@@ -1164,6 +1187,7 @@ def char_usages_write(chars_dict, filename, floor, archetype):
                     out_chars_append["app_" + str(i)] = "-"
             out_chars_append["cons_avg"] = chars_dict[char]["cons_avg"]
             out_chars_append["sample"] = chars_dict[char]["sample"]
+            out_chars_append["sample_app_flat"] = chars_dict[char]["sample_app_flat"]
         else:
             for i in range(weap_len):
                 out_chars_append["weapon_" + str(i + 1)] = ""
@@ -1199,6 +1223,7 @@ def char_usages_write(chars_dict, filename, floor, archetype):
                     out_chars_append["round_" + str(i)] = "0.0"
             out_chars_append["cons_avg"] = chars_dict[char]["cons_avg"]
             out_chars_append["sample"] = chars_dict[char]["sample"]
+            out_chars_append["sample_app_flat"] = chars_dict[char]["sample_app_flat"]
         out_chars.append(out_chars_append)
         out_chars_csv.append(out_chars_append.copy())
         if char == filename:
@@ -1269,12 +1294,5 @@ def name_filter(comp, mode="out"):
                 filtered.append(char)
     return filtered
     #TODO Need to create a structure for bad names --> names 
-
-def comp_chars(row):
-    comp = []
-    for i in range(5, 9):
-        if row[i] != "":
-            comp.append(row[i])
-    return comp
 
 main()
