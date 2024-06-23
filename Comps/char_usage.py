@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import warnings
 from scipy.stats import skew, trim_mean
 from archetypes import *
-from comp_rates_config import RECENT_PHASE, pf_mode, whaleOnly
+from comp_rates_config import RECENT_PHASE, pf_mode, as_mode, whaleOnly
 
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 if pf_mode:
@@ -165,7 +165,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                             dpsCount += 1
                     elif char == "Serval":
                         dpsCount -= 1
-                if sustainCount == 0 and (pf_mode or whaleOnly):
+                if sustainCount == 0 and ((pf_mode and not as_mode) or whaleOnly):
                     sustainCount = 1
                 if "Ruan Mei" in player.chambers[chamber].characters:
                     dpsCount = 1
@@ -307,24 +307,13 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                 if not uses_room:
                     is_count_cycles = False
                 elif chambers == ["12-1", "12-2"] or (pf_mode and chambers == ["4-1", "4-2"]):
-                    appears[star_num][char]["sample_app_flat"] = uses_room[room_num]
+                    appears[star_num][char]["sample_app_flat"] = uses_room[4 if pf_mode else 12]
                     if len(uses_room) != len(chambers)/2:
                         is_count_cycles = False
                 for room_num in uses_room:
-                    if whaleOnly:
-                        if uses_room[room_num] < 8:
-                            is_count_cycles = False
-                            break
-                        elif not(pf_mode) and round(statistics.mean(avg_round), 2) <= 7 and uses_room[room_num] <= 15:
-                            is_count_cycles = False
-                            break
-                    else:
-                        if uses_room[room_num] < 8:
-                            is_count_cycles = False
-                            break
-                        elif not(pf_mode) and round(statistics.mean(avg_round), 2) <= 9 and uses_room[room_num] <= 15:
-                            is_count_cycles = False
-                            break
+                    if uses_room[room_num] < 10:
+                        is_count_cycles = False
+                        break
 
                 # if avg_round:
                 if is_count_cycles:

@@ -29,14 +29,10 @@ with open("output1.csv", 'r') as f:
 #         print(i[0])
 # exit()
 
-pf_filename = ""
-if pf_mode:
-    pf_filename = "_pf"
-
 if os.path.exists("../data/raw_csvs_real/"):
-    f = open("../data/raw_csvs_real/" + phase_num + pf_filename + ".csv", 'r')
+    f = open("../data/raw_csvs_real/" + phase_num + ".csv", 'r')
 else:
-    f = open("../data/raw_csvs/" + phase_num + pf_filename + ".csv", 'r')
+    f = open("../data/raw_csvs/" + phase_num + ".csv", 'r')
 reader = csv.reader(f, delimiter=',')
 headers = next(reader)
 spiral = list(reader)
@@ -57,7 +53,7 @@ substats = {}
 
 spiral_rows = {}
 for spiral_row in spiral:
-    if int(''.join(filter(str.isdigit, spiral_row[1]))) > 11 or (pf_mode and int(''.join(filter(str.isdigit, spiral_row[1]))) > 3):
+    if (int(''.join(filter(str.isdigit, spiral_row[1]))) > 11 or (pf_mode and int(''.join(filter(str.isdigit, spiral_row[1]))) > 3)) and int(spiral_row[4]) == 3:
         if spiral_row[0] not in spiral_rows:
             spiral_rows[spiral_row[0]] = {}
         # if comp_stats:

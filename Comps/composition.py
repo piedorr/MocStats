@@ -78,7 +78,7 @@ class Composition:
             if CHARACTERS[character]["availability"] in ["Limited 5*", "5*"]:
                 fives.append(character)
 
-            if character in ["Seele", "Yanqing", "Hook", "Jing Yuan", "Dan Heng • Imbibitor Lunae", "Argenti", "Dr. Ratio", "Acheron", "Boothill"]:
+            if character in ["Seele", "Yanqing", "Hook", "Jing Yuan", "Dan Heng • Imbibitor Lunae", "Argenti", "Dr. Ratio", "Acheron", "Boothill", "Firefly"]:
                 self.dps.insert(0, character)
             elif character in ["Kafka", "Qingque", "Arlan", "Dan Heng", "Sushang"]:
                 self.dps.append(character)

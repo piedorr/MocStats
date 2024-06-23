@@ -35,14 +35,15 @@ for artifact in artifacts:
         affix = affix.replace("Imaginary", "Imag.")
         affix = affix.replace("Quantum", "Quan.")
         affix = affix.replace("Lightning", "Light.")
+        affix = affix.replace("Outgoing Healing", "Heal")
 
         if affix not in artifacts_affixes:
             artifacts_affixes[affix] = []
         artifacts_affixes[affix].append(artifacts[artifact]["name"])
 
 for artifact in list(artifacts_affixes.keys()):
-    if len(artifacts_affixes[artifact]) > 1 and artifact not in artifacts2:
-        if len(artifact) > 12:
+    if len(artifacts_affixes[artifact]) > 1:
+        if artifact not in artifacts2 and len(artifact) > 12:
             print("Set name too long: " + artifact)
         else:
             add_arti = input("Add " + artifact + "? (y/n): ")

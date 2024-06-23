@@ -2911,5 +2911,59 @@
         "role": "Damage Dealer",
         "alt_name": null,
         "out_name": false
+    },
+    "Firefly": {
+        "id": "1310",
+        "name": "Firefly",
+        "tag": "sam",
+        "rarity": 5,
+        "path": "Warrior",
+        "element": "Fire",
+        "max_sp": 240,
+        "ranks": [
+            "131001",
+            "131002",
+            "131003",
+            "131004",
+            "131005",
+            "131006"
+        ],
+        "skills": [
+            "131001",
+            "131002",
+            "131003",
+            "131004",
+            "131006",
+            "131007",
+            "131008",
+            "131009"
+        ],
+        "skill_trees": [
+            "1310001",
+            "1310002",
+            "1310003",
+            "1310004",
+            "1310007",
+            "1310101",
+            "1310102",
+            "1310103",
+            "1310201",
+            "1310202",
+            "1310203",
+            "1310204",
+            "1310205",
+            "1310206",
+            "1310207",
+            "1310208",
+            "1310209",
+            "1310210"
+        ],
+        "icon": "icon/character/1310.png",
+        "preview": "image/character_preview/1310.png",
+        "portrait": "image/character_portrait/1310.png",
+        "availability": "Limited 5*",
+        "role": "Damage Dealer",
+        "alt_name": null,
+        "out_name": false
     }
 }

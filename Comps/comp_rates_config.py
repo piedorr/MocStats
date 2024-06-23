@@ -7,11 +7,14 @@ with open('../data/light_cones.json') as char_file:
     LIGHT_CONES = json.load(char_file)
 
 # no need to add 2.2.1"_pf"
-RECENT_PHASE = "2.2.2"
-past_phase = "2.1.4"
+# if no past phase, leave blank
+RECENT_PHASE = "2.3.1"
+past_phase = ""
 global pf_mode
-pf_mode = False
-# pf_mode = True
+global as_mode
+# if as, pf_mode = True
+pf_mode = True
+as_mode = True
 char_infographics = ["Sushang", "Hook", "Natasha", "Dr. Ratio", "Kafka"]
 char_infographics = char_infographics[3]
 

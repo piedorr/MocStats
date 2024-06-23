@@ -49,7 +49,7 @@ copy_weapons = {}
 
 spiral_rows = {}
 for spiral_row in spiral:
-    if int(''.join(filter(str.isdigit, spiral_row[1]))) > 9:
+    if (int(''.join(filter(str.isdigit, spiral_row[1]))) > 11 or (pf_mode and int(''.join(filter(str.isdigit, spiral_row[1]))) > 3)) and int(spiral_row[4]) == 3:
         if spiral_row[0] not in spiral_rows:
             spiral_rows[spiral_row[0]] = set()
         spiral_rows[spiral_row[0]].update([spiral_row[5], spiral_row[6], spiral_row[7], spiral_row[8]])
@@ -298,13 +298,14 @@ for char in chars:
             del stats[char][weapon]
             weapons[char].remove(weapon)
 
-    print()
-    print()
-    if os.path.exists("results_real"):
-        csv_writer = csv.writer(open("results_real/" + char + "_weapons.csv", 'w', newline=''))
-    else:
-        csv_writer = csv.writer(open("results/" + char + "_weapons.csv", 'w', newline=''))
-    csv_writer.writerow(stats[char][weapons[char][0]].keys())
-    for weapon in weapons[char]:
-        print(weapon + ": " + str(sample[char][weapon]))
-        csv_writer.writerow(stats[char][weapon].values())
+    if stats[char]:
+        print()
+        print()
+        if os.path.exists("results_real"):
+            csv_writer = csv.writer(open("results_real/" + char + "_weapons.csv", 'w', newline=''))
+        else:
+            csv_writer = csv.writer(open("results/" + char + "_weapons.csv", 'w', newline=''))
+            csv_writer.writerow(stats[char][weapons[char][0]].keys())
+        for weapon in weapons[char]:
+            print(weapon + ": " + str(sample[char][weapon]))
+            csv_writer.writerow(stats[char][weapon].values())

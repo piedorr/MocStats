@@ -34,7 +34,9 @@ def main():
         self_uids = []
 
     pf_filename = ""
-    if pf_mode:
+    if as_mode:
+        pf_filename = "_as"
+    elif pf_mode:
         pf_filename = "_pf"
     if os.path.exists("../data/raw_csvs_real/"):
         stats = open("../data/raw_csvs_real/" + RECENT_PHASE + pf_filename + ".csv")
@@ -87,15 +89,11 @@ def main():
                     comp_chars_temp.append(line[i])
             cons_chars_temp = []
             for i in range(9, 13):
-                if pf_mode:
-                    if line[i + 1] != "":
-                        cons_chars_temp.append(line[i])
-                else:
-                    if line[i] != "":
-                        cons_chars_temp.append(line[i])
+                if line[i] != "":
+                    cons_chars_temp.append(line[i])
             if comp_chars_temp:
                 comp = Composition(line[0], comp_chars_temp, RECENT_PHASE, line[3], line[4],
-                                   stage + "-" + str(line[2]), alt_comps, line[9] if pf_mode else "", cons_chars_temp)
+                                   stage + "-" + str(line[2]), alt_comps, line[13] if pf_mode else "", cons_chars_temp)
                 # if int(stage) > 7:
                 #     if line[0] not in dps_freq_comp:
                 #         dps_freq_comp[line[0]] = set()
@@ -463,7 +461,7 @@ def used_comps(players, comps, rooms, filename, phase=RECENT_PHASE, floor=False,
                 whaleCount += 1
             if whaleOnly and not whaleComp:
                 continue
-            if "Ruan Mei" in comp_tuple or pf_mode:
+            if "Ruan Mei" in comp_tuple or (pf_mode and not as_mode):
                 dpsCount = 1
             # sustainless = not sustainCount
             # if sustainCount > 1:
@@ -687,7 +685,7 @@ def used_duos(players, comps, rooms, usage, archetype, check_duo, phase=RECENT_P
                 sustainCount += 1
         if not find_archetype(foundchar):
             continue
-        if sustainCount < 1 and pf_mode:
+        if sustainCount < 1 and (pf_mode and not as_mode):
             sustainCount = 1
 
         # Permutate the duos, for example if Ganyu and Xiangling are used,
@@ -811,7 +809,7 @@ def comp_usages_write(comps_dict, filename, floor, info_char, sort_app):
                 alt_comp_name = comps_dict[star_threshold][comp]["alt_comp_name"]
                 # Only one variation of each comp name is included,
                 # unless if it's used for a character's infographic
-                if ((pf_mode or (not pf_mode and "No Sustain" not in comp_name)) and
+                if (((pf_mode and not as_mode) or ("No Sustain" not in comp_name)) and
                     comp_name not in comp_names and comp_name not in dual_comp_names and dual_comp_name not in comp_names and alt_comp_name not in comp_names and
                     comps_dict[star_threshold][comp]["round"] != 99.99 and comps_dict[star_threshold][comp]["round"] != 0) or comp_name == "-" or info_char:
                     if sort_app:
@@ -835,7 +833,7 @@ def comp_usages_write(comps_dict, filename, floor, info_char, sort_app):
                             "char_4": comp[3],
                             "app_rate": str(comps_dict[star_threshold][comp]["app_rate"]) + "%",
                             "avg_round": str(
-                                round(comps_dict[star_threshold][comp]["round"] / 1000, 2) if pf_mode else comps_dict[star_threshold][comp]["round"]
+                                round(comps_dict[star_threshold][comp]["round"] / 1000, 2) if (pf_mode and not as_mode) else comps_dict[star_threshold][comp]["round"]
                             ),
                             # "own_rate": str(comps_dict[star_threshold][comp]["own_rate"]) + "%",
                             # "usage_rate": str(comps_dict[star_threshold][comp]["usage_rate"]) + "%"
@@ -1015,9 +1013,9 @@ def duo_write(duos_dict, usage, filename, archetype, check_duo):
             csv_writer.writerow(temp_duos)
             count += 1
         # csv_writer.writerow(duos.values())
-        temp_duos = [duos["char"], round(duos["round"] / 1000, 2) if pf_mode else duos["round"]]
+        temp_duos = [duos["char"], round(duos["round"] / 1000, 2) if (pf_mode and not as_mode) else duos["round"]]
         for i in range(10):
-            temp_duos += [duos["char_" + str(i + 1)], duos["app_rate_" + str(i + 1)], round(duos["avg_round_" + str(i + 1)] / 1000, 2) if pf_mode else duos["avg_round_" + str(i + 1)]]
+            temp_duos += [duos["char_" + str(i + 1)], duos["app_rate_" + str(i + 1)], round(duos["avg_round_" + str(i + 1)] / 1000, 2) if (pf_mode and not as_mode) else duos["avg_round_" + str(i + 1)]]
         csv_writer.writerow(temp_duos)
         # duos.pop("round")
         for i in range(duo_dict_len):
@@ -1146,10 +1144,10 @@ def char_usages_write(chars_dict, filename, floor, archetype):
                 if i < len(list(chars_dict[char]["artifacts"])):
                     arti_name = list(chars_dict[char]["artifacts"])[i]
                     out_chars_append["artifact_" + str(i + 1)] = arti_name
-                    arti_name = arti_name.replace("Watchmaker,", "Watchmaker").replace("Sigonia,", "Sigonia").split(", ")
-                    out_chars_append["artifact_" + str(i + 1) + "_1"] = arti_name[0].replace("Watchmaker", "Watchmaker,").replace("Sigonia", "Sigonia,")
+                    arti_name = arti_name.replace("Watchmaker,", "Watchmaker").replace("Sigonia,", "Sigonia").replace("Duran,", "Duran").split(", ")
+                    out_chars_append["artifact_" + str(i + 1) + "_1"] = arti_name[0].replace("Watchmaker", "Watchmaker,").replace("Sigonia", "Sigonia,").replace("Duran", "Duran,")
                     if len(arti_name) > 1:
-                        out_chars_append["artifact_" + str(i + 1) + "_2"] = arti_name[1].replace("Watchmaker", "Watchmaker,").replace("Sigonia", "Sigonia,")
+                        out_chars_append["artifact_" + str(i + 1) + "_2"] = arti_name[1].replace("Watchmaker", "Watchmaker,").replace("Sigonia", "Sigonia,").replace("Duran", "Duran,")
                     else:
                         out_chars_append["artifact_" + str(i + 1) + "_2"] = ""
                     out_chars_append["artifact_" + str(i + 1) + "_app"] = str(list(chars_dict[char]["artifacts"].values())[i]["percent"]) + "%"
@@ -1259,7 +1257,7 @@ def char_usages_write(chars_dict, filename, floor, archetype):
         for value in iterate_value_round:
             if out_chars[i][value].replace(".", "").replace("-", "").isnumeric():
                 out_chars[i][value] = round(float(out_chars[i][value])) if pf_mode else float(out_chars[i][value])
-                out_chars_csv[i][value] = str(round(float(out_chars_csv[i][value]) / 1000 if pf_mode else float(out_chars_csv[i][value]), 2))
+                out_chars_csv[i][value] = str(round(float(out_chars_csv[i][value]) / 1000 if pf_mode else float(out_chars_csv[i][value]), 2)) if not as_mode else out_chars_csv[i][value]
             else:
                 out_chars[i][value] = 99.99
                 if pf_mode:
