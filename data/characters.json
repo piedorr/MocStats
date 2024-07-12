@@ -2965,5 +2965,57 @@
         "role": "Damage Dealer",
         "alt_name": null,
         "out_name": false
+    },
+    "Jade": {
+        "id": "1314",
+        "name": "Jade",
+        "tag": "jade",
+        "rarity": 5,
+        "path": "Mage",
+        "element": "Quantum",
+        "max_sp": 140,
+        "ranks": [
+            "131401",
+            "131402",
+            "131403",
+            "131404",
+            "131405",
+            "131406"
+        ],
+        "skills": [
+            "131401",
+            "131402",
+            "131403",
+            "131404",
+            "131406",
+            "131407"
+        ],
+        "skill_trees": [
+            "1314001",
+            "1314002",
+            "1314003",
+            "1314004",
+            "1314007",
+            "1314101",
+            "1314102",
+            "1314103",
+            "1314201",
+            "1314202",
+            "1314203",
+            "1314204",
+            "1314205",
+            "1314206",
+            "1314207",
+            "1314208",
+            "1314209",
+            "1314210"
+        ],
+        "icon": "icon/character/1314.png",
+        "preview": "image/character_preview/1314.png",
+        "portrait": "image/character_portrait/1314.png",
+        "availability": "Limited 5*",
+        "role": "Damage Dealer",
+        "alt_name": null,
+        "out_name": false
     }
 }
