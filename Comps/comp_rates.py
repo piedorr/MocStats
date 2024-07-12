@@ -444,7 +444,7 @@ def used_comps(players, comps, rooms, filename, phase=RECENT_PHASE, floor=False,
                     dpsCount += 1
                     if comp_tuple[char] == "Topaz & Numby":
                         for char_fua in range (4):
-                            if comp_tuple[char_fua] in ["Dr. Ratio", "Clara", "Jing Yuan", "Himeko", "Kafka", "Blade", "Herta", "Xueyi"]:
+                            if comp_tuple[char_fua] in ["Dr. Ratio", "Clara", "Jing Yuan", "Himeko", "Kafka", "Blade", "Herta", "Xueyi", "Jade"]:
                                 dpsCount -= 1
                                 break
                 if "Kafka" not in comp_tuple:
@@ -1050,8 +1050,8 @@ def duo_write(duos_dict, usage, filename, archetype, check_duo):
                     if (char_i in ["Black Swan", "Serval", "Sampo", "Luka", "Guinaifen"] and char_j in ["Black Swan", "Kafka"]
                         or char_j in ["Black Swan", "Serval", "Sampo", "Luka", "Guinaifen"] and char_i in ["Black Swan", "Kafka"]):
                         continue
-                    if (char_i in ["Dr. Ratio", "Clara", "Jing Yuan", "Himeko", "Kafka", "Blade", "Herta", "Xueyi"] and char_j == "Topaz & Numby"
-                        or char_j in ["Dr. Ratio", "Clara", "Jing Yuan", "Himeko", "Kafka", "Blade", "Herta", "Xueyi"] and char_i == "Topaz & Numby"):
+                    if (char_i in ["Dr. Ratio", "Clara", "Jing Yuan", "Himeko", "Kafka", "Blade", "Herta", "Xueyi", "Jade"] and char_j == "Topaz & Numby"
+                        or char_j in ["Dr. Ratio", "Clara", "Jing Yuan", "Himeko", "Kafka", "Blade", "Herta", "Xueyi", "Jade"] and char_i == "Topaz & Numby"):
                         continue
                     if char_j not in out_duos_check:
                         continue

@@ -156,7 +156,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                     if CHARACTERS[char]["role"] == "Damage Dealer":
                         dpsCount += 1
                         if char == "Topaz & Numby":
-                            for char_fua in ["Dr. Ratio", "Clara", "Jing Yuan", "Himeko", "Kafka", "Blade", "Herta", "Xueyi"]:
+                            for char_fua in ["Dr. Ratio", "Clara", "Jing Yuan", "Himeko", "Kafka", "Blade", "Herta", "Xueyi", "Jade"]:
                                 if char_fua in player.chambers[chamber].characters:
                                     dpsCount -= 1
                                     break

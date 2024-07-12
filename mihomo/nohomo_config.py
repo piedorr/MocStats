@@ -9,7 +9,7 @@ skip_random = False
 print_chart = False
 # as: pf True
 pf_mode = True
-as_mode = True
+as_mode = False
 
 # stats.py
 # comp_stats = ['Bailu', 'Jing Yuan', 'Tingyun', 'Yukong']

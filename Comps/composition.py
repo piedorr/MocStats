@@ -78,7 +78,7 @@ class Composition:
             if CHARACTERS[character]["availability"] in ["Limited 5*", "5*"]:
                 fives.append(character)
 
-            if character in ["Seele", "Yanqing", "Hook", "Jing Yuan", "Dan Heng • Imbibitor Lunae", "Argenti", "Dr. Ratio", "Acheron", "Boothill", "Firefly"]:
+            if character in ["Seele", "Yanqing", "Hook", "Jing Yuan", "Dan Heng • Imbibitor Lunae", "Argenti", "Dr. Ratio", "Acheron", "Boothill", "Firefly", "Jade"]:
                 self.dps.insert(0, character)
             elif character in ["Kafka", "Qingque", "Arlan", "Dan Heng", "Sushang"]:
                 self.dps.append(character)
@@ -97,7 +97,7 @@ class Composition:
 
             if character in ["Kafka", "Black Swan", "Serval", "Sampo", "Luka", "Guinaifen"]:
                 self.dot.append(character)
-            if character in ["Topaz & Numby", "Dr. Ratio", "Clara", "Jing Yuan", "Himeko", "Kafka", "Blade", "Herta", "Xueyi"]:
+            if character in ["Topaz & Numby", "Dr. Ratio", "Clara", "Jing Yuan", "Himeko", "Kafka", "Blade", "Herta", "Xueyi", "Jade"]:
                 self.fua.append(character)
 
             if CHARACTERS[character]["element"] == "Ice":

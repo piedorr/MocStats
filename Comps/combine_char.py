@@ -1,10 +1,8 @@
 import json
 import re
 
-# moc_phase = input("MoC phase: ")
-# pf_phase = input("PF phase: ")
 moc_phase = "2.2.2"
-pf_phase = "2.2.1"
+pf_phase = "2.3.2"
 as_phase = "2.3.1"
 
 with open('../data/characters.json') as char_file:
