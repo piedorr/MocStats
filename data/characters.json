@@ -10,7 +10,6 @@
         "availability": "4*",
         "path": "Knight",
         "element": "Ice",
-        "max_sp": 120,
         "ranks": [
             "100101",
             "100102",
@@ -47,22 +46,6 @@
             "1001209",
             "1001210"
         ],
-        "icon": "icon/character/1001.png",
-        "preview": "image/character_preview/1001.png",
-        "portrait": "image/character_portrait/1001.png",
-        "guide_overview": [
-            "guide/Nwflower/character_overview/1001.png",
-            "guide/OriginMirror/character_overview/1001.png"
-        ],
-        "guide_material": [
-            "guide/Nwflower/character_material/1001.png"
-        ],
-        "guide_evaluation": [
-            {
-                "image": "guide/Gamer/character_evaluation/1001.png",
-                "link": "https://www.gamer.cn/xqtd/article/19314"
-            }
-        ]
     },
     "Dan Heng": {
         "id": "1002",

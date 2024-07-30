@@ -145,7 +145,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                         break
 
                 for char in player.chambers[chamber].characters:
-                    if CHARACTERS[char]["availability"] == "Limited 5*":
+                    if CHARACTERS[char]["availability"] == "Limited S":
                         # if char in player.owned:
                         #     if player.owned[char]["cons"] > 0:
                         #         whaleComp = True
@@ -190,7 +190,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
 
                         appears[star_num][char_name]["flat"] += 1
                         if whaleComp == whaleOnly and (sustainCount == 1 or char_name in ["Fire Trailblazer", "March 7th"]) and dpsCount == 1:
-                            if CHARACTERS[char]["availability"] == "Limited 5*":
+                            if CHARACTERS[char]["availability"] == "Limited S":
                                 appears[star_num][char_name]["cons_freq"][0]["round"][list(str(chamber).split("-"))[0]].append(player.chambers[chamber].round_num)
                             appears[star_num][char_name]["round"][list(str(chamber).split("-"))[0]].append(player.chambers[chamber].round_num)
                         # In case of character in comp data missing from character data
@@ -212,7 +212,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                         appears[star_num][char_name]["owned"] += 1
                         appears[star_num][char_name]["cons_freq"][player.owned[char]["cons"]]["flat"] += 1
                         if (sustainCount == 1 or char_name in ["Fire Trailblazer", "March 7th"]) and dpsCount == 1:
-                            if CHARACTERS[char]["availability"] == "Limited 5*":
+                            if CHARACTERS[char]["availability"] == "Limited S":
                                 if player.owned[char]["cons"] != 0:
                                     appears[star_num][char_name]["cons_freq"][player.owned[char]["cons"]]["round"][list(str(chamber).split("-"))[0]].append(player.chambers[chamber].round_num)
                             elif not whaleComp:

@@ -1,7 +1,7 @@
 import json
 import re
 
-moc_phase = "2.2.2"
+moc_phase = "2.3.3"
 pf_phase = "2.3.2"
 as_phase = "2.3.1"
 

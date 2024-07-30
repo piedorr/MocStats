@@ -8,7 +8,7 @@ skip_self = False
 skip_random = False
 print_chart = False
 # as: pf True
-pf_mode = True
+pf_mode = False
 as_mode = False
 
 # stats.py

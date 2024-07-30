@@ -7,10 +7,10 @@ import msvcrt
 import time
 import _thread
 
-from mihomo import Language, MihomoApi, FormattedApiInfo
+from mihomo import Language, MihomoAPI, StarrailInfoParsed
 from nohomo_config import *
 
-client = MihomoApi()
+client = MihomoAPI(Language.EN)
 
 print(len(uids))
 
@@ -43,7 +43,7 @@ async def v1():
 		for i in range(5):
 			try:
 				print('{} / {} : {}, {}'.format(cpt, len(uids), uid, i), end="\r")
-				data: FormattedApiInfo = await client.get_parsed_api_data(str(uid))
+				data: StarrailInfoParsed = await client.fetch_user(str(uid))
 				for character in data.characters:
 					line = []
 					line_chars = []
@@ -59,7 +59,7 @@ async def v1():
 						line_chars.append(character.name)
 					line.append(character.level)
 					line_chars.append(character.level)
-					line_chars.append(character.rank)
+					line_chars.append(character.eidolon)
 					line.append(character.element.name)
 					if character.light_cone != None:
 						line.append(character.light_cone.name)
@@ -77,7 +77,7 @@ async def v1():
 						"Ultimate": 0,
 						"Talent": 0
 					}
-					for skill in character.skills:
+					for skill in character.traces:
 						if skill.type_text in skills and skill.max_level > 1:
 							skills[skill.type_text] = skill.level
 					for skill in skills.values():
@@ -100,14 +100,14 @@ async def v1():
 
 					for stat in character.attributes:
 						if stat.name in desired_stats:
-							if stat.percent:
+							if stat.is_percent:
 								desired_stats[stat.name] = stat.value*100
 							else:
 								desired_stats[stat.name] = stat.value
 
 					for stat in character.additions:
 						if stat.name in desired_stats:
-							if stat.percent:
+							if stat.is_percent:
 								desired_stats[stat.name] += stat.value*100
 							else:
 								desired_stats[stat.name] += stat.value
@@ -151,8 +151,8 @@ async def v1():
 								artifacts[relic.set_name] = 1
 							else:
 								artifacts[relic.set_name] += 1
-						for stat in relic.sub_affix:
-							if stat.percent:
+						for stat in relic.sub_affixes:
+							if stat.is_percent:
 								substats[stat.name] += stat.value*100
 							else:
 								substats["Flat " + stat.name] += stat.value
@@ -203,11 +203,11 @@ async def v1():
 				pass
 			except Exception as e:
 				if str(e) == "[429] Too Many Requests":
-					print("[429] Too Many Requests")
+					print("[429] Too Many Requests", end="\r")
 					time.sleep(60)
 					pass
-				elif str(e) == "Cannot connect to host api.mihomo.me:443 ssl:default [getaddrinfo failed]":
-					print("Cannot connect")
+				elif "Cannot connect" in str(e):
+					print("Cannot connect", end="\r")
 					time.sleep(10)
 					pass
 				elif str(e) == "User not found.":
