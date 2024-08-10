@@ -42,8 +42,8 @@ for artifact in artifacts:
         artifacts_affixes[affix].append(artifacts[artifact]["name"])
 
 for artifact in list(artifacts_affixes.keys()):
-    if len(artifacts_affixes[artifact]) > 1:
-        if artifact not in artifacts2 and len(artifact) > 12:
+    if len(artifacts_affixes[artifact]) > 1 and artifact not in artifacts2:
+        if len(artifact) > 12:
             print("Set name too long: " + artifact)
         else:
             add_arti = input("Add " + artifact + "? (y/n): ")
@@ -93,6 +93,13 @@ for char in chars2:
     char_name = chars2[char]["name"]
     if char_name == "{NICKNAME}":
         char_name = chars2[char]["element"].capitalize() + " Trailblazer"
+        if char_name in chars1:
+            if "trailblazer_ids" not in chars1[char_name]:
+                chars1[char_name]["trailblazer_ids"] = []
+            if chars2[char]["id"] not in chars1[char_name]["trailblazer_ids"]:
+                chars1[char_name]["trailblazer_ids"].append(chars2[char]["id"])
+    elif char_name == "March 7th":
+        char_name = chars2[char]["element"].capitalize() + " March 7th"
         if char_name in chars1:
             if "trailblazer_ids" not in chars1[char_name]:
                 chars1[char_name]["trailblazer_ids"] = []

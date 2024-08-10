@@ -1,9 +1,9 @@
 import json
 
-with open('../data/characters.json') as char_file:
+with open("../data/characters.json") as char_file:
     CHARACTERS = json.load(char_file)
 
-with open('../data/light_cones.json') as char_file:
+with open("../data/light_cones.json") as char_file:
     LIGHT_CONES = json.load(char_file)
 
 # no need to add 2.2.1"_pf"
@@ -57,7 +57,15 @@ run_commands = [
 
 
 sigWeaps = []
-standWeaps = ["Night on the Milky Way", "Something Irreplaceable", "But the Battle Isn't Over", "In the Name of the World", "Moment of Victory", "Time Waits for No One", "Sleep Like the Dead"]
+standWeaps = [
+    "Night on the Milky Way",
+    "Something Irreplaceable",
+    "But the Battle Isn't Over",
+    "In the Name of the World",
+    "Moment of Victory",
+    "Time Waits for No One",
+    "Sleep Like the Dead",
+]
 for light_cone in LIGHT_CONES:
     if light_cone[:2] == "23":
         if LIGHT_CONES[light_cone]["name"] not in standWeaps:

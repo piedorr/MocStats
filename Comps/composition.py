@@ -2,35 +2,47 @@ import json
 
 # Set class constants in initialization
 # Load the list of characters from their file
-with open('../data/characters.json') as char_file:
+with open("../data/characters.json") as char_file:
     CHARACTERS = json.load(char_file)
 
 # # Load the list of elements from the reactions file
 # with open('../data/reaction.json') as react_file:
 #     ELEMENTS = list(json.load(react_file).keys())
 
+
 class Composition:
     """An object that stores information about a particular composition. Has:
-        player: a string for the player who used this comp.
-        phase: a string for the phase this composition was used in.
-        room: a string in the form XX-X-X for the room this comp was used in.
-        char_presence: a string --> boolean dict for chars in this comp.
-        characters: a list of strings for the names of the chars in this comp.
-        elements: a string --> int dict for the num of chars for each element.
-        resonance: a string --> boolean dict for which resonances are active.
-        
-        Additional methods are:
-        resonance_string: returns the resonances active as a string.
-        on_res_chars: returns the list of characters activating the resonance.
-        char_elemeent_list: returns the list of character's elements.
+    player: a string for the player who used this comp.
+    phase: a string for the phase this composition was used in.
+    room: a string in the form XX-X-X for the room this comp was used in.
+    char_presence: a string --> boolean dict for chars in this comp.
+    characters: a list of strings for the names of the chars in this comp.
+    elements: a string --> int dict for the num of chars for each element.
+    resonance: a string --> boolean dict for which resonances are active.
+
+    Additional methods are:
+    resonance_string: returns the resonances active as a string.
+    on_res_chars: returns the list of characters activating the resonance.
+    char_elemeent_list: returns the list of character's elements.
     """
 
-    def __init__(self, uid, comp_chars, phase, round_num, star_num, room, info_char, buff, comp_chars_cons):
+    def __init__(
+        self,
+        uid,
+        comp_chars,
+        phase,
+        round_num,
+        star_num,
+        room,
+        info_char,
+        buff,
+        comp_chars_cons,
+    ):
         """Composition constructor. Takes in:
-            A player, as a UID string
-            A composition, as a length-four list of character strings
-            A phase, as a string
-            A room, as a string
+        A player, as a UID string
+        A composition, as a length-four list of character strings
+        A phase, as a string
+        A room, as a string
         """
         self.player = str(uid)
         self.phase = phase
@@ -55,8 +67,6 @@ class Composition:
         self.healer = []
         self.dot = []
         self.fua = []
-        temp = []
-        temp_remove = []
         len_element = {
             "Ice": 0,
             "Wind": 0,
@@ -78,7 +88,19 @@ class Composition:
             if CHARACTERS[character]["availability"] in ["Limited 5*", "5*"]:
                 fives.append(character)
 
-            if character in ["Seele", "Yanqing", "Hook", "Jing Yuan", "Dan Heng • Imbibitor Lunae", "Argenti", "Dr. Ratio", "Acheron", "Boothill", "Firefly", "Jade"]:
+            if character in [
+                "Seele",
+                "Yanqing",
+                "Hook",
+                "Jing Yuan",
+                "Dan Heng • Imbibitor Lunae",
+                "Argenti",
+                "Dr. Ratio",
+                "Acheron",
+                "Boothill",
+                "Firefly",
+                "Jade",
+            ]:
                 self.dps.insert(0, character)
             elif character in ["Kafka", "Qingque", "Arlan", "Dan Heng", "Sushang"]:
                 self.dps.append(character)
@@ -86,18 +108,70 @@ class Composition:
                 self.subdps.insert(0, character)
             elif character in ["Clara", "Blade", "Xueyi", "Misha", "Black Swan"]:
                 self.subdps.append(character)
-            elif character in ["Welt", "Serval", "Physical Trailblazer", "Sampo", "Herta", "Luka", "Topaz & Numby", "Guinaifen"]:
+            elif character in [
+                "Welt",
+                "Serval",
+                "Physical Trailblazer",
+                "Sampo",
+                "Herta",
+                "Luka",
+                "Topaz & Numby",
+                "Guinaifen",
+            ]:
                 self.anemo.insert(0, character)
-            elif character in ["Bronya", "Silver Wolf", "Asta", "Tingyun", "Pela", "Yukong", "Hanya", "Ruan Mei","Sparkle", "Robin", "Imaginary Trailblazer"]:
+            elif character in [
+                "Bronya",
+                "Silver Wolf",
+                "Asta",
+                "Tingyun",
+                "Pela",
+                "Yukong",
+                "Hanya",
+                "Ruan Mei",
+                "Sparkle",
+                "Robin",
+                "Imaginary Trailblazer",
+            ]:
                 self.anemo.append(character)
-            elif character in ["Natasha", "Luocha", "Bailu", "Lynx", "Huohuo","Gallagher"]:
+            elif character in [
+                "Natasha",
+                "Luocha",
+                "Bailu",
+                "Lynx",
+                "Huohuo",
+                "Gallagher",
+            ]:
                 self.healer.insert(0, character)
-            elif character in ["March 7th", "Gepard", "Fire Trailblazer", "Fu Xuan", "Aventurine"]:
+            elif character in [
+                "March 7th",
+                "Gepard",
+                "Fire Trailblazer",
+                "Fu Xuan",
+                "Aventurine",
+            ]:
                 self.healer.append(character)
 
-            if character in ["Kafka", "Black Swan", "Serval", "Sampo", "Luka", "Guinaifen"]:
+            if character in [
+                "Kafka",
+                "Black Swan",
+                "Serval",
+                "Sampo",
+                "Luka",
+                "Guinaifen",
+            ]:
                 self.dot.append(character)
-            if character in ["Topaz & Numby", "Dr. Ratio", "Clara", "Jing Yuan", "Himeko", "Kafka", "Blade", "Herta", "Xueyi", "Jade"]:
+            if character in [
+                "Topaz & Numby",
+                "Dr. Ratio",
+                "Clara",
+                "Jing Yuan",
+                "Himeko",
+                "Kafka",
+                "Blade",
+                "Herta",
+                "Xueyi",
+                "Jade",
+            ]:
                 self.fua.append(character)
 
             if CHARACTERS[character]["element"] == "Ice":
@@ -117,7 +191,9 @@ class Composition:
         self.fivecount = len(fives)
         self.characters = self.dps + self.subdps + self.anemo + self.healer
 
-        if ("Acheron" in self.dps or "Kafka" in self.dps) and "Black Swan" in self.subdps:
+        if (
+            "Acheron" in self.dps or "Kafka" in self.dps
+        ) and "Black Swan" in self.subdps:
             self.subdps.remove("Black Swan")
             self.anemo.insert(0, "Black Swan")
 
@@ -162,7 +238,10 @@ class Composition:
             elif "Imaginary Trailblazer" in self.characters:
                 archetype = " Super Break"
             elif len(self.dps) + len(self.subdps) > 1:
-                if len(self.dps) + len(self.subdps) > 2 and "Follow-Up" not in self.alt_comp_name:
+                if (
+                    len(self.dps) + len(self.subdps) > 2
+                    and "Follow-Up" not in self.alt_comp_name
+                ):
                     archetype = " Triple Carry"
                 else:
                     archetype = " Dual Carry"
@@ -178,26 +257,26 @@ class Composition:
             else:
                 self.comp_name = "Full Sustain"
 
-    def comp_elements(self):
-        """Composition elements tracker.
-        Creates a dict that maps elements to number of chars with that element,
-        and a dict that maps the resonance(s) the comp has to booleans.
-        """
-        self.elements = dict.fromkeys(ELEMENTS, 0)
-        for char in self.characters:
-            self.elements[CHARACTERS[char]["element"]] += 1
-        
-        # self.resonance = dict.fromkeys(ELEMENTS, False)
+    # def comp_elements(self):
+    #     """Composition elements tracker.
+    #     Creates a dict that maps elements to number of chars with that element,
+    #     and a dict that maps the resonance(s) the comp has to booleans.
+    #     """
+    #     self.elements = dict.fromkeys(ELEMENTS, 0)
+    #     for char in self.characters:
+    #         self.elements[CHARACTERS[char]["element"]] += 1
 
-        # # Add the unique resonance to the list of element resonances,
-        # # and set it as the default. Technically there's the edge case for
-        # # if there's < 4 characters, it should be false I think?
-        # self.resonance['Unique'] = len(self.characters) == 4
-        # for ele in ELEMENTS:
-        #     if self.elements[ele] >= 2:
-        #         self.resonance[ele] = True
-        #         self.resonance['Unique'] = False
-    
+    #     # self.resonance = dict.fromkeys(ELEMENTS, False)
+
+    #     # # Add the unique resonance to the list of element resonances,
+    #     # # and set it as the default. Technically there's the edge case for
+    #     # # if there's < 4 characters, it should be false I think?
+    #     # self.resonance['Unique'] = len(self.characters) == 4
+    #     # for ele in ELEMENTS:
+    #     #     if self.elements[ele] >= 2:
+    #     #         self.resonance[ele] = True
+    #     #         self.resonance['Unique'] = False
+
     # def resonance_string(self):
     #     """Returns the resonance of the composition. Two resos are joined by a ,"""
     #     resos = []
@@ -205,7 +284,7 @@ class Composition:
     #         if self.resonance[reso]:
     #             resos.append(reso)
     #     return ", ".join(resos)
-    
+
     # def on_res_chars(self):
     #     """Returns the list of characters who match the composition's resonance."""
     #     chars = []
