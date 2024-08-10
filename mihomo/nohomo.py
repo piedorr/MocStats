@@ -1,14 +1,9 @@
-import requests
-import asyncio
-import genshin
-import inspect
-import pickle
-import msvcrt
-import time
 import _thread
+import time
+import asyncio
 
 from mihomo import Language, MihomoAPI, StarrailInfoParsed
-from nohomo_config import *
+from nohomo_config import (json, os, csv, uids, filename, trailblazer_ids, relics_data)
 
 client = MihomoAPI(Language.EN)
 
@@ -27,8 +22,7 @@ async def v1():
 	if not os.path.exists("results_real"):
 		os.makedirs("results_real")
 
-	cpt = 1
-	error_uids = []
+	# error_uids = []
 	header = ['uid', 'player_level', 'character', 'char_level', 'path', 'light_cone', 'light_cone_level', 'attack_lvl', 'skill_lvl', 'ultimate_lvl', 'talent_lvl', 'HP', 'ATK', 'DEF', 'SPD', 'CRIT Rate', 'CRIT DMG', 'DMG Boost', 'Outgoing Healing Boost', 'Energy Regeneration Rate', 'Effect RES', 'Effect Hit Rate', 'Break Effect', 'SPD sub', 'HP sub', 'ATK sub', 'DEF sub', 'CRIT Rate sub', 'CRIT DMG sub', 'Effect RES sub', 'Effect Hit Rate sub', 'Break Effect sub', 'Body', 'Feet', 'Sphere', 'Rope', 'relic', 'ornament']
 	writer = csv.writer(open(filename + '.csv', 'w', encoding='UTF8', newline=''))
 	writer.writerow(header)
@@ -37,12 +31,16 @@ async def v1():
 	writer_chars = csv.writer(open(filename + '_char.csv', 'w', encoding='UTF8', newline=''))
 	writer_chars.writerow(header)
 
-	for uid in uids:
-		cpt += 1
+	input_list = []
+	_thread.start_new_thread(input_thread, (input_list,))
+	uid_iter = -1
+	while not input_list and uid_iter < len(uids):
+		uid_iter += 1
+		uid = uids[uid_iter]
 
 		for i in range(5):
 			try:
-				print('{} / {} : {}, {}'.format(cpt, len(uids), uid, i), end="\r")
+				print('{} / {} : {}, {}'.format(uid_iter + 1, len(uids), uid, i))
 				data: StarrailInfoParsed = await client.fetch_user(str(uid))
 				for character in data.characters:
 					line = []
@@ -52,8 +50,12 @@ async def v1():
 					line_chars.append("2.2b")
 					line.append(data.player.level)
 					if (str(character.id) in trailblazer_ids):
-						line.append("Trailblazer")
-						line_chars.append("Trailblazer")
+						if "March 7th" in character.name:
+							line.append("March 7th")
+							line_chars.append("March 7th")
+						else:
+							line.append("Trailblazer")
+							line_chars.append("Trailblazer")
 					else:
 						line.append(character.name)
 						line_chars.append(character.name)
@@ -61,7 +63,7 @@ async def v1():
 					line_chars.append(character.level)
 					line_chars.append(character.eidolon)
 					line.append(character.element.name)
-					if character.light_cone != None:
+					if character.light_cone is not None:
 						line.append(character.light_cone.name)
 						line_chars.append(character.light_cone.name)
 						line.append(character.light_cone.level)
@@ -166,7 +168,7 @@ async def v1():
 					char_set = None
 					for set in artifacts:
 						if artifacts[set] == 2 or artifacts[set] == 4:
-							if char_set != None:
+							if char_set is not None:
 								if set < char_set:
 									char_set = set + ", " + char_set
 								else:
@@ -176,7 +178,7 @@ async def v1():
 						elif artifacts[set] == 3:
 							char_set = set + ", Flex"
 					if len(artifacts) > 2:
-						if char_set != None:
+						if char_set is not None:
 							char_set += ", Flex"
 						else:
 							char_set = "Flex"
@@ -194,23 +196,20 @@ async def v1():
 					writer_chars.writerow(line_chars)
 				time.sleep(0.5)
 				break
-			except asyncio.exceptions.TimeoutError as e:
+			except asyncio.exceptions.TimeoutError:
 				time.sleep(10)
-				pass
 			except AttributeError:
 				# print(str(uid) + " Too Many Requests")
 				time.sleep(10)
-				pass
 			except Exception as e:
 				if str(e) == "[429] Too Many Requests":
-					print("[429] Too Many Requests", end="\r")
+					print("[429] Too Many Requests")
 					time.sleep(60)
-					pass
 				elif "Cannot connect" in str(e):
-					print("Cannot connect", end="\r")
+					print("Cannot connect")
 					time.sleep(10)
-					pass
 				elif str(e) == "User not found.":
+					print("User not found.")
 					break
 				else:
 					# error_uids.append('{}: {}'.format(uid, e))

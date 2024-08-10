@@ -3,9 +3,9 @@ import re
 
 moc_phase = "2.3.3"
 pf_phase = "2.3.2"
-as_phase = "2.3.1"
+as_phase = "2.4.1"
 
-with open('../data/characters.json') as char_file:
+with open("../data/characters.json") as char_file:
     CHARACTERS = json.load(char_file)
 with open("../char_results/" + moc_phase + "/all2.json") as stats:
     moc_dict = json.load(stats)
@@ -38,8 +38,20 @@ for char in moc_dict:
     uses_moc[char["char"]]["sphere_stats"] = {}
     uses_moc[char["char"]]["rope_stats"] = {}
     for stat in char:
-        for stat_name in ["weapon", "artifact", "planar", "body_stats", "feet_stats", "sphere_stats", "rope_stats"]:
-            if re.sub(r'\d', '', stat) == stat_name + "_" and char[stat] != "" and char[stat] != "-":
+        for stat_name in [
+            "weapon",
+            "artifact",
+            "planar",
+            "body_stats",
+            "feet_stats",
+            "sphere_stats",
+            "rope_stats",
+        ]:
+            if (
+                re.sub(r"\d", "", stat) == stat_name + "_"
+                and char[stat] != ""
+                and char[stat] != "-"
+            ):
                 temp_dict = {}
                 if stat_name == "artifact":
                     temp_dict["1"] = char[stat + "_1"]
@@ -62,8 +74,20 @@ for char in pf_dict:
     uses_pf[char["char"]]["sphere_stats"] = {}
     uses_pf[char["char"]]["rope_stats"] = {}
     for stat in char:
-        for stat_name in ["weapon", "artifact", "planar", "body_stats", "feet_stats", "sphere_stats", "rope_stats"]:
-            if re.sub(r'\d', '', stat) == stat_name + "_" and char[stat] != "" and char[stat] != "-":
+        for stat_name in [
+            "weapon",
+            "artifact",
+            "planar",
+            "body_stats",
+            "feet_stats",
+            "sphere_stats",
+            "rope_stats",
+        ]:
+            if (
+                re.sub(r"\d", "", stat) == stat_name + "_"
+                and char[stat] != ""
+                and char[stat] != "-"
+            ):
                 temp_dict = {}
                 if stat_name == "artifact":
                     temp_dict["1"] = char[stat + "_1"]
@@ -86,8 +110,20 @@ for char in as_dict:
     uses_as[char["char"]]["sphere_stats"] = {}
     uses_as[char["char"]]["rope_stats"] = {}
     for stat in char:
-        for stat_name in ["weapon", "artifact", "planar", "body_stats", "feet_stats", "sphere_stats", "rope_stats"]:
-            if re.sub(r'\d', '', stat) == stat_name + "_" and char[stat] != "" and char[stat] != "-":
+        for stat_name in [
+            "weapon",
+            "artifact",
+            "planar",
+            "body_stats",
+            "feet_stats",
+            "sphere_stats",
+            "rope_stats",
+        ]:
+            if (
+                re.sub(r"\d", "", stat) == stat_name + "_"
+                and char[stat] != ""
+                and char[stat] != "-"
+            ):
                 temp_dict = {}
                 if stat_name == "artifact":
                     temp_dict["1"] = char[stat + "_1"]
@@ -154,52 +190,95 @@ for char in CHARACTERS:
         "rope_stats": uses_moc.get(char, {}).get("rope_stats", {}),
     }
 
-    rate_moc = uses_temp["app_rate_moc"] if (uses_temp["app_rate_moc"] == 0) == (uses_temp["sample_size_players_moc"] == 0) else 0
-    rate_pf = uses_temp["app_rate_pf"] if (uses_temp["app_rate_pf"] == 0) == (uses_temp["sample_size_players_pf"] == 0) else 0
-    rate_as = uses_temp["app_rate_as"] if (uses_temp["app_rate_as"] == 0) == (uses_temp["sample_size_players_as"] == 0) else 0
+    rate_moc = (
+        uses_temp["app_rate_moc"]
+        if (uses_temp["app_rate_moc"] == 0)
+        == (uses_moc.get(char, {}).get("weapon_1_app", {}) == 0)
+        else 0
+    )
+    rate_pf = (
+        uses_temp["app_rate_pf"]
+        if (uses_temp["app_rate_pf"] == 0)
+        == (uses_pf.get(char, {}).get("weapon_1_app", {}) == 0)
+        else 0
+    )
+    rate_as = (
+        uses_temp["app_rate_as"]
+        if (uses_temp["app_rate_as"] == 0)
+        == (uses_as.get(char, {}).get("weapon_1_app", {}) == 0)
+        else 0
+    )
     rate_combine = rate_moc + rate_pf + rate_as
     rate_combine = rate_combine if rate_combine else 1
 
     for stat in stats_len:
         for item in uses_temp[stat]:
-            uses_temp[stat][item]["app"] = round(uses_temp[stat][item]["app"] * rate_moc / rate_combine, 2)
+            uses_temp[stat][item]["app"] = round(
+                uses_temp[stat][item]["app"] * rate_moc / rate_combine, 2
+            )
         for item in uses_pf.get(char, {}).get(stat, {}):
             if item != "" and item != "-":
                 if item in uses_temp[stat]:
-                    uses_temp[stat][item]["app"] = round(uses_temp[stat][item]["app"] + uses_pf[char][stat][item]["app"] * rate_pf / rate_combine, 2)
+                    uses_temp[stat][item]["app"] = round(
+                        uses_temp[stat][item]["app"]
+                        + uses_pf[char][stat][item]["app"] * rate_pf / rate_combine,
+                        2,
+                    )
                     if stat in ["weapons", "artifacts", "planars"]:
-                        uses_temp[stat][item]["round_pf"] = uses_pf[char][stat][item]["round_pf"]
+                        uses_temp[stat][item]["round_pf"] = uses_pf[char][stat][item][
+                            "round_pf"
+                        ]
                 else:
                     uses_temp[stat][item] = uses_pf[char][stat][item].copy()
-                    uses_temp[stat][item]["app"] = round(uses_temp[stat][item]["app"] * rate_pf / rate_combine, 2)
+                    uses_temp[stat][item]["app"] = round(
+                        uses_temp[stat][item]["app"] * rate_pf / rate_combine, 2
+                    )
         for item in uses_as.get(char, {}).get(stat, {}):
             if item != "" and item != "-":
                 if item in uses_temp[stat]:
-                    uses_temp[stat][item]["app"] = round(uses_temp[stat][item]["app"] + uses_as[char][stat][item]["app"] * rate_as / rate_combine, 2)
+                    uses_temp[stat][item]["app"] = round(
+                        uses_temp[stat][item]["app"]
+                        + uses_as[char][stat][item]["app"] * rate_as / rate_combine,
+                        2,
+                    )
                     if stat in ["weapons", "artifacts", "planars"]:
-                        uses_temp[stat][item]["round_as"] = uses_as[char][stat][item]["round_as"]
+                        uses_temp[stat][item]["round_as"] = uses_as[char][stat][item][
+                            "round_as"
+                        ]
                 else:
                     uses_temp[stat][item] = uses_as[char][stat][item].copy()
-                    uses_temp[stat][item]["app"] = round(uses_temp[stat][item]["app"] * rate_as / rate_combine, 2)
+                    uses_temp[stat][item]["app"] = round(
+                        uses_temp[stat][item]["app"] * rate_as / rate_combine, 2
+                    )
 
-        sorted_items = (sorted(
-            uses_temp[stat].items(),
-            key = lambda t: t[1]["app"],
-            reverse=True
-        ))
+        sorted_items = sorted(
+            uses_temp[stat].items(), key=lambda t: t[1]["app"], reverse=True
+        )
         uses_temp[stat] = {k: v for k, v in sorted_items}
 
         for i in range(stats_len[stat]):
             if i < len(list(uses_temp[stat])):
                 uses_temp[stat + "_" + str(i + 1)] = list(uses_temp[stat])[i]
                 if stat == "artifacts":
-                    uses_temp[stat + "_" + str(i + 1) + "_1"] = list(uses_temp[stat].values())[i]["1"]
-                    uses_temp[stat + "_" + str(i + 1) + "_2"] = list(uses_temp[stat].values())[i]["2"]
-                uses_temp[stat + "_" + str(i + 1) + "_app"] = list(uses_temp[stat].values())[i]["app"]
+                    uses_temp[stat + "_" + str(i + 1) + "_1"] = list(
+                        uses_temp[stat].values()
+                    )[i]["1"]
+                    uses_temp[stat + "_" + str(i + 1) + "_2"] = list(
+                        uses_temp[stat].values()
+                    )[i]["2"]
+                uses_temp[stat + "_" + str(i + 1) + "_app"] = list(
+                    uses_temp[stat].values()
+                )[i]["app"]
                 if stat in ["weapons", "artifacts", "planars"]:
-                    uses_temp[stat + "_" + str(i + 1) + "_round_moc"] = list(uses_temp[stat].values())[i]["round_moc"]
-                    uses_temp[stat + "_" + str(i + 1) + "_round_pf"] = list(uses_temp[stat].values())[i]["round_pf"]
-                    uses_temp[stat + "_" + str(i + 1) + "_round_as"] = list(uses_temp[stat].values())[i]["round_as"]
+                    uses_temp[stat + "_" + str(i + 1) + "_round_moc"] = list(
+                        uses_temp[stat].values()
+                    )[i]["round_moc"]
+                    uses_temp[stat + "_" + str(i + 1) + "_round_pf"] = list(
+                        uses_temp[stat].values()
+                    )[i]["round_pf"]
+                    uses_temp[stat + "_" + str(i + 1) + "_round_as"] = list(
+                        uses_temp[stat].values()
+                    )[i]["round_as"]
             else:
                 uses_temp[stat + "_" + str(i + 1)] = ""
                 if stat == "artifacts":
@@ -212,13 +291,59 @@ for char in CHARACTERS:
                     uses_temp[stat + "_" + str(i + 1) + "_round_as"] = 0.0
         del uses_temp[stat]
 
-    stats_iter = ["app_0", "app_1", "app_2", "app_3", "app_4", "app_5", "app_6", "cons_avg", "char_lvl", "light_cone_lvl", "attack_lvl", "skill_lvl", "ultimate_lvl", "talent_lvl", "max_hp", "atk", "dfns", "speed", "crate", "cdmg", "dmg_boost", "heal_boost", "energy_regen", "effect_res", "effect_rate", "break_effect", "spd_sub", "hp_sub", "atk_sub", "def_sub", "crate_sub", "cdmg_sub", "res_sub", "ehr_sub", "break_sub"]
+    stats_iter = [
+        "app_0",
+        "app_1",
+        "app_2",
+        "app_3",
+        "app_4",
+        "app_5",
+        "app_6",
+        "cons_avg",
+        "char_lvl",
+        "light_cone_lvl",
+        "attack_lvl",
+        "skill_lvl",
+        "ultimate_lvl",
+        "talent_lvl",
+        "max_hp",
+        "atk",
+        "dfns",
+        "speed",
+        "crate",
+        "cdmg",
+        "dmg_boost",
+        "heal_boost",
+        "energy_regen",
+        "effect_res",
+        "effect_rate",
+        "break_effect",
+        "spd_sub",
+        "hp_sub",
+        "atk_sub",
+        "def_sub",
+        "crate_sub",
+        "cdmg_sub",
+        "res_sub",
+        "ehr_sub",
+        "break_sub",
+    ]
     for stat in stats_iter:
-        stat_moc = uses_moc.get(char, {}).get(stat)
-        stat_pf = uses_pf.get(char, {}).get(stat)
-        stat_as = uses_as.get(char, {}).get(stat)
-        uses_temp[stat] = round((((stat_moc * rate_moc) if stat_moc != None else 0) + ((stat_pf * rate_pf) if stat_pf != None else 0) + ((stat_as * rate_as) if stat_as != None else 0)) / rate_combine, 2)
+        stat_moc = uses_moc.get(char, {}).get(stat) or 0
+        stat_pf = uses_pf.get(char, {}).get(stat) or 0
+        stat_as = uses_as.get(char, {}).get(stat) or 0
+        uses_temp[stat] = round(
+            ((stat_moc * rate_moc) + (stat_pf * rate_pf) + (stat_as * rate_as))
+            / (
+                ((rate_moc) if stat_moc != 0 else 0)
+                + ((rate_pf) if stat_pf != 0 else 0)
+                + ((rate_as) if stat_as != 0 else 0)
+            )
+            if (rate_moc * stat_moc + rate_pf * stat_pf + rate_as * stat_as != 0)
+            else 1,
+            2,
+        )
     uses.append(uses_temp)
 
 with open("../char_results/builds.json", "w") as out_file:
-    out_file.write(json.dumps(uses,indent=2))
+    out_file.write(json.dumps(uses, indent=2))

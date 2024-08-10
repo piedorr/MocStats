@@ -80,12 +80,10 @@ def main():
     last_uid = "0"
 
     for line in reader:
-        if skip_self:
-            if line[0] in self_uids:
-                continue
-        if skip_random:
-            if line[0] not in self_uids:
-                continue
+        if skip_self and line[0] in self_uids:
+            continue
+        if skip_random and line[0] not in self_uids:
+            continue
         if line[0] != last_uid:
             skip_uid = False
             if line[0] in uid_freq_comp:
@@ -327,7 +325,7 @@ def main():
         #             "rarity": usage[star_num][char]["rarity"],
         #             "diff": usage[star_num][char]["diff"]
         #         }
-        #         if usage[star_num][char]["round"] == 0.0:
+        #         if usage[star_num][char]["round"] == 0:
         #             continue
         #         rounds[star_num][char] = {
         #             "round": usage[star_num][char]["round"],
@@ -385,7 +383,7 @@ def main():
                         "rarity": char_chambers[room][star_num][char]["rarity"],
                         "diff": char_chambers[room][star_num][char]["diff"],
                     }
-                    if char_chambers[room][star_num][char]["round"] == 0.0:
+                    if char_chambers[room][star_num][char]["round"] == 0:
                         continue
                     rounds[room][star_num][char] = {
                         "round": char_chambers[room][star_num][char]["round"],
@@ -445,7 +443,7 @@ def main():
                         "rarity": char_chambers[room][star_num][char]["rarity"],
                         "diff": char_chambers[room][star_num][char]["diff"],
                     }
-                    if char_chambers[room][star_num][char]["round"] == 0.0:
+                    if char_chambers[room][star_num][char]["round"] == 0:
                         continue
                     rounds[room][star_num][char] = {
                         "round": char_chambers[room][star_num][char]["round"],
@@ -543,7 +541,7 @@ def used_comps(
     global total_comps
     total_comps = 0
     total_self_comps = 0
-    whaleCount = 0
+    whale_count = 0
     # sustainless = 0
     # dual_sustain = {}
     # dual_dps = {}
@@ -565,9 +563,9 @@ def used_comps(
                 #     lessFour.append(comp.player)
                 continue
 
-            whaleComp = False
-            sustainCount = 0
-            dpsCount = 0
+            whale_comp = False
+            sustain_count = 0
+            dps_count = 0
             for char in range(4):
                 if CHARACTERS[comp_tuple[char]]["availability"] == "Limited 5*":
                     # if comp_tuple[char] in players[phase][comp.player].owned:
@@ -577,21 +575,22 @@ def used_comps(
                     #     # ) or (
                     #     #     whaleSigWeap and players[phase][comp.player].owned[comp_tuple[char]]["weapon"] in sigWeaps
                     #     ):
-                    #         whaleComp = True
+                    #         whale_comp = True
                     if comp.char_cons[comp_tuple[char]] > 0:
-                        whaleComp = True
+                        whale_comp = True
                 # if comp_tuple[char] not in total_char_comps:
                 #     total_char_comps[comp_tuple[char]] = 0
                 # total_char_comps[comp_tuple[char]] += 1
                 if CHARACTERS[comp_tuple[char]]["role"] == "Sustain":
-                    sustainCount += 1
+                    sustain_count += 1
                 if CHARACTERS[comp_tuple[char]]["role"] == "Damage Dealer":
-                    dpsCount += 1
+                    dps_count += 1
                     if comp_tuple[char] == "Topaz & Numby":
                         for char_fua in range(4):
                             if comp_tuple[char_fua] in [
                                 "Dr. Ratio",
                                 "Clara",
+                                "Yunli",
                                 "Jing Yuan",
                                 "Himeko",
                                 "Kafka",
@@ -600,31 +599,31 @@ def used_comps(
                                 "Xueyi",
                                 "Jade",
                             ]:
-                                dpsCount -= 1
+                                dps_count -= 1
                                 break
                 if "Kafka" not in comp_tuple:
                     if comp_tuple[char] in ["Black Swan", "Sampo", "Luka", "Guinaifen"]:
-                        dpsCount += 1
+                        dps_count += 1
                 elif comp_tuple[char] == "Serval":
-                    dpsCount -= 1
+                    dps_count -= 1
                 for duo_dps in valid_duo_dps:
                     if set(duo_dps).issubset(comp_tuple):
-                        dpsCount = 1
+                        dps_count = 1
                         break
 
-            if whaleComp:
-                whaleCount += 1
-            if whaleOnly and not whaleComp:
+            if whale_comp:
+                whale_count += 1
+            if whaleOnly and not whale_comp:
                 continue
             if "Ruan Mei" in comp_tuple or (pf_mode and not as_mode):
-                dpsCount = 1
-            # sustainless = not sustainCount
-            # if sustainCount > 1:
+                dps_count = 1
+            # sustainless = not sustain_count
+            # if sustain_count > 1:
             #     for char in range (4):
             #         if comp_tuple[char] not in dual_sustain:
             #             dual_sustain[comp_tuple[char]] = 0
             #         dual_sustain[comp_tuple[char]] += 1
-            # if dpsCount > 1:
+            # if dps_count > 1:
             #     for char in range (4):
             #         if comp_tuple[char] not in dual_dps:
             #             dual_dps[comp_tuple[char]] = 0
@@ -672,11 +671,11 @@ def used_comps(
                 comps_dict[star_threshold][comp_tuple]["uses"] += 1
                 # comps_dict[star_threshold][comp_tuple]["round_num"][list(str(comp.room).split("-"))[0]].append(comp.round_num)
                 comps_dict[star_threshold][comp_tuple]["players"].add(comp.player)
-                if whaleComp:
+                if whale_comp:
                     comps_dict[star_threshold][comp_tuple]["whale_count"].add(
                         comp.player
                     )
-                if whaleComp == whaleOnly:
+                if whale_comp == whaleOnly:
                     for i in range(4):
                         if comp_tuple[i] in players[phase][comp.player].owned:
                             if (
@@ -743,7 +742,7 @@ def used_comps(
                     comps_dict[star_threshold][comp_tuple]["round_num"][
                         list(str(comp.room).split("-"))[0]
                     ].append(comp.round_num)
-                    if star_threshold == 4 and sustainCount == 1 and dpsCount == 1:
+                    if star_threshold == 4 and sustain_count == 1 and dps_count == 1:
                         avg_round_stage[list(str(comp.room).split("-"))[0]].append(
                             comp.round_num
                         )
@@ -796,7 +795,7 @@ def used_comps(
     #         print("    Dual DPS: " + str(dual_percent))
     #         print()
     if whaleOnly:
-        print("Whale percentage: " + str(whaleCount / total_comps))
+        print("Whale percentage: " + str(whale_count / total_comps))
     return comps_dict
 
 
@@ -945,22 +944,22 @@ def used_duos(players, comps, rooms, usage, archetype, check_duo, phase=RECENT_P
             continue
 
         foundchar = resetfind()
-        whaleComp = False
-        sustainCount = 0
+        whale_comp = False
+        sustain_count = 0
         for char in comp.characters:
             findchars(char, foundchar)
             if CHARACTERS[char]["availability"] == "Limited 5*":
                 # if char in players[phase][comp.player].owned:
                 #     if players[phase][comp.player].owned[char]["cons"] > 0:
-                #         whaleComp = True
+                #         whale_comp = True
                 if comp.char_cons[char] > 0:
-                    whaleComp = True
+                    whale_comp = True
             if CHARACTERS[char]["role"] == "Sustain":
-                sustainCount += 1
+                sustain_count += 1
         if not find_archetype(foundchar):
             continue
-        if sustainCount < 1 and (pf_mode and not as_mode):
-            sustainCount = 1
+        if sustain_count < 1 and (pf_mode and not as_mode):
+            sustain_count = 1
 
         # Permutate the duos, for example if Ganyu and Xiangling are used,
         # two duos are used, Ganyu/Xiangling and Xiangling/Ganyu
@@ -995,17 +994,17 @@ def used_duos(players, comps, rooms, usage, archetype, check_duo, phase=RECENT_P
 
             if is_triple_dps and check_duo:
                 continue
-            if not whaleComp:
+            if not whale_comp:
                 if CHARACTERS[duo[0]]["role"] == "Sustain":
                     if (
-                        sustainCount == 1
-                        or duo[0] in ["Fire Trailblazer", "March 7th"]
+                        sustain_count == 1
+                        or duo[0] in ["Fire Trailblazer", "Ice March 7th"]
                         or CHARACTERS[duo[1]]["role"] == "Sustain"
                     ):
                         duos_dict[duo]["round_num"][
                             list(str(comp.room).split("-"))[0]
                         ].append(comp.round_num)
-                elif sustainCount == 1 or duo[1] in ["Fire Trailblazer", "March 7th"]:
+                elif sustain_count == 1 or duo[1] in ["Fire Trailblazer", "Ice March 7th"]:
                     duos_dict[duo]["round_num"][
                         list(str(comp.room).split("-"))[0]
                     ].append(comp.round_num)
@@ -1278,7 +1277,6 @@ def comp_usages_write(comps_dict, filename, floor, info_char, sort_app):
                     #     exc_comps_append["avg_round"] = str(comps_dict[star_threshold][comp]["round"])
                     #     exc_comps.append(exc_comps_append)
                 elif comp_name in comp_names:
-                    temp_comp_name = "-"
                     if alt_comp_name != "-":
                         temp_comp_name = alt_comp_name
                     else:
@@ -1497,6 +1495,7 @@ def duo_write(duos_dict, usage, filename, archetype, check_duo):
                         in [
                             "Dr. Ratio",
                             "Clara",
+                            "Yunli",
                             "Jing Yuan",
                             "Himeko",
                             "Kafka",
@@ -1510,6 +1509,7 @@ def duo_write(duos_dict, usage, filename, archetype, check_duo):
                         in [
                             "Dr. Ratio",
                             "Clara",
+                            "Yunli",
                             "Jing Yuan",
                             "Himeko",
                             "Kafka",
@@ -1847,7 +1847,6 @@ def name_filter(comp, mode="out"):
             else:
                 filtered.append(char)
     return filtered
-    # TODO Need to create a structure for bad names --> names
 
 
 main()

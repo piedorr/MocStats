@@ -3,13 +3,14 @@ import json
 import os.path
 import sys
 sys.path.append('../Comps/')
+from comp_rates_config import RECENT_PHASE, skew_num
 
 skip_self = False
 skip_random = False
 print_chart = False
 # as: pf True
-pf_mode = False
-as_mode = False
+pf_mode = True
+as_mode = True
 
 # stats.py
 # comp_stats = ['Bailu', 'Jing Yuan', 'Tingyun', 'Yukong']
@@ -24,8 +25,6 @@ run_all_chars = True
 run_chars_name = ["Firefly", "Ruan Mei", "Gallagher", "Misha", "Xueyi"]
 
 
-
-from comp_rates_config import RECENT_PHASE, skew_num
 phase_num = RECENT_PHASE
 if as_mode:
     phase_num = phase_num + "_as"
@@ -40,14 +39,9 @@ characters = json.load(f)
 
 trailblazer_ids = []
 for char_name, char in characters.items():
-    if "Trailblazer" in char_name:
+    if "trailblazer_ids" in char:
         for trailblazer_id in char["trailblazer_ids"]:
             trailblazer_ids.append(trailblazer_id)
-
-# trailblazer_ids = []
-# for char in characters.values():
-#     if char["name"] == "{NICKNAME}":
-#         trailblazer_ids.append(char["id"])
 
 if os.path.exists("../char_results"):
     with open("../char_results/uids.csv", 'r', encoding='UTF8') as f:

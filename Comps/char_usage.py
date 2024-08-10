@@ -72,7 +72,7 @@ def ownership(players, chambers=ROOMS):
         for char in owns[phase]:
             own_flat = owns[phase][char]["flat"] / 100.0
             if own_flat > 0:
-                if "Trailblzer" in char:
+                if "Trailblazer" in char or "March 7th" in char:
                     # # Cons usage is only added for floor 12
                     # if (chambers == ["1-1", "1-2", "2-1", "2-2", "3-1", "3-2", "4-1", "4-2", "5-1", "5-2", "6-1", "6-2", "7-1", "7-2", "8-1", "8-2", "9-1", "9-2", "10-1", "10-2", "11-1", "11-2", "12-1", "12-2"]):
                     for cons in owns[phase][char]["cons_freq"]:
@@ -195,7 +195,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                         break
 
                 for char in player.chambers[chamber].characters:
-                    if CHARACTERS[char]["availability"] == "Limited S":
+                    if CHARACTERS[char]["availability"] == "Limited 5*":
                         # if char in player.owned:
                         #     if player.owned[char]["cons"] > 0:
                         #         whaleComp = True
@@ -250,17 +250,19 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                             # if foundDuo[0] == char_name:
                             if char_name in foundDuo:
                                 dpsCount = 1
+                        elif not valid_duo_dps:
+                            dpsCount = 1
 
                         appears[star_num][char_name]["flat"] += 1
                         if (
                             whaleComp == whaleOnly
                             and (
                                 sustainCount == 1
-                                or char_name in ["Fire Trailblazer", "March 7th"]
+                                or char_name in ["Fire Trailblazer", "Ice March 7th"]
                             )
                             and dpsCount == 1
                         ):
-                            if CHARACTERS[char]["availability"] == "Limited S":
+                            if CHARACTERS[char]["availability"] == "Limited 5*":
                                 appears[star_num][char_name]["cons_freq"][0]["round"][
                                     list(str(chamber).split("-"))[0]
                                 ].append(player.chambers[chamber].round_num)
@@ -289,9 +291,9 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                         ]["flat"] += 1
                         if (
                             sustainCount == 1
-                            or char_name in ["Fire Trailblazer", "March 7th"]
+                            or char_name in ["Fire Trailblazer", "Ice March 7th"]
                         ) and dpsCount == 1:
-                            if CHARACTERS[char]["availability"] == "Limited S":
+                            if CHARACTERS[char]["availability"] == "Limited 5*":
                                 if player.owned[char]["cons"] != 0:
                                     appears[star_num][char_name]["cons_freq"][
                                         player.owned[char]["cons"]
@@ -341,7 +343,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                                 not whaleComp
                                 and (
                                     sustainCount == 1
-                                    or char_name in ["Fire Trailblazer", "March 7th"]
+                                    or char_name in ["Fire Trailblazer", "Ice March 7th"]
                                 )
                                 and dpsCount == 1
                             ):
@@ -384,7 +386,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                                 not whaleComp
                                 and (
                                     sustainCount == 1
-                                    or char_name in ["Fire Trailblazer", "March 7th"]
+                                    or char_name in ["Fire Trailblazer", "Ice March 7th"]
                                 )
                                 and dpsCount == 1
                             ):
@@ -427,7 +429,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                                 not whaleComp
                                 and (
                                     sustainCount == 1
-                                    or char_name in ["Fire Trailblazer", "March 7th"]
+                                    or char_name in ["Fire Trailblazer", "Ice March 7th"]
                                 )
                                 and dpsCount == 1
                             ):

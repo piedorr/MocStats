@@ -1,5 +1,6 @@
 import sys
-sys.path.append('../Comps/')
+
+sys.path.append("../Comps/")
 
 import os.path
 import numpy as np
@@ -7,20 +8,30 @@ import operator
 import csv
 import json
 import statistics
-import matplotlib
+
 # matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
-import numpy as np
 from scipy.stats import skew
 from pynput import keyboard
 from itertools import chain
-from archetypes import *
-from nohomo_config import *
+from nohomo_config import (
+    phase_num,
+    pf_mode,
+    skip_random,
+    skip_self,
+    check_char,
+    check_char_name,
+    check_stats,
+    skew_num,
+    print_chart,
+)
 
-with open("output1.csv", 'r') as f:
-    reader = csv.reader(f, delimiter=',')
+with open("output1.csv", "r") as f:
+    reader = csv.reader(f, delimiter=",")
     headers = next(reader)
     data = np.array(list(reader))
+with open("../data/light_cones.json", "r") as f:
+    LIGHT_CONES = json.load(f)
 
 # lastuid = ""
 # for i in data:
@@ -30,15 +41,15 @@ with open("output1.csv", 'r') as f:
 # exit()
 
 if os.path.exists("../data/raw_csvs_real/"):
-    f = open("../data/raw_csvs_real/" + phase_num + ".csv", 'r')
+    f = open("../data/raw_csvs_real/" + phase_num + ".csv", "r")
 else:
-    f = open("../data/raw_csvs/" + phase_num + ".csv", 'r')
-reader = csv.reader(f, delimiter=',')
+    f = open("../data/raw_csvs/" + phase_num + ".csv", "r")
+reader = csv.reader(f, delimiter=",")
 headers = next(reader)
 spiral = list(reader)
 
-with open("../char_results/all.csv", 'r') as f:
-    reader = csv.reader(f, delimiter=',')
+with open("../char_results/all.csv", "r") as f:
+    reader = csv.reader(f, delimiter=",")
     headers = next(reader)
     build = np.array(list(reader))
 
@@ -53,7 +64,10 @@ substats = {}
 
 spiral_rows = {}
 for spiral_row in spiral:
-    if (int(''.join(filter(str.isdigit, spiral_row[1]))) > 11 or (pf_mode and int(''.join(filter(str.isdigit, spiral_row[1]))) > 3)) and int(spiral_row[4]) == 3:
+    if (
+        int("".join(filter(str.isdigit, spiral_row[1]))) > 11
+        or (pf_mode and int("".join(filter(str.isdigit, spiral_row[1]))) > 3)
+    ) and int(spiral_row[4]) == 3:
         if spiral_row[0] not in spiral_rows:
             spiral_rows[spiral_row[0]] = {}
         # if comp_stats:
@@ -63,7 +77,7 @@ for spiral_row in spiral:
         #     spiral_temp.sort()
         #     if spiral_temp != ['Bailu', 'Jing Yuan', 'Tingyun', 'Yukong']:
         #         continue
-        for i in range(5,9):
+        for i in range(5, 9):
             if "Dan Heng â€¢ Imbibitor Lunae" in spiral_row[i]:
                 spiral_row[i] = "Dan Heng • Imbibitor Lunae"
             if "Topaz and Numby" in spiral_row[i]:
@@ -108,7 +122,7 @@ for char in chars:
         "break_sub": [],
         # "cvalue": [],
         "sample_size": 0,
-        "sample_size_players": 0
+        "sample_size_players": 0,
     }
     mean[char] = {
         "char_lvl": 0,
@@ -174,7 +188,7 @@ for char in chars:
         "body_stats": {},
         "feet_stats": {},
         "sphere_stats": {},
-        "rope_stats": {}
+        "rope_stats": {},
     }
     substats[char] = {
         "spd_sub": 2.3,
@@ -185,7 +199,7 @@ for char in chars:
         "cdmg_sub": 0.05832,
         "res_sub": 0.03888,
         "ehr_sub": 0.03888,
-        "break_sub": 0.05832
+        "break_sub": 0.05832,
     }
 ar = 0
 count = 0
@@ -195,8 +209,8 @@ mainstatkeys = list(mainstats[chars[0]].keys())
 substatkeys = list(substats[chars[0]].keys())
 
 if os.path.isfile("../../uids.csv"):
-    with open("../../uids.csv", 'r', encoding='UTF8') as f:
-        reader = csv.reader(f, delimiter=',')
+    with open("../../uids.csv", "r", encoding="UTF8") as f:
+        reader = csv.reader(f, delimiter=",")
         self_uids = list(reader)[0]
 
 for row in data:
@@ -208,8 +222,8 @@ for row in data:
     #     row.insert(2,"Nilou")
     if row[0] != uid:
         uid = row[0]
-        ar+=int(row[1])
-        count+=1
+        ar += int(row[1])
+        count += 1
     if row[2] not in chars:
         if "Dan Heng â€¢ Imbibitor Lunae" in row[2]:
             row[2] = "Dan Heng • Imbibitor Lunae"
@@ -220,32 +234,42 @@ for row in data:
         else:
             print(row[2])
             exit()
-    if row[2] == "Trailblazer":
+    if row[2] == "Trailblazer" or row[2] == "March 7th":
         match row[4]:
             case "Fire":
-                row[2] = "Fire Trailblazer"
+                row[2] = "Fire " + row[2]
             case "Physical":
-                row[2] = "Physical Trailblazer"
+                row[2] = "Physical " + row[2]
             case "Ice":
-                row[2] = "Ice Trailblazer"
+                row[2] = "Ice " + row[2]
             case "Lightning":
-                row[2] = "Lightning Trailblazer"
+                row[2] = "Lightning " + row[2]
             case "Wind":
-                row[2] = "Wind Trailblazer"
+                row[2] = "Wind " + row[2]
             case "Quantum":
-                row[2] = "Quantum Trailblazer"
+                row[2] = "Quantum " + row[2]
             case "Imaginary":
-                row[2] = "Imaginary Trailblazer"
+                row[2] = "Imaginary " + row[2]
+    if "Trailblazer" in row[2]:
+        if row[2] == "Ice Trailblazer":
+            row[2] = "Ice March 7th"
+        else:
+            for light_cone in LIGHT_CONES:
+                if (
+                    LIGHT_CONES[light_cone]["name"] == row[5]
+                    and LIGHT_CONES[light_cone]["path"] == "Rogue"
+                ):
+                    row[2] = "Imaginary March 7th"
     # for char in chars:
     #     if row[2] == char:
-            # elif row[4] == "None":
-            #     row[2] = "Traveler-D"
+    # elif row[4] == "None":
+    #     row[2] = "Traveler-D"
 
-            # found = False
-            # for char_row in chardata:
-            #     if char_row[0] == row[0] and not found:
-            #         if char_row[2] == char and char_row[3] == "Dendro":
-            #             found = True
+    # found = False
+    # for char_row in chardata:
+    #     if char_row[0] == row[0] and not found:
+    #         if char_row[2] == char and char_row[3] == "Dendro":
+    #             found = True
     found = False
     if row[0] in spiral_rows:
         if row[2] in spiral_rows[row[0]] or (
@@ -265,26 +289,26 @@ for row in data:
         #     #         isValidChar = True
         #     case _:
         if found:
-        #     isValidChar = True
-        # # if found and foundDendro and foundHydro: # Hyperbloom
-        # # if found and foundDendro and not foundHydro: # Aggravate/Spread
-        # if isValidChar:
+            #     isValidChar = True
+            # # if found and foundDendro and foundHydro: # Hyperbloom
+            # # if found and foundDendro and not foundHydro: # Aggravate/Spread
+            # if isValidChar:
             stats[row[2]]["sample_size_players"] += 1
             for i in range(spiral_rows[row[0]][row[2]]):
                 stats[row[2]]["char_lvl"].append(float(row[3]))
                 stats[row[2]]["sample_size"] += 1
                 stats[row[2]]["spd_sub"].append(float(row[23]))
-                if (row[6].isnumeric()):
+                if row[6].isnumeric():
                     stats[row[2]]["light_cone_lvl"].append(float(row[6]))
-                for i in range(3,11):
-                    stats[row[2]][statkeys[i]].append(float(row[i+4]))
-                for i in chain(range(11,19), range(20,28)):
-                    stats[row[2]][statkeys[i]].append(float(row[i+4])/100)
+                for i in range(3, 11):
+                    stats[row[2]][statkeys[i]].append(float(row[i + 4]))
+                for i in chain(range(11, 19), range(20, 28)):
+                    stats[row[2]][statkeys[i]].append(float(row[i + 4]) / 100)
                 for i in range(4):
-                    if row[i+32] in mainstats[row[2]][mainstatkeys[i]]:
-                        mainstats[row[2]][mainstatkeys[i]][row[i+32]] += 1
+                    if row[i + 32] in mainstats[row[2]][mainstatkeys[i]]:
+                        mainstats[row[2]][mainstatkeys[i]][row[i + 32]] += 1
                     else:
-                        mainstats[row[2]][mainstatkeys[i]][row[i+32]] = 1
+                        mainstats[row[2]][mainstatkeys[i]][row[i + 32]] = 1
                 # stats[row[2]]["cvalue"].append(stats[row[2]]["crate"][-1] * 2 + stats[row[2]]["cdmg"][-1])
 
                 # if char_arti in artifacts[char]:
@@ -302,20 +326,52 @@ for char in copy_chars:
             if not stats[char][stat]:
                 stats[char][stat] = 0
             elif stat != "name" and "sample_size" not in stat:
-                if stat in ["char_lvl", "light_cone_lvl", "attack_lvl", "skill_lvl", "ultimate_lvl", "talent_lvl", "max_hp", "atk", "dfns", "speed"]:
+                if stat in [
+                    "char_lvl",
+                    "light_cone_lvl",
+                    "attack_lvl",
+                    "skill_lvl",
+                    "ultimate_lvl",
+                    "talent_lvl",
+                    "max_hp",
+                    "atk",
+                    "dfns",
+                    "speed",
+                ]:
                     median[char][stat] = round(statistics.median(stats[char][stat]), 2)
                     mean[char][stat] = round(statistics.mean(stats[char][stat]), 2)
                 else:
                     median[char][stat] = round(statistics.median(stats[char][stat]), 4)
                     mean[char][stat] = round(statistics.mean(stats[char][stat]), 4)
-                if (mean[char][stat] > 0 and median[char][stat] > 0 and stats[char]["sample_size"] > 5):
-                    if stat not in ["char_lvl", "light_cone_lvl", "attack_lvl", "skill_lvl", "ultimate_lvl", "talent_lvl", "energy_regen", "dmg_boost"]:
+                if (
+                    mean[char][stat] > 0
+                    and median[char][stat] > 0
+                    and stats[char]["sample_size"] > 5
+                ):
+                    if stat not in [
+                        "char_lvl",
+                        "light_cone_lvl",
+                        "attack_lvl",
+                        "skill_lvl",
+                        "ultimate_lvl",
+                        "talent_lvl",
+                        "energy_regen",
+                        "dmg_boost",
+                    ]:
                         skewness = round(skew(stats[char][stat], axis=0, bias=True), 2)
                 if abs(skewness) > skew_num:
                     if print_chart:
-                        if (not(check_char) or char == check_char_name) and stat in check_stats:
+                        if (
+                            not (check_char) or char == check_char_name
+                        ) and stat in check_stats:
                             print("skewness: " + str(skewness))
-                            print(stat + ": " + str(mean[char][stat]) + ", " + str(median[char][stat]))
+                            print(
+                                stat
+                                + ": "
+                                + str(mean[char][stat])
+                                + ", "
+                                + str(median[char][stat])
+                            )
                             try:
                                 plt.hist(stats[char][stat])
                                 plt.show()
@@ -324,7 +380,7 @@ for char in copy_chars:
                             # print("1 - Mean, 2 - Median: ")
                             with keyboard.Events() as events:
                                 event = events.get(1e6)
-                                if event.key == keyboard.KeyCode.from_char('1'):
+                                if event.key == keyboard.KeyCode.from_char("1"):
                                     stats[char][stat] = str(mean[char][stat])
                                 else:
                                     stats[char][stat] = str(median[char][stat])
@@ -336,11 +392,9 @@ for char in copy_chars:
                     stats[char][stat] = mean[char][stat]
 
         for stat in mainstats[char]:
-            sorted_stats = (sorted(
-                mainstats[char][stat].items(),
-                key = operator.itemgetter(1),
-                reverse=True
-            ))
+            sorted_stats = sorted(
+                mainstats[char][stat].items(), key=operator.itemgetter(1), reverse=True
+            )
             mainstats[char][stat] = {k: v for k, v in sorted_stats}
             for mainstat in mainstats[char][stat]:
                 mainstats[char][stat][mainstat] = round(
@@ -350,11 +404,13 @@ for char in copy_chars:
             i = 0
             while i < 3:
                 if i >= len(mainstatlist):
-                    stats[char][stat + "_" + str(i+1)] = "-"
-                    stats[char][stat + "_" + str(i+1) + "_app"] = "-"
+                    stats[char][stat + "_" + str(i + 1)] = "-"
+                    stats[char][stat + "_" + str(i + 1) + "_app"] = "-"
                 else:
-                    stats[char][stat + "_" + str(i+1)] = mainstatlist[i]
-                    stats[char][stat + "_" + str(i+1) + "_app"] = mainstats[char][stat][mainstatlist[i]]
+                    stats[char][stat + "_" + str(i + 1)] = mainstatlist[i]
+                    stats[char][stat + "_" + str(i + 1) + "_app"] = mainstats[char][
+                        stat
+                    ][mainstatlist[i]]
                 i += 1
 
         # for i in range(9):
@@ -380,16 +436,16 @@ for char in copy_chars:
         for stat in mainstats[char]:
             i = 0
             while i < 3:
-                stats[char][stat + "_" + str(i+1)] = "-"
-                stats[char][stat + "_" + str(i+1) + "_app"] = "-"
+                stats[char][stat + "_" + str(i + 1)] = "-"
+                stats[char][stat + "_" + str(i + 1) + "_app"] = "-"
                 i += 1
 
 if os.path.exists("results_real"):
-    file1 = open("results_real/chars.csv", 'w', newline='')
-    file2 = open("results_real/demographic.csv", 'w', newline='')
+    file1 = open("results_real/chars.csv", "w", newline="")
+    file2 = open("results_real/demographic.csv", "w", newline="")
 else:
-    file1 = open("results/chars.csv", 'w', newline='')
-    file2 = open("results/demographic.csv", 'w', newline='')
+    file1 = open("results/chars.csv", "w", newline="")
+    file2 = open("results/demographic.csv", "w", newline="")
 
 csv_writer = csv.writer(file1)
 csv_writer2 = csv.writer(file2)
@@ -403,14 +459,14 @@ for char in chars:
 
 temp_stats = []
 iter_char = 0
-with open('../char_results/all.json') as char_file:
+with open("../char_results/all.json") as char_file:
     CHARACTERS = json.load(char_file)
-with open('../char_results/appearance_combine.json') as app_char_file:
+with open("../char_results/appearance_combine.json") as app_char_file:
     APP = json.load(app_char_file)
-with open('../char_results/rounds_combine.json') as round_char_file:
+with open("../char_results/rounds_combine.json") as round_char_file:
     ROUND = json.load(round_char_file)
 for char in stats:
-    for i in chain(range(11,19), range(20,28)):
+    for i in chain(range(11, 19), range(20, 28)):
         stats[char][statkeys[i]] = round(stats[char][statkeys[i]] * 100, 2)
     iterate_value_app = []
     for i in range(3):
@@ -432,7 +488,7 @@ for char in stats:
         exit()
 
     app_dict = {}
-    if not(pf_mode):
+    if not (pf_mode):
         app_dict = {
             "12_app": APP["12-1"]["4"][char]["app"],
             "12_round": ROUND["12-1"]["4"][char]["round"],
@@ -445,7 +501,7 @@ for char in stats:
     temp_stats.append((CHARACTERS[iter_char] | stats[char]) | app_dict)
     # temp_stats.append((CHARACTERS[iter_char]) | app_dict)
     iter_char += 1
-with open('../char_results/all2.json', 'w') as char_file:
-    char_file.write(json.dumps(temp_stats,indent=2))
+with open("../char_results/all2.json", "w") as char_file:
+    char_file.write(json.dumps(temp_stats, indent=2))
 
-print("Average AR: ", (ar/count))
+print("Average AR: ", (ar / count))

@@ -102,22 +102,13 @@ class Composition:
                 "Jade",
             ]:
                 self.dps.insert(0, character)
-            elif character in ["Kafka", "Qingque", "Arlan", "Dan Heng", "Sushang"]:
+            elif character in ["Kafka", "Qingque", "Arlan", "Dan Heng", "Sushang", "Jingliu", "Himeko"]:
                 self.dps.append(character)
-            elif character in ["Jingliu", "Himeko"]:
+            elif character in ["Clara", "Yunli", "Blade", "Xueyi", "Misha", "Black Swan"]:
                 self.subdps.insert(0, character)
-            elif character in ["Clara", "Blade", "Xueyi", "Misha", "Black Swan"]:
+            elif character in ["Imaginary March 7th", "Welt", "Serval", "Physical Trailblazer", "Herta", "Topaz & Numby"]:
                 self.subdps.append(character)
-            elif character in [
-                "Welt",
-                "Serval",
-                "Physical Trailblazer",
-                "Sampo",
-                "Herta",
-                "Luka",
-                "Topaz & Numby",
-                "Guinaifen",
-            ]:
+            elif character in ["Sampo", "Luka", "Guinaifen"]:
                 self.anemo.insert(0, character)
             elif character in [
                 "Bronya",
@@ -143,7 +134,7 @@ class Composition:
             ]:
                 self.healer.insert(0, character)
             elif character in [
-                "March 7th",
+                "Ice March 7th",
                 "Gepard",
                 "Fire Trailblazer",
                 "Fu Xuan",
@@ -164,6 +155,7 @@ class Composition:
                 "Topaz & Numby",
                 "Dr. Ratio",
                 "Clara",
+                "Yunli",
                 "Jing Yuan",
                 "Himeko",
                 "Kafka",
@@ -217,7 +209,7 @@ class Composition:
                     self.alt_comp_name = self.characters[0] + " Dual DoT"
                 # elif len(self.dps) + len(self.subdps) == 1:
                 #     self.alt_comp_name = self.characters[0] + " Solo DoT"
-            elif len(self.fua) > 1:
+            elif len(self.fua) > 1 or (len(self.fua) == 1 and "Imaginary March 7th" in self.characters):
                 self.alt_comp_name = self.characters[0] + " Follow-Up"
 
             # if len_element["Quantum"] == 4:
