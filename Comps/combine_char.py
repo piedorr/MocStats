@@ -1,9 +1,23 @@
 import json
 import re
+from comp_rates_config import (RECENT_PHASE, pf_mode, as_mode)
 
-moc_phase = "2.3.3"
-pf_phase = "2.3.2"
-as_phase = "2.4.1"
+with open("phases.json") as phases_file:
+    phases = json.load(phases_file)
+
+if as_mode:
+    phases["as_phase"] = RECENT_PHASE
+elif pf_mode:
+    phases["pf_phase"] = RECENT_PHASE
+else:
+    phases["moc_phase"] = RECENT_PHASE
+
+with open("phases.json", "w") as phases_file:
+    phases_file.write(json.dumps(phases, indent=2))
+
+moc_phase = phases["moc_phase"]
+pf_phase = phases["pf_phase"]
+as_phase = phases["as_phase"]
 
 with open("../data/characters.json") as char_file:
     CHARACTERS = json.load(char_file)

@@ -3115,5 +3115,57 @@
         "trailblazer_ids": [
             "1224"
         ]
+    },
+    "Jiaoqiu": {
+        "id": "1218",
+        "name": "Jiaoqiu",
+        "tag": "jiaoqiu",
+        "rarity": 5,
+        "path": "Warlock",
+        "element": "Fire",
+        "max_sp": 100,
+        "ranks": [
+            "121801",
+            "121802",
+            "121803",
+            "121804",
+            "121805",
+            "121806"
+        ],
+        "skills": [
+            "121801",
+            "121802",
+            "121803",
+            "121804",
+            "121806",
+            "121807"
+        ],
+        "skill_trees": [
+            "1218001",
+            "1218002",
+            "1218003",
+            "1218004",
+            "1218007",
+            "1218101",
+            "1218102",
+            "1218103",
+            "1218201",
+            "1218202",
+            "1218203",
+            "1218204",
+            "1218205",
+            "1218206",
+            "1218207",
+            "1218208",
+            "1218209",
+            "1218210"
+        ],
+        "icon": "icon/character/1218.png",
+        "preview": "image/character_preview/1218.png",
+        "portrait": "image/character_portrait/1218.png",
+        "availability": "Limited 5*",
+        "role": "Amplifier",
+        "alt_name": null,
+        "out_name": false
     }
 }

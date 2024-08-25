@@ -3,14 +3,18 @@ import json
 import os.path
 import sys
 sys.path.append('../Comps/')
-from comp_rates_config import RECENT_PHASE, skew_num
+from comp_rates_config import RECENT_PHASE, skew_num, pf_mode, as_mode
+
+from subprocess import call
+
+call('pip install --upgrade git+https://github.com/KT-Yeh/mihomo.git')
 
 skip_self = False
 skip_random = False
 print_chart = False
 # as: pf True
-pf_mode = True
-as_mode = True
+# pf_mode = True
+# as_mode = False
 
 # stats.py
 # comp_stats = ['Bailu', 'Jing Yuan', 'Tingyun', 'Yukong']
@@ -43,7 +47,7 @@ for char_name, char in characters.items():
         for trailblazer_id in char["trailblazer_ids"]:
             trailblazer_ids.append(trailblazer_id)
 
-if os.path.exists("../char_results"):
+if os.path.exists("../char_results/uids.csv"):
     with open("../char_results/uids.csv", 'r', encoding='UTF8') as f:
         reader = csv.reader(f, delimiter=',')
         uids = list(reader)
@@ -51,7 +55,7 @@ if os.path.exists("../char_results"):
         uids = list(dict.fromkeys(uids))
         # uids = uids[uids.index({uid})+1:]
 else:
-    uids = []
+    uids = [806411333]
 
 filenum = 1
 while os.path.exists("output" + str(filenum) + ".csv"):

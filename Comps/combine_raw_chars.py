@@ -1,5 +1,5 @@
-import numpy as np
 import csv
+from send2trash import send2trash
 from comp_rates_config import RECENT_PHASE
 
 char_data = {}
@@ -23,5 +23,6 @@ for uid in char_data:
     for char in char_data[uid]:
         print_data += [[uid, "2.2b", char] + char_data[uid][char]]
 
-csv_writer = csv.writer(open("../data/raw_csvs_real/" + RECENT_PHASE + "_charnew.csv", 'w', newline=''))
+send2trash("../data/raw_csvs_real/" + RECENT_PHASE + "_char.csv")
+csv_writer = csv.writer(open("../data/raw_csvs_real/" + RECENT_PHASE + "_char.csv", 'w', newline=''))
 csv_writer.writerows(print_data)

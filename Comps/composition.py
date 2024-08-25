@@ -122,6 +122,7 @@ class Composition:
                 "Sparkle",
                 "Robin",
                 "Imaginary Trailblazer",
+                "Jiaoqiu",
             ]:
                 self.anemo.append(character)
             elif character in [

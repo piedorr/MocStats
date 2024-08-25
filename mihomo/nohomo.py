@@ -1,6 +1,7 @@
 import _thread
 import time
 import asyncio
+import traceback
 
 from mihomo import Language, MihomoAPI, StarrailInfoParsed
 from nohomo_config import (json, os, csv, uids, filename, trailblazer_ids, relics_data)
@@ -38,7 +39,11 @@ async def v1():
 		uid_iter += 1
 		uid = uids[uid_iter]
 
-		for i in range(5):
+		i = -1
+		while i < 5:
+			i += 1
+			if (i == 5):
+				print("error")
 			try:
 				print('{} / {} : {}, {}'.format(uid_iter + 1, len(uids), uid, i))
 				data: StarrailInfoParsed = await client.fetch_user(str(uid))
@@ -79,9 +84,16 @@ async def v1():
 						"Ultimate": 0,
 						"Talent": 0
 					}
+					skill_ids = {}
 					for skill in character.traces:
 						if skill.type_text in skills and skill.max_level > 1:
-							skills[skill.type_text] = skill.level
+							skill_ids[str(character.id) + "0" + str(skill.id)[-2:]] = skill.type_text
+					# print(json.dumps(skill_ids, indent = 2))
+					for skill in character.trace_tree:
+						if str(skill.id) in skill_ids:
+							# print(skill_ids[str(skill.id)] + ": " + str(skill.level))
+							skills[skill_ids[str(skill.id)]] = skill.level
+					# print(json.dumps(skills, indent = 2))
 					for skill in skills.values():
 						line.append(skill)
 
@@ -194,26 +206,27 @@ async def v1():
 
 					writer.writerow(line)
 					writer_chars.writerow(line_chars)
-				time.sleep(0.5)
 				break
 			except asyncio.exceptions.TimeoutError:
-				time.sleep(10)
+				print("timeout")
+				time.sleep(1)
 			except AttributeError:
+				print("{}: {}".format(uid, traceback.format_exc()))
 				# print(str(uid) + " Too Many Requests")
-				time.sleep(10)
+				time.sleep(1)
 			except Exception as e:
 				if str(e) == "[429] Too Many Requests":
 					print("[429] Too Many Requests")
-					time.sleep(60)
+					time.sleep(10)
 				elif "Cannot connect" in str(e):
 					print("Cannot connect")
-					time.sleep(10)
+					i = 0
+					time.sleep(1)
 				elif str(e) == "User not found.":
 					print("User not found.")
 					break
 				else:
-					# error_uids.append('{}: {}'.format(uid, e))
-					print('{}: {}, {}'.format(uid, e, type(e)))
+					print("{}: {}".format(uid, traceback.format_exc()))
 					# exit()
 					break
 

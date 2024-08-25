@@ -2,7 +2,7 @@ import sys
 
 sys.path.append("../Comps/")
 
-import os.path
+import os
 import numpy as np
 import operator
 import csv
@@ -231,6 +231,8 @@ for row in data:
             row[2] = "Topaz & Numby"
         elif "Trailblazer" in row[2]:
             row[2] = "Trailblazer"
+        elif "March 7th" in row[2]:
+            row[2] = "March 7th"
         else:
             print(row[2])
             exit()
@@ -250,16 +252,6 @@ for row in data:
                 row[2] = "Quantum " + row[2]
             case "Imaginary":
                 row[2] = "Imaginary " + row[2]
-    if "Trailblazer" in row[2]:
-        if row[2] == "Ice Trailblazer":
-            row[2] = "Ice March 7th"
-        else:
-            for light_cone in LIGHT_CONES:
-                if (
-                    LIGHT_CONES[light_cone]["name"] == row[5]
-                    and LIGHT_CONES[light_cone]["path"] == "Rogue"
-                ):
-                    row[2] = "Imaginary March 7th"
     # for char in chars:
     #     if row[2] == char:
     # elif row[4] == "None":
@@ -501,7 +493,11 @@ for char in stats:
     temp_stats.append((CHARACTERS[iter_char] | stats[char]) | app_dict)
     # temp_stats.append((CHARACTERS[iter_char]) | app_dict)
     iter_char += 1
-with open("../char_results/all2.json", "w") as char_file:
+
+if not os.path.exists("../char_results/" + phase_num):
+    os.mkdir("../char_results/" + phase_num)
+
+with open("../char_results/" + phase_num + "/all2.json", "w") as char_file:
     char_file.write(json.dumps(temp_stats, indent=2))
 
 print("Average AR: ", (ar / count))
