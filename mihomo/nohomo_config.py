@@ -7,8 +7,6 @@ from comp_rates_config import RECENT_PHASE, skew_num, pf_mode, as_mode
 
 from subprocess import call
 
-call('pip install --upgrade git+https://github.com/KT-Yeh/mihomo.git')
-
 skip_self = False
 skip_random = False
 print_chart = False
