@@ -196,11 +196,12 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
 
                 for char in player.chambers[chamber].characters:
                     if CHARACTERS[char]["availability"] == "Limited 5*":
-                        # if char in player.owned:
-                        #     if player.owned[char]["cons"] > 0:
-                        #         whaleComp = True
-                        if player.chambers[chamber].char_cons[char] > 0:
-                            whaleComp = True
+                        if player.chambers[chamber].char_cons:
+                            if player.chambers[chamber].char_cons[char] > 0:
+                                whaleComp = True
+                        elif char in player.owned:
+                            if player.owned[char]["cons"] > 0:
+                                whaleComp = True
                     if CHARACTERS[char]["role"] == "Sustain":
                         sustainCount += 1
                     if CHARACTERS[char]["role"] == "Damage Dealer":
@@ -217,6 +218,8 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                                 "Herta",
                                 "Xueyi",
                                 "Jade",
+                                "Feixiao",
+                                "Moze",
                             ]:
                                 if char_fua in player.chambers[chamber].characters:
                                     dpsCount -= 1
@@ -226,6 +229,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                             dpsCount += 1
                     elif char == "Serval":
                         dpsCount -= 1
+
                 if sustainCount == 0 and ((pf_mode and not as_mode) or whaleOnly):
                     sustainCount = 1
                 if "Ruan Mei" in player.chambers[chamber].characters:
@@ -343,7 +347,8 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                                 not whaleComp
                                 and (
                                     sustainCount == 1
-                                    or char_name in ["Fire Trailblazer", "Ice March 7th"]
+                                    or char_name
+                                    in ["Fire Trailblazer", "Ice March 7th"]
                                 )
                                 and dpsCount == 1
                             ):
@@ -386,7 +391,8 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                                 not whaleComp
                                 and (
                                     sustainCount == 1
-                                    or char_name in ["Fire Trailblazer", "Ice March 7th"]
+                                    or char_name
+                                    in ["Fire Trailblazer", "Ice March 7th"]
                                 )
                                 and dpsCount == 1
                             ):
@@ -429,7 +435,8 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                                 not whaleComp
                                 and (
                                     sustainCount == 1
-                                    or char_name in ["Fire Trailblazer", "Ice March 7th"]
+                                    or char_name
+                                    in ["Fire Trailblazer", "Ice March 7th"]
                                 )
                                 and dpsCount == 1
                             ):

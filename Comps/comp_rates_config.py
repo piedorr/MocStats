@@ -2,13 +2,14 @@ import json
 import argparse
 import os
 from dotenv import load_dotenv
+
 load_dotenv()
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-a", "--all", action = "store_true")
-parser.add_argument("-d", "--duos", action = "store_true")
-parser.add_argument("-t", "--top", action = "store_true")
-parser.add_argument("-w", "--whale", action = "store_true")
+parser.add_argument("-a", "--all", action="store_true")
+parser.add_argument("-d", "--duos", action="store_true")
+parser.add_argument("-t", "--top", action="store_true")
+parser.add_argument("-w", "--whale", action="store_true")
 
 # # Unused for now
 # parser.add_argument("-MOC", action = "store_true")
@@ -19,22 +20,22 @@ parser.add_argument("-w", "--whale", action = "store_true")
 
 args = parser.parse_args()
 
-with open(os.getenv("REPO_PATH") + "/data/characters.json") as char_file:
+with open(str(os.getenv("REPO_PATH")) + "/data/characters.json") as char_file:
     CHARACTERS = json.load(char_file)
 
-with open(os.getenv("REPO_PATH") + "/data/light_cones.json") as char_file:
+with open(str(os.getenv("REPO_PATH")) + "/data/light_cones.json") as char_file:
     LIGHT_CONES = json.load(char_file)
 
 # no need to add 2.2.1"_pf"
-RECENT_PHASE = "2.4.3"
+RECENT_PHASE = "2.5.2"
 
 # if no past phase, leave blank
 # add 2.2.1"_pf"
-past_phase = "2.3.3"
+past_phase = "2.5.2_pf"
 global pf_mode
 global as_mode
 # if as: pf_mode = True
-pf_mode = False
+pf_mode = True
 as_mode = False
 char_infographics = ["Sushang", "Hook", "Natasha", "Dr. Ratio", "Kafka"]
 char_infographics = char_infographics[3]

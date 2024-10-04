@@ -76,14 +76,17 @@ class Composition:
             "Lightning": 0,
             "Physical": 0,
         }
-        for char_iter in range(len(comp_chars)):
-            self.char_cons[comp_chars[char_iter]] = int(comp_chars_cons[char_iter])
+        if comp_chars_cons:
+            for char_iter in range(len(comp_chars)):
+                self.char_cons[comp_chars[char_iter]] = int(comp_chars_cons[char_iter])
         comp_chars.sort()
         for character in comp_chars:
-            if "Dan Heng â€¢ Imbibitor Lunae" in character:
+            if "Imbibitor" in character:
                 character = "Dan Heng • Imbibitor Lunae"
-            if "Topaz and Numby" in character:
+            if "Topaz and Numby" == character:
                 character = "Topaz & Numby"
+            if "March 7th" == character:
+                character = "Ice March 7th"
             self.char_presence[character] = True
             if CHARACTERS[character]["availability"] in ["Limited 5*", "5*"]:
                 fives.append(character)
@@ -100,13 +103,37 @@ class Composition:
                 "Boothill",
                 "Firefly",
                 "Jade",
+                "Feixiao",
+                "Moze",
             ]:
                 self.dps.insert(0, character)
-            elif character in ["Kafka", "Qingque", "Arlan", "Dan Heng", "Sushang", "Jingliu", "Himeko"]:
+            elif character in [
+                "Kafka",
+                "Qingque",
+                "Arlan",
+                "Dan Heng",
+                "Sushang",
+                "Jingliu",
+                "Himeko",
+            ]:
                 self.dps.append(character)
-            elif character in ["Clara", "Yunli", "Blade", "Xueyi", "Misha", "Black Swan"]:
+            elif character in [
+                "Clara",
+                "Yunli",
+                "Blade",
+                "Xueyi",
+                "Misha",
+                "Black Swan",
+            ]:
                 self.subdps.insert(0, character)
-            elif character in ["Imaginary March 7th", "Welt", "Serval", "Physical Trailblazer", "Herta", "Topaz & Numby"]:
+            elif character in [
+                "Imaginary March 7th",
+                "Welt",
+                "Serval",
+                "Physical Trailblazer",
+                "Herta",
+                "Topaz & Numby",
+            ]:
                 self.subdps.append(character)
             elif character in ["Sampo", "Luka", "Guinaifen"]:
                 self.anemo.insert(0, character)
@@ -140,6 +167,7 @@ class Composition:
                 "Fire Trailblazer",
                 "Fu Xuan",
                 "Aventurine",
+                "Lingsha",
             ]:
                 self.healer.append(character)
 
@@ -164,6 +192,8 @@ class Composition:
                 "Herta",
                 "Xueyi",
                 "Jade",
+                "Feixiao",
+                "Moze",
             ]:
                 self.fua.append(character)
 
@@ -210,7 +240,7 @@ class Composition:
                     self.alt_comp_name = self.characters[0] + " Dual DoT"
                 # elif len(self.dps) + len(self.subdps) == 1:
                 #     self.alt_comp_name = self.characters[0] + " Solo DoT"
-            elif len(self.fua) > 1 or (len(self.fua) == 1 and "Imaginary March 7th" in self.characters):
+            elif len(self.fua) > 1:
                 self.alt_comp_name = self.characters[0] + " Follow-Up"
 
             # if len_element["Quantum"] == 4:

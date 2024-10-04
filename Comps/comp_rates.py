@@ -111,11 +111,21 @@ def main():
             comp_chars_temp = []
             for i in range(5, 9):
                 if line[i] != "":
+                    if "Imbibitor" in line[i]:
+                        line[i] = "Dan Heng • Imbibitor Lunae"
+                    elif "Topaz and Numby" == line[i]:
+                        line[i] = "Topaz & Numby"
+                    elif "March 7th" == line[i]:
+                        line[i] = "Ice March 7th"
                     comp_chars_temp.append(line[i])
             cons_chars_temp = []
-            for i in range(9, 13):
-                if line[i] != "":
-                    cons_chars_temp.append(line[i])
+            if len(line) > 10:
+                for i in range(9, 13):
+                    if line[i] != "":
+                        cons_chars_temp.append(line[i])
+                pf_buff = line[13] if pf_mode else ""
+            else:
+                pf_buff = line[9] if pf_mode else ""
             if comp_chars_temp:
                 comp = Composition(
                     line[0],
@@ -125,7 +135,7 @@ def main():
                     line[4],
                     stage + "-" + str(line[2]),
                     alt_comps,
-                    line[13] if pf_mode else "",
+                    pf_buff,
                     cons_chars_temp,
                 )
                 # if int(stage) > 7:
@@ -207,10 +217,12 @@ def main():
                     all_players[RECENT_PHASE][last_uid] = player
                     last_uid = line[0]
                     player = PlayerPhase(last_uid, RECENT_PHASE)
-                if "Dan Heng â€¢ Imbibitor Lunae" in line[2]:
+                if "Imbibitor" in line[2]:
                     line[2] = "Dan Heng • Imbibitor Lunae"
-                elif "Topaz and Numby" in line[2]:
+                elif "Topaz and Numby" == line[2]:
                     line[2] = "Topaz & Numby"
+                elif "March 7th" == line[2]:
+                    line[2] = "Ice March 7th"
                 player.add_character(
                     line[2], line[3], line[4], line[5], line[6], line[7], line[8]
                 )
@@ -542,7 +554,7 @@ def used_comps(
     total_comps = 0
     total_self_comps = 0
     whale_count = 0
-    # sustainless = 0
+    sustainless = 0
     # dual_sustain = {}
     # dual_dps = {}
     # total_char_comps = {}
@@ -568,16 +580,17 @@ def used_comps(
             dps_count = 0
             for char in range(4):
                 if CHARACTERS[comp_tuple[char]]["availability"] == "Limited 5*":
-                    # if comp_tuple[char] in players[phase][comp.player].owned:
-                    # # if comp_tuple[char] in players[phase][comp.player].owned and comp_tuple[char] == "Blade":
-                    #     if (
-                    #         players[phase][comp.player].owned[comp_tuple[char]]["cons"] > 0
-                    #     # ) or (
-                    #     #     whaleSigWeap and players[phase][comp.player].owned[comp_tuple[char]]["weapon"] in sigWeaps
-                    #     ):
-                    #         whale_comp = True
-                    if comp.char_cons[comp_tuple[char]] > 0:
-                        whale_comp = True
+                    if comp.char_cons:
+                        if comp.char_cons[comp_tuple[char]] > 0:
+                            whale_comp = True
+                    elif comp_tuple[char] in players[phase][comp.player].owned:
+                        if (
+                            players[phase][comp.player].owned[comp_tuple[char]]["cons"]
+                            > 0
+                            # ) or (
+                            #     whaleSigWeap and players[phase][comp.player].owned[comp_tuple[char]]["weapon"] in sigWeaps
+                        ):
+                            whale_comp = True
                 # if comp_tuple[char] not in total_char_comps:
                 #     total_char_comps[comp_tuple[char]] = 0
                 # total_char_comps[comp_tuple[char]] += 1
@@ -598,6 +611,8 @@ def used_comps(
                                 "Herta",
                                 "Xueyi",
                                 "Jade",
+                                "Feixiao",
+                                "Moze",
                             ]:
                                 dps_count -= 1
                                 break
@@ -617,7 +632,8 @@ def used_comps(
                 continue
             if "Ruan Mei" in comp_tuple or (pf_mode and not as_mode):
                 dps_count = 1
-            # sustainless = not sustain_count
+            if not sustain_count:
+                sustainless += 1
             # if sustain_count > 1:
             #     for char in range (4):
             #         if comp_tuple[char] not in dual_sustain:
@@ -779,7 +795,7 @@ def used_comps(
     # print("Less than four: " + str(lessFour))
     # print("Less than four: " + str(len(lessFour)/total_comps))
     # print("Healerless: " + str(sustainless))
-    # print("Healerless: " + str(sustainless/total_comps))
+    print("Healerless: " + str(sustainless / total_comps))
     # for char in dual_sustain:
     #     if char in ["Jingliu", "Dan Heng • Imbibitor Lunae", "Kafka", "Jing Yuan", "Seele", "Blade", "Qingque"]:
     #         dual_percent = dual_sustain[char]/total_char_comps[char]
@@ -949,11 +965,12 @@ def used_duos(players, comps, rooms, usage, archetype, check_duo, phase=RECENT_P
         for char in comp.characters:
             findchars(char, foundchar)
             if CHARACTERS[char]["availability"] == "Limited 5*":
-                # if char in players[phase][comp.player].owned:
-                #     if players[phase][comp.player].owned[char]["cons"] > 0:
-                #         whale_comp = True
-                if comp.char_cons[char] > 0:
-                    whale_comp = True
+                if comp.char_cons:
+                    if comp.char_cons[char] > 0:
+                        whale_comp = True
+                elif char in players[phase][comp.player].owned:
+                    if players[phase][comp.player].owned[char]["cons"] > 0:
+                        whale_comp = True
             if CHARACTERS[char]["role"] == "Sustain":
                 sustain_count += 1
         if not find_archetype(foundchar):
@@ -1004,7 +1021,10 @@ def used_duos(players, comps, rooms, usage, archetype, check_duo, phase=RECENT_P
                         duos_dict[duo]["round_num"][
                             list(str(comp.room).split("-"))[0]
                         ].append(comp.round_num)
-                elif sustain_count == 1 or duo[1] in ["Fire Trailblazer", "Ice March 7th"]:
+                elif sustain_count == 1 or duo[1] in [
+                    "Fire Trailblazer",
+                    "Ice March 7th",
+                ]:
                     duos_dict[duo]["round_num"][
                         list(str(comp.room).split("-"))[0]
                     ].append(comp.round_num)
@@ -1503,6 +1523,8 @@ def duo_write(duos_dict, usage, filename, archetype, check_duo):
                             "Herta",
                             "Xueyi",
                             "Jade",
+                            "Feixiao",
+                            "Moze",
                         ]
                         and char_j == "Topaz & Numby"
                         or char_j
@@ -1517,6 +1539,8 @@ def duo_write(duos_dict, usage, filename, archetype, check_duo):
                             "Herta",
                             "Xueyi",
                             "Jade",
+                            "Feixiao",
+                            "Moze",
                         ]
                         and char_i == "Topaz & Numby"
                     ):
