@@ -1424,7 +1424,7 @@ def duo_write(duos_dict, usage, filename, archetype, check_duo):
         if usage[4][char]["app_flat"] > 0:
             out_duos_append = {
                 "char": char,
-                "round": usage[4][char]["round"],
+                "app": usage[4][char]["app"],
             }
             for i in range(duo_dict_len):
                 if i < len(duos_dict[char]):
@@ -1440,10 +1440,7 @@ def duo_write(duos_dict, usage, filename, archetype, check_duo):
                     out_duos_append["avg_round_" + str(i + 1)] = 0.00
                     out_duos_append["app_flat_" + str(i + 1)] = 0
             out_duos.append(out_duos_append)
-    if pf_mode:
-        out_duos = sorted(out_duos, key=lambda t: t["round"], reverse=True)
-    else:
-        out_duos = sorted(out_duos, key=lambda t: t["round"], reverse=False)
+    out_duos = sorted(out_duos, key=lambda t: t["app"], reverse=True)
 
     if archetype != "all":
         filename = filename + "_" + archetype
@@ -1458,7 +1455,7 @@ def duo_write(duos_dict, usage, filename, archetype, check_duo):
         out_duos_exclu[duos["char"]] = {}
         if count == 0:
             # csv_writer.writerow(duos.keys())
-            temp_duos = ["char", "round"]
+            temp_duos = ["char", "app"]
             for i in range(10):
                 temp_duos += [
                     "char_" + str(i + 1),
@@ -1470,9 +1467,7 @@ def duo_write(duos_dict, usage, filename, archetype, check_duo):
         # csv_writer.writerow(duos.values())
         temp_duos = [
             duos["char"],
-            round(duos["round"] / 1000, 2)
-            if (pf_mode and not as_mode)
-            else duos["round"],
+            duos["app"],
         ]
         for i in range(10):
             temp_duos += [
@@ -1483,37 +1478,40 @@ def duo_write(duos_dict, usage, filename, archetype, check_duo):
                 else duos["avg_round_" + str(i + 1)],
             ]
         csv_writer.writerow(temp_duos)
-        # duos.pop("round")
-        for i in range(duo_dict_len):
-            duos["app_rate_" + str(i + 1)] = float(duos["app_rate_" + str(i + 1)][:-1])
-            if (
-                duos["app_rate_" + str(i + 1)] >= 1
-                and duos["app_flat_" + str(i + 1)] >= 10
-                and (
-                    (
-                        duos["avg_round_" + str(i + 1)]
-                        < usage[4][duos["char_" + str(i + 1)]]["round"]
-                    )
-                    or (
-                        duos["avg_round_" + str(i + 1)]
-                        < usage[4][duos["char"]]["round"]
-                    )
+
+        if check_duo:
+            for i in range(duo_dict_len):
+                duos["app_rate_" + str(i + 1)] = float(
+                    duos["app_rate_" + str(i + 1)][:-1]
                 )
-                and usage[4][duos["char_" + str(i + 1)]]["round"] != 99.99
-                and usage[4][duos["char_" + str(i + 1)]]["round"] != 0
-            ):
-                # out_duos_exclu[duos["char"]][duos["char_" + str(i + 1)]] = {
-                #     "app": duos["app_rate_" + str(i + 1)],
-                #     "avg_round": duos["avg_round_" + str(i + 1)]
-                # }
-                # duos.pop("char_" + str(i + 1))
-                # duos.pop("app_rate_" + str(i + 1))
-                # duos.pop("avg_round_" + str(i + 1))
-                # continue
-                out_duos_check[duos["char"]][duos["char_" + str(i + 1)]] = {
-                    "app": duos["app_rate_" + str(i + 1)],
-                    "avg_round": duos["avg_round_" + str(i + 1)],
-                }
+                if (
+                    duos["app_rate_" + str(i + 1)] >= 1
+                    and duos["app_flat_" + str(i + 1)] >= 10
+                    and (
+                        (
+                            duos["avg_round_" + str(i + 1)]
+                            < usage[4][duos["char_" + str(i + 1)]]["round"]
+                        )
+                        or (
+                            duos["avg_round_" + str(i + 1)]
+                            < usage[4][duos["char"]]["round"]
+                        )
+                    )
+                    and usage[4][duos["char_" + str(i + 1)]]["round"] != 99.99
+                    and usage[4][duos["char_" + str(i + 1)]]["round"] != 0
+                ):
+                    # out_duos_exclu[duos["char"]][duos["char_" + str(i + 1)]] = {
+                    #     "app": duos["app_rate_" + str(i + 1)],
+                    #     "avg_round": duos["avg_round_" + str(i + 1)]
+                    # }
+                    # duos.pop("char_" + str(i + 1))
+                    # duos.pop("app_rate_" + str(i + 1))
+                    # duos.pop("avg_round_" + str(i + 1))
+                    # continue
+                    out_duos_check[duos["char"]][duos["char_" + str(i + 1)]] = {
+                        "app": duos["app_rate_" + str(i + 1)],
+                        "avg_round": duos["avg_round_" + str(i + 1)],
+                    }
     if check_duo:
         char_names = list(CHARACTERS.keys())
         out_dd = {}
