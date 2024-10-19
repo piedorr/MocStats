@@ -93,14 +93,14 @@ async def v1():
         uid_iter += 1
         uid = uids[uid_iter]
 
-        i = -1
+        i: int = -1
         while i < 5:
             i += 1
             if i == 5:
                 print("error")
             try:
                 print("{} / {} : {}, {}".format(uid_iter + 1, len(uids), uid, i))
-                data: StarrailInfoParsed = await client.fetch_user(str(uid))
+                data: StarrailInfoParsed = await client.fetch_user(uid)
                 for character in data.characters:
                     line = []
                     line_chars = []
@@ -224,11 +224,11 @@ async def v1():
                             else:
                                 substats["Flat " + stat.name] += stat.value
 
-                    for i in list(substats.keys())[3:]:
-                        line.append(round(substats[i], 3))
+                    for stat_key in list(substats.keys())[3:]:
+                        line.append(round(substats[stat_key], 3))
 
-                    for i in list(mainstats.keys())[2:]:
-                        line.append(mainstats[i])
+                    for stat_key in list(mainstats.keys())[2:]:
+                        line.append(mainstats[stat_key])
 
                     char_set = None
                     for set in artifacts:
