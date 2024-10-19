@@ -520,7 +520,7 @@ def main():
             message="Finished executing comp_rates",
             # displaying time
             timeout=2,
-        )
+        )  # type: ignore
         # waiting time
         time.sleep(2)
 
@@ -554,12 +554,26 @@ def used_comps(
     total_comps = 0
     total_self_comps = 0
     whale_count = 0
-    sustainless = 0
+    # sustainless = 0
     # dual_sustain = {}
     # dual_dps = {}
     # total_char_comps = {}
+
+    # For storing the prev and next comps
+    comp_iter = 0
+    side_comp = None
     for comp in comps:
+        if comp_iter - 1 > len(comps):
+            if comps[comp_iter - 1].player == comp.player:
+                side_comp = comps[comp_iter - 1]
+        elif not side_comp and comp_iter + 1 < len(comps):
+            if comps[comp_iter + 1].player == comp.player:
+                side_comp = comps[comp_iter + 1]
+        comp_iter += 1
+
         comp_tuple = tuple(comp.characters)
+        if side_comp:
+            side_comp_tuple = tuple(side_comp.characters)
         # Check if the comp is used in the rooms that are being checked
         if comp.room not in rooms:
             continue
@@ -573,6 +587,8 @@ def used_comps(
                 total_self_comps += 1
             if len(comp_tuple) < 4:
                 #     lessFour.append(comp.player)
+                continue
+            if len(side_comp_tuple) < 4:
                 continue
 
             whale_comp = False
@@ -589,6 +605,26 @@ def used_comps(
                             > 0
                             # ) or (
                             #     whaleSigWeap and players[phase][comp.player].owned[comp_tuple[char]]["weapon"] in sigWeaps
+                        ):
+                            whale_comp = True
+                elif (
+                    CHARACTERS[side_comp_tuple[char]]["availability"] == "Limited 5*"
+                    and not whale_comp
+                    and side_comp
+                ):
+                    if side_comp.char_cons:
+                        if side_comp.char_cons[side_comp_tuple[char]] > 0:
+                            whale_comp = True
+                    elif (
+                        side_comp_tuple[char] in players[phase][side_comp.player].owned
+                    ):
+                        if (
+                            players[phase][side_comp.player].owned[
+                                side_comp_tuple[char]
+                            ]["cons"]
+                            > 0
+                            # ) or (
+                            #     whaleSigWeap and players[phase][side_comp.player].owned[comp_tuple[char]]["weapon"] in sigWeaps
                         ):
                             whale_comp = True
                 # if comp_tuple[char] not in total_char_comps:
@@ -632,8 +668,8 @@ def used_comps(
                 continue
             if "Ruan Mei" in comp_tuple or (pf_mode and not as_mode):
                 dps_count = 1
-            if not sustain_count:
-                sustainless += 1
+            # if not sustain_count:
+            #     sustainless += 1
             # if sustain_count > 1:
             #     for char in range (4):
             #         if comp_tuple[char] not in dual_sustain:
@@ -795,7 +831,7 @@ def used_comps(
     # print("Less than four: " + str(lessFour))
     # print("Less than four: " + str(len(lessFour)/total_comps))
     # print("Healerless: " + str(sustainless))
-    print("Healerless: " + str(sustainless / total_comps))
+    # print("Healerless: " + str(sustainless / total_comps))
     # for char in dual_sustain:
     #     if char in ["Jingliu", "Dan Heng • Imbibitor Lunae", "Kafka", "Jing Yuan", "Seele", "Blade", "Qingque"]:
     #         dual_percent = dual_sustain[char]/total_char_comps[char]
@@ -1606,7 +1642,7 @@ def duo_write(duos_dict, usage, filename, archetype, check_duo):
                 message="Finished executing comp_rates",
                 # displaying time
                 timeout=2,
-            )
+            )  # type: ignore
             # waiting time
             time.sleep(1)
         exit()
