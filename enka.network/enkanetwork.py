@@ -22,6 +22,9 @@ def input_thread(input_list):
 
 async def main() -> None:
     async with enka.HSRClient(enka.hsr.Language.ENGLISH) as client:
+        is_update = input("Update assets? (y/n) ")
+        if is_update == "y":
+            await client.update_assets()
         if not os.path.exists("results_real"):
             os.makedirs("results_real")
 
