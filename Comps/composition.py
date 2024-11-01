@@ -104,7 +104,7 @@ class Composition:
                 "Firefly",
                 "Jade",
                 "Feixiao",
-                "Moze",
+                "Rappa",
             ]:
                 self.dps.insert(0, character)
             elif character in [
@@ -128,6 +128,7 @@ class Composition:
                 self.subdps.insert(0, character)
             elif character in [
                 "Imaginary March 7th",
+                "Moze",
                 "Welt",
                 "Serval",
                 "Physical Trailblazer",
