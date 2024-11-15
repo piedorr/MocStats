@@ -1473,7 +1473,7 @@ def duo_write(duos_dict, usage, filename, archetype, check_duo):
             temp_duos += [
                 duos["char_" + str(i + 1)],
                 duos["app_rate_" + str(i + 1)],
-                round(duos["avg_round_" + str(i + 1)] / 1000, 2)
+                round(duos["avg_round_" + str(i + 1)] / 1000, 3 if pf_mode else 2)
                 if (pf_mode and not as_mode)
                 else duos["avg_round_" + str(i + 1)],
             ]
@@ -1861,7 +1861,7 @@ def char_usages_write(chars_dict, filename, floor, archetype):
                             float(out_chars_csv[i][value]) / 1000
                             if pf_mode
                             else float(out_chars_csv[i][value]),
-                            2,
+                            3 if pf_mode else 2,
                         )
                     )
                     if not as_mode
