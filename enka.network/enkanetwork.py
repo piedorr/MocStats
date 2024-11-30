@@ -252,9 +252,11 @@ async def main() -> None:
                         writer_chars.writerow(line_chars)
                     break
                 except enka.errors.PlayerDoesNotExistError:
-                    return print("Player does not exist.")
+                    print("Player does not exist.")
+                    break
                 except enka.errors.GameMaintenanceError:
-                    return print("Game is in maintenance.")
+                    print("Game is in maintenance.")
+                    break
                 except asyncio.exceptions.TimeoutError:
                     print("timeout")
                     time.sleep(1)
