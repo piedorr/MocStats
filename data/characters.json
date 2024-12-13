@@ -3382,5 +3382,57 @@
         "role": "Damage Dealer",
         "alt_name": null,
         "out_name": false
+    },
+    "Sunday": {
+        "id": "1313",
+        "name": "Sunday",
+        "tag": "sunday",
+        "rarity": 5,
+        "path": "Shaman",
+        "element": "Imaginary",
+        "max_sp": 130,
+        "ranks": [
+            "131301",
+            "131302",
+            "131303",
+            "131304",
+            "131305",
+            "131306"
+        ],
+        "skills": [
+            "131301",
+            "131302",
+            "131303",
+            "131304",
+            "131306",
+            "131307"
+        ],
+        "skill_trees": [
+            "1313001",
+            "1313002",
+            "1313003",
+            "1313004",
+            "1313007",
+            "1313101",
+            "1313102",
+            "1313103",
+            "1313201",
+            "1313202",
+            "1313203",
+            "1313204",
+            "1313205",
+            "1313206",
+            "1313207",
+            "1313208",
+            "1313209",
+            "1313210"
+        ],
+        "icon": "icon/character/1313.png",
+        "preview": "image/character_preview/1313.png",
+        "portrait": "image/character_portrait/1313.png",
+        "availability": "Limited 5*",
+        "role": "Amplifier",
+        "alt_name": null,
+        "out_name": false
     }
 }
