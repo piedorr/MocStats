@@ -611,6 +611,8 @@ def used_comps(
                     CHARACTERS[side_comp_tuple[char]]["availability"] == "Limited 5*"
                     and not whale_comp
                     and side_comp
+                    and not pf_mode
+                    and not as_mode
                 ):
                     if side_comp.char_cons:
                         if side_comp.char_cons[side_comp_tuple[char]] > 0:
