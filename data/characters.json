@@ -3434,5 +3434,58 @@
         "role": "Amplifier",
         "alt_name": null,
         "out_name": false
+    },
+    "Fugue": {
+        "id": "1225",
+        "name": "Fugue",
+        "tag": "fugue",
+        "rarity": 5,
+        "path": "Warlock",
+        "element": "Fire",
+        "max_sp": 130,
+        "ranks": [
+            "122501",
+            "122502",
+            "122503",
+            "122504",
+            "122505",
+            "122506"
+        ],
+        "skills": [
+            "122501",
+            "122502",
+            "122503",
+            "122504",
+            "122506",
+            "122507",
+            "122508"
+        ],
+        "skill_trees": [
+            "1225001",
+            "1225002",
+            "1225003",
+            "1225004",
+            "1225007",
+            "1225101",
+            "1225102",
+            "1225103",
+            "1225201",
+            "1225202",
+            "1225203",
+            "1225204",
+            "1225205",
+            "1225206",
+            "1225207",
+            "1225208",
+            "1225209",
+            "1225210"
+        ],
+        "icon": "icon/character/1225.png",
+        "preview": "image/character_preview/1225.png",
+        "portrait": "image/character_portrait/1225.png",
+        "availability": "Limited 5*",
+        "role": "Amplifier",
+        "alt_name": null,
+        "out_name": false
     }
 }

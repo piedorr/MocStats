@@ -152,6 +152,7 @@ class Composition:
                 "Imaginary Trailblazer",
                 "Jiaoqiu",
                 "Sunday",
+                "Fugue",
             ]:
                 self.anemo.append(character)
             elif character in [
