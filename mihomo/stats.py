@@ -1,4 +1,5 @@
 import sys
+from slugify import slugify
 
 sys.path.append("../Comps/")
 
@@ -32,6 +33,8 @@ with open("output1.csv", "r") as f:
     data = np.array(list(reader))
 with open("../data/light_cones.json", "r") as f:
     LIGHT_CONES = json.load(f)
+with open("../Comps/prydwen-slug.json") as slug_file:
+    slug = json.load(slug_file)
 
 # lastuid = ""
 # for i in data:
@@ -472,6 +475,9 @@ for char in stats:
         else:
             stats[char][value] = 0.00
 
+    stats[char]["name"] = slugify(stats[char]["name"])
+    if (stats[char]["name"] in slug):
+        stats[char]["name"] = slug[stats[char]["name"]]
     if stats[char]["name"] == CHARACTERS[iter_char]["char"]:
         del stats[char]["name"]
     else:

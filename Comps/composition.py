@@ -67,6 +67,7 @@ class Composition:
         self.healer = []
         self.dot = []
         self.fua = []
+        self.super_break = []
         len_element = {
             "Ice": 0,
             "Wind": 0,
@@ -199,6 +200,8 @@ class Composition:
                 "Moze",
             ]:
                 self.fua.append(character)
+            if character in ["Imaginary Trailblazer", "Fugue"]:
+                self.super_break.append(character)
 
             if CHARACTERS[character]["element"] == "Ice":
                 len_element["Ice"] += 1
@@ -261,7 +264,7 @@ class Composition:
             if len(self.healer) == 0:
                 archetype = " No Sustain"
                 self.alt_comp_name = self.characters[0] + " No Sustain"
-            elif "Imaginary Trailblazer" in self.characters:
+            elif len(self.super_break) >= 1:
                 archetype = " Super Break"
             elif len(self.dps) + len(self.subdps) > 1:
                 if (

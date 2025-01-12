@@ -1,7 +1,10 @@
 import json
 import re
 from comp_rates_config import (RECENT_PHASE, pf_mode, as_mode)
+from slugify import slugify
 
+with open("../Comps/prydwen-slug.json") as slug_file:
+    slug = json.load(slug_file)
 with open("phases.json") as phases_file:
     phases = json.load(phases_file)
 
@@ -43,6 +46,9 @@ stats_len = {
 }
 
 for char in moc_dict:
+    char["char"] = slugify(char["char"])
+    if (char["char"] in slug):
+        char["char"] = slug[char["char"]]
     uses_moc[char["char"]] = char.copy()
     uses_moc[char["char"]]["weapons"] = {}
     uses_moc[char["char"]]["artifacts"] = {}
@@ -79,6 +85,9 @@ for char in moc_dict:
                     stat_name = stat_name[:-1]
                 uses_moc[char["char"]][stat_name + "s"][char[stat]] = temp_dict
 for char in pf_dict:
+    char["char"] = slugify(char["char"])
+    if (char["char"] in slug):
+        char["char"] = slug[char["char"]]
     uses_pf[char["char"]] = char.copy()
     uses_pf[char["char"]]["weapons"] = {}
     uses_pf[char["char"]]["artifacts"] = {}
@@ -115,6 +124,9 @@ for char in pf_dict:
                     stat_name = stat_name[:-1]
                 uses_pf[char["char"]][stat_name + "s"][char[stat]] = temp_dict
 for char in as_dict:
+    char["char"] = slugify(char["char"])
+    if (char["char"] in slug):
+        char["char"] = slug[char["char"]]
     uses_as[char["char"]] = char.copy()
     uses_as[char["char"]]["weapons"] = {}
     uses_as[char["char"]]["artifacts"] = {}
@@ -152,6 +164,10 @@ for char in as_dict:
                 uses_as[char["char"]][stat_name + "s"][char[stat]] = temp_dict
 
 for char in CHARACTERS:
+    char = slugify(char)
+    char
+    if (char in slug):
+        char = slug[char]
     uses_temp = {
         "char": char,
         "app_rate_moc": uses_moc.get(char, {}).get("app_rate", 0),
