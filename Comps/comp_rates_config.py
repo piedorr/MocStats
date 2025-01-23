@@ -12,6 +12,7 @@ parser.add_argument("-d", "--duos", action="store_true")
 parser.add_argument("-t", "--top", action="store_true")
 parser.add_argument("-ct", "--comps_top", action="store_true")
 parser.add_argument("-w", "--whale", action="store_true")
+parser.add_argument("-f", "--f2p", action="store_true")
 
 # # Unused for now
 # parser.add_argument("-MOC", action = "store_true")
@@ -62,7 +63,7 @@ skip_self = False
 skip_random = False
 archetype = "all"
 whaleOnly = args.whale
-whaleSigWeap = False
+f2pOnly = args.f2p
 
 # Char infographics should be separated from overall comp rankings
 run_commands = [
@@ -77,7 +78,7 @@ run_commands = [
     # "Comp usage all stages",
 ]
 
-if args.whale or args.top:
+if args.whale or args.top or args.f2p:
     run_commands = [
         "Char usages 8 - 10",
         "Comp usage 8 - 10",
@@ -117,11 +118,18 @@ standWeaps = [
     "Moment of Victory",
     "Time Waits for No One",
     "Sleep Like the Dead",
+    "On the Fall of an Aeon",
+    "Cruising in the Stellar Sea",
+    "Texture of Memories",
+    "Solitary Healing",
+    "Eternal Calculus",
 ]
 for light_cone in LIGHT_CONES:
-    if light_cone[:2] == "23":
-        if LIGHT_CONES[light_cone]["name"] not in standWeaps:
-            sigWeaps += [LIGHT_CONES[light_cone]["name"]]
+    if (
+        LIGHT_CONES[light_cone]["rarity"] == 5
+        and LIGHT_CONES[light_cone]["name"] not in standWeaps
+    ):
+        sigWeaps += [LIGHT_CONES[light_cone]["name"]]
 
 alt_comps = "Character specific infographics" in run_commands
 if alt_comps and char_app_rate_threshold > app_rate_threshold:

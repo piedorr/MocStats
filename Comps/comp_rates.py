@@ -22,6 +22,8 @@ from comp_rates_config import (
     archetype,
     past_phase,
     whaleOnly,
+    f2pOnly,
+    sigWeaps,
     char_infographics,
     app_rate_threshold,
     app_rate_threshold_round,
@@ -30,6 +32,7 @@ from comp_rates_config import (
     duo_dict_len,
 )
 from archetypes import find_archetype, resetfind, findchars
+
 with open("prydwen-slug.json") as slug_file:
     slug = json.load(slug_file)
 
@@ -325,7 +328,7 @@ def main():
         usage = char_usages(
             all_players, archetype, past_phase, one_stage, filename="all", floor=True
         )
-        if not whaleOnly:
+        if not whaleOnly and not f2pOnly:
             duo_usages(
                 all_comps, all_players, usage, archetype, one_stage, check_duo=False
             )
@@ -406,7 +409,7 @@ def main():
                         "rarity": char_chambers[room][star_num][char]["rarity"],
                         "diff": char_chambers[room][star_num][char]["diff_rounds"],
                     }
-        if not whaleOnly:
+        if not whaleOnly and not f2pOnly:
             with open("../char_results/appearance.json", "w") as out_file:
                 out_file.write(json.dumps(appearances, indent=2))
             with open("../char_results/rounds.json", "w") as out_file:
@@ -466,7 +469,7 @@ def main():
                         "rarity": char_chambers[room][star_num][char]["rarity"],
                         "diff": char_chambers[room][star_num][char]["diff_rounds"],
                     }
-        if not whaleOnly:
+        if not whaleOnly and not f2pOnly:
             with open("../char_results/appearance_combine.json", "w") as out_file:
                 out_file.write(json.dumps(appearances, indent=2))
             with open("../char_results/rounds_combine.json", "w") as out_file:
@@ -491,7 +494,7 @@ def main():
         for room in three_stages:
             comp_usages(all_comps, all_players, [room], filename=room, offset=2)
 
-        if not whaleOnly:
+        if not whaleOnly and not f2pOnly:
             with open("../char_results/demographic.json", "w") as out_file:
                 out_file.write(json.dumps(sample_size, indent=2))
         cur_time = time.time()
@@ -513,6 +516,7 @@ def main():
         "Comp usage 8 - 10" in run_commands
         and "Comp usages for each stage" in run_commands
         and not whaleOnly
+        and not f2pOnly
     ):
         with open("../comp_results/json/all_comps.json", "w") as out_file:
             out_file.write(json.dumps(all_comps_json, indent=2))
@@ -557,6 +561,7 @@ def used_comps(
     total_comps = 0
     total_self_comps = 0
     whale_count = 0
+    f2p_count = 0
     # sustainless = 0
     # dual_sustain = {}
     # dual_dps = {}
@@ -595,6 +600,7 @@ def used_comps(
                 continue
 
             whale_comp = False
+            f2p_comp = True
             sustain_count = 0
             dps_count = 0
             for char in range(4):
@@ -602,14 +608,21 @@ def used_comps(
                     if comp.char_cons:
                         if comp.char_cons[comp_tuple[char]] > 0:
                             whale_comp = True
-                    elif comp_tuple[char] in players[phase][comp.player].owned:
+                    if comp_tuple[char] in players[phase][comp.player].owned:
                         if (
                             players[phase][comp.player].owned[comp_tuple[char]]["cons"]
                             > 0
                             # ) or (
-                            #     whaleSigWeap and players[phase][comp.player].owned[comp_tuple[char]]["weapon"] in sigWeaps
+                            #     players[phase][comp.player].owned[comp_tuple[char]]["weapon"] in sigWeaps
                         ):
                             whale_comp = True
+                        if (
+                            players[phase][comp.player].owned[comp_tuple[char]][
+                                "weapon"
+                            ]
+                            not in sigWeaps
+                        ):
+                            f2p_comp = False
                 elif (
                     CHARACTERS[side_comp_tuple[char]]["availability"] == "Limited 5*"
                     and not whale_comp
@@ -670,6 +683,10 @@ def used_comps(
             if whale_comp:
                 whale_count += 1
             if whaleOnly and not whale_comp:
+                continue
+            if f2p_comp:
+                f2p_count += 1
+            if f2pOnly and (not f2p_comp or whale_comp):
                 continue
             if "Ruan Mei" in comp_tuple or (pf_mode and not as_mode):
                 dps_count = 1
@@ -732,7 +749,7 @@ def used_comps(
                     comps_dict[star_threshold][comp_tuple]["whale_count"].add(
                         comp.player
                     )
-                if whale_comp == whaleOnly:
+                if whale_comp == whaleOnly and (not f2pOnly or f2p_comp):
                     for i in range(4):
                         if comp_tuple[i] in players[phase][comp.player].owned:
                             if (
@@ -1396,6 +1413,8 @@ def comp_usages_write(comps_dict, filename, floor, info_char, sort_app):
 
     if whaleOnly:
         filename = filename + "_C1"
+    elif f2pOnly:
+        filename = filename + "_E0S0"
 
     # if floor and not info_char:
     #     # csv_writer = csv.writer(open("../comp_results/f2p_app_" + filename + ".csv", 'w', newline=''))
@@ -1653,7 +1672,7 @@ def duo_write(duos_dict, usage, filename, archetype, check_duo):
             # waiting time
             time.sleep(1)
         exit()
-    
+
     for i in range(len(out_duos)):
         for duo_value in ["char"] + [f"char_{i}" for i in range(1, 31)]:
             if out_duos[i][duo_value]:
@@ -1841,6 +1860,8 @@ def char_usages_write(chars_dict, filename, floor, archetype):
         filename = filename + "_" + archetype
     if whaleOnly:
         filename = filename + "_C1"
+    elif f2pOnly:
+        filename = filename + "_E0S0"
 
     iterate_value_app = ["app_rate", "diff"]
     iterate_value_round = ["avg_round", "std_dev_round", "diff_rounds"]
@@ -1900,8 +1921,8 @@ def char_usages_write(chars_dict, filename, floor, archetype):
                 out_chars[i][value] = 99.99
                 if pf_mode:
                     out_chars[i][value] = 0
-        with open("../char_results/" + filename + ".json", "w") as out_file:
-            out_file.write(json.dumps(out_chars, indent=2))
+    with open("../char_results/" + filename + ".json", "w") as out_file:
+        out_file.write(json.dumps(out_chars, indent=2))
 
     csv_writer = csv.writer(
         open("../char_results/" + filename + ".csv", "w", newline="")

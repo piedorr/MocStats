@@ -5,7 +5,14 @@ import csv
 import statistics
 import warnings
 from scipy.stats import skew, trim_mean
-from comp_rates_config import RECENT_PHASE, pf_mode, as_mode, whaleOnly
+from comp_rates_config import (
+    RECENT_PHASE,
+    pf_mode,
+    as_mode,
+    whaleOnly,
+    f2pOnly,
+    sigWeaps,
+)
 
 warnings.filterwarnings("ignore", category=RuntimeWarning)
 if pf_mode:
@@ -186,6 +193,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                 total_battle += 1
                 # foundchar = resetfind()
                 whaleComp = False
+                f2pComp = True
                 sustainCount = 0
                 dpsCount = 0
                 foundDuo = []
@@ -199,9 +207,11 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                         if player.chambers[chamber].char_cons:
                             if player.chambers[chamber].char_cons[char] > 0:
                                 whaleComp = True
-                        elif char in player.owned:
+                        if char in player.owned:
                             if player.owned[char]["cons"] > 0:
                                 whaleComp = True
+                            if player.owned[char]["weapon"] in sigWeaps:
+                                f2pComp = False
                     if CHARACTERS[char]["role"] == "Sustain":
                         sustainCount += 1
                     if CHARACTERS[char]["role"] == "Damage Dealer":
@@ -234,7 +244,9 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                     sustainCount = 1
                 if "Ruan Mei" in player.chambers[chamber].characters:
                     dpsCount = 1
-                if whaleOnly and not whaleComp:
+                if (whaleOnly and not whaleComp) or (
+                    f2pOnly and (not f2pComp or whaleComp)
+                ):
                     continue
                 # dpsCount = 1
 
@@ -260,6 +272,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                         appears[star_num][char_name]["flat"] += 1
                         if (
                             whaleComp == whaleOnly
+                            and (not f2pOnly or f2pComp)
                             and (
                                 sustainCount == 1
                                 or char_name in ["Fire Trailblazer", "Ice March 7th"]
