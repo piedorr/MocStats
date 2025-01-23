@@ -106,6 +106,7 @@ class Composition:
                 "Jade",
                 "Feixiao",
                 "Rappa",
+                "The Herta",
             ]:
                 self.dps.insert(0, character)
             elif character in [
@@ -154,6 +155,7 @@ class Composition:
                 "Jiaoqiu",
                 "Sunday",
                 "Fugue",
+                "Ice Trailblazer",
             ]:
                 self.anemo.append(character)
             elif character in [

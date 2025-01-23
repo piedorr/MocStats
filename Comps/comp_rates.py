@@ -1366,7 +1366,7 @@ def comp_usages_write(comps_dict, filename, floor, info_char, sort_app):
                     out = name_filter(comp, mode="out")
                     for i in range(0, 4):
                         out[i] = slugify(out[i])
-                        if (out[i] in slug):
+                        if out[i] in slug:
                             out[i] = slug[out[i]]
                     out_json_dict = {
                         "char_one": out[0],
@@ -1656,9 +1656,9 @@ def duo_write(duos_dict, usage, filename, archetype, check_duo):
     
     for i in range(len(out_duos)):
         for duo_value in ["char"] + [f"char_{i}" for i in range(1, 31)]:
-            if (out_duos[i][duo_value]):
+            if out_duos[i][duo_value]:
                 out_duos[i][duo_value] = slugify(out_duos[i][duo_value])
-                if (out_duos[i][duo_value] in slug):
+                if out_duos[i][duo_value] in slug:
                     out_duos[i][duo_value] = slug[out_duos[i][duo_value]]
     with open("../char_results/" + filename + ".json", "w") as out_file:
         out_file.write(json.dumps(out_duos, indent=2))
@@ -1861,7 +1861,7 @@ def char_usages_write(chars_dict, filename, floor, archetype):
     for i in range(len(out_chars)):
         # for i in range(7):
         out_chars[i]["char"] = slugify(out_chars[i]["char"])
-        if (out_chars[i]["char"] in slug):
+        if out_chars[i]["char"] in slug:
             out_chars[i]["char"] = slug[out_chars[i]["char"]]
         for value in iterate_value_app:
             if out_chars[i][value][:-1].replace(".", "").replace("-", "").isnumeric():
@@ -1900,7 +1900,6 @@ def char_usages_write(chars_dict, filename, floor, archetype):
                 out_chars[i][value] = 99.99
                 if pf_mode:
                     out_chars[i][value] = 0
-    if not whaleOnly:
         with open("../char_results/" + filename + ".json", "w") as out_file:
             out_file.write(json.dumps(out_chars, indent=2))
 

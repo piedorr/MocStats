@@ -1,6 +1,6 @@
 import json
 import re
-from comp_rates_config import (RECENT_PHASE, pf_mode, as_mode)
+from comp_rates_config import RECENT_PHASE, pf_mode, as_mode
 from slugify import slugify
 
 with open("../Comps/prydwen-slug.json") as slug_file:
@@ -30,6 +30,12 @@ with open("../char_results/" + pf_phase + "_pf/all2.json") as stats:
     pf_dict = json.load(stats)
 with open("../char_results/" + as_phase + "_as/all2.json") as stats:
     as_dict = json.load(stats)
+with open("../char_results/" + moc_phase + "/all_C1.json") as stats:
+    moc_dict_e1 = json.load(stats)
+with open("../char_results/" + pf_phase + "_pf/all_C1.json") as stats:
+    pf_dict_e1 = json.load(stats)
+with open("../char_results/" + as_phase + "_as/all_C1.json") as stats:
+    as_dict_e1 = json.load(stats)
 
 uses = []
 uses_moc = {}
@@ -47,7 +53,7 @@ stats_len = {
 
 for char in moc_dict:
     char["char"] = slugify(char["char"])
-    if (char["char"] in slug):
+    if char["char"] in slug:
         char["char"] = slug[char["char"]]
     uses_moc[char["char"]] = char.copy()
     uses_moc[char["char"]]["weapons"] = {}
@@ -86,7 +92,7 @@ for char in moc_dict:
                 uses_moc[char["char"]][stat_name + "s"][char[stat]] = temp_dict
 for char in pf_dict:
     char["char"] = slugify(char["char"])
-    if (char["char"] in slug):
+    if char["char"] in slug:
         char["char"] = slug[char["char"]]
     uses_pf[char["char"]] = char.copy()
     uses_pf[char["char"]]["weapons"] = {}
@@ -125,7 +131,7 @@ for char in pf_dict:
                 uses_pf[char["char"]][stat_name + "s"][char[stat]] = temp_dict
 for char in as_dict:
     char["char"] = slugify(char["char"])
-    if (char["char"] in slug):
+    if char["char"] in slug:
         char["char"] = slug[char["char"]]
     uses_as[char["char"]] = char.copy()
     uses_as[char["char"]]["weapons"] = {}
@@ -166,20 +172,32 @@ for char in as_dict:
 for char in CHARACTERS:
     char = slugify(char)
     char
-    if (char in slug):
+    if char in slug:
         char = slug[char]
     uses_temp = {
         "char": char,
         "app_rate_moc": uses_moc.get(char, {}).get("app_rate", 0),
         "avg_round_moc": uses_moc.get(char, {}).get("avg_round", 0),
+        "avg_round_moc_e1": next((x for x in moc_dict_e1 if x["char"] == char), None)[
+            "avg_round"
+        ]
+        or 0,
         "sample_moc": uses_moc.get(char, {}).get("sample", 0),
         "sample_size_players_moc": uses_moc.get(char, {}).get("sample_size_players", 0),
         "app_rate_pf": uses_pf.get(char, {}).get("app_rate", 0),
         "avg_round_pf": uses_pf.get(char, {}).get("avg_round", 0),
+        "avg_round_pf_e1": next((x for x in pf_dict_e1 if x["char"] == char), None)[
+            "avg_round"
+        ]
+        or 0,
         "sample_pf": uses_pf.get(char, {}).get("sample", 0),
         "sample_size_players_pf": uses_pf.get(char, {}).get("sample_size_players", 0),
         "app_rate_as": uses_as.get(char, {}).get("app_rate", 0),
         "avg_round_as": uses_as.get(char, {}).get("avg_round", 0),
+        "avg_round_as_e1": next((x for x in as_dict_e1 if x["char"] == char), None)[
+            "avg_round"
+        ]
+        or 0,
         "sample_as": uses_as.get(char, {}).get("sample", 0),
         "sample_size_players_as": uses_as.get(char, {}).get("sample_size_players", 0),
         "app_0": 0,
