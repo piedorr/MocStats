@@ -126,7 +126,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
         valid_duo_dps = []
 
     for star_num in range(0, 5):
-        total_battle = 0
+        all_uids = set()
         appears[star_num] = {}
         players_chars[star_num] = {}
         comp_error = False
@@ -190,7 +190,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                     continue
                 if star_num != 4 and player.chambers[chamber].star_num != star_num:
                     continue
-                total_battle += 1
+                all_uids.add(player.player)
                 # foundchar = resetfind()
                 whaleComp = False
                 f2pComp = True
@@ -468,7 +468,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
             df_spiral.to_csv("compositions.csv", index=False)
             raise ValueError("There are missing comps from character data.")
 
-        total = total_battle * offset / 200.0
+        total = len(all_uids) / 100.0
         all_rounds = {}
         for char in appears[star_num]:
             all_rounds[char] = {}
