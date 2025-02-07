@@ -40,8 +40,8 @@ global as_mode
 # if as: pf_mode = True
 pf_mode = True
 as_mode = True
-char_infographics = ["Sushang", "Hook", "Natasha", "Dr. Ratio", "Kafka"]
-char_infographics = char_infographics[3]
+run_chars_name = ["The Herta"]
+char_infographics = run_chars_name[0]
 
 # threshold for comps in character infographics, non-inclusive
 global char_app_rate_threshold

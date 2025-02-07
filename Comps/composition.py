@@ -228,6 +228,9 @@ class Composition:
             self.subdps.remove("Black Swan")
             self.anemo.insert(0, "Black Swan")
 
+        if (not self.dps or not self.subdps) and "Lingsha" in self.healer:
+            self.dps.insert(0, "Lingsha")
+
         """Name structure creator.
         """
         # comp_names = {

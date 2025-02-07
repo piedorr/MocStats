@@ -1689,14 +1689,9 @@ def char_usages_write(chars_dict, filename, floor, archetype):
     weap_len = 10
     arti_len = 10
     planar_len = 5
-    if pf_mode:
-        chars_dict = dict(
-            sorted(chars_dict.items(), key=lambda t: t[1]["round"], reverse=True)
-        )
-    else:
-        chars_dict = dict(
-            sorted(chars_dict.items(), key=lambda t: t[1]["round"], reverse=False)
-        )
+    chars_dict = dict(
+        sorted(chars_dict.items(), key=lambda t: t[1]["app"], reverse=True)
+    )
     for char in chars_dict:
         out_chars_append = {
             "char": char,

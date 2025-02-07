@@ -3,7 +3,7 @@ import json
 import os.path
 import sys
 sys.path.append('../Comps/')
-from comp_rates_config import RECENT_PHASE, skew_num, pf_mode, as_mode
+from comp_rates_config import RECENT_PHASE, skew_num, pf_mode, as_mode, run_chars_name
 
 from subprocess import call
 
@@ -23,8 +23,7 @@ check_char_name = "Yanqing"
 check_stats = []
 
 # stat.py
-run_all_chars = True
-run_chars_name = ["Firefly", "Ruan Mei", "Gallagher", "Misha", "Xueyi"]
+run_all_chars = False
 
 
 phase_num = RECENT_PHASE
