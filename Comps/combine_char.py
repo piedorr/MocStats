@@ -180,36 +180,36 @@ for char in CHARACTERS:
     char
     if char in slug:
         char = slug[char]
-    moc_dict_e1_char = next((x for x in moc_dict_e1 if x["char"] == char), None)
-    moc_dict_s0_char = next((x for x in moc_dict_s0 if x["char"] == char), None)
-    pf_dict_e1_char = next((x for x in pf_dict_e1 if x["char"] == char), None)
-    pf_dict_s0_char = next((x for x in pf_dict_s0 if x["char"] == char), None)
-    as_dict_e1_char = next((x for x in as_dict_e1 if x["char"] == char), None)
-    as_dict_s0_char = next((x for x in as_dict_s0 if x["char"] == char), None)
+    moc_dict_e1_char = next((x for x in moc_dict_e1 if x["char"] == char), {})
+    moc_dict_s0_char = next((x for x in moc_dict_s0 if x["char"] == char), {})
+    pf_dict_e1_char = next((x for x in pf_dict_e1 if x["char"] == char), {})
+    pf_dict_s0_char = next((x for x in pf_dict_s0 if x["char"] == char), {})
+    as_dict_e1_char = next((x for x in as_dict_e1 if x["char"] == char), {})
+    as_dict_s0_char = next((x for x in as_dict_s0 if x["char"] == char), {})
     uses_temp = {
         "char": char,
         "app_rate_moc": uses_moc.get(char, {}).get("app_rate", 0),
-        "app_rate_moc_e1": moc_dict_e1_char["app_rate"] or 0,
-        "app_rate_moc_s0": moc_dict_s0_char["app_rate"] or 0,
+        "app_rate_moc_e1": moc_dict_e1_char.get("app_rate", 0),
+        "app_rate_moc_s0": moc_dict_s0_char.get("app_rate", 0),
         "avg_round_moc": uses_moc.get(char, {}).get("avg_round", 99.99),
-        "avg_round_moc_e1": moc_dict_e1_char["avg_round"] or 99.99,
-        "avg_round_moc_s0": moc_dict_s0_char["avg_round"] or 99.99,
+        "avg_round_moc_e1": moc_dict_e1_char.get("avg_round", 99.99),
+        "avg_round_moc_s0": moc_dict_s0_char.get("avg_round", 99.99),
         "sample_moc": uses_moc.get(char, {}).get("sample", 0),
         "sample_size_players_moc": uses_moc.get(char, {}).get("sample_size_players", 0),
         "app_rate_pf": uses_pf.get(char, {}).get("app_rate", 0),
-        "app_rate_pf_e1": pf_dict_e1_char["app_rate"] or 0,
-        "app_rate_pf_s0": pf_dict_s0_char["app_rate"] or 0,
+        "app_rate_pf_e1": pf_dict_e1_char.get("app_rate", 0),
+        "app_rate_pf_s0": pf_dict_s0_char.get("app_rate", 0),
         "avg_round_pf": uses_pf.get(char, {}).get("avg_round", 0),
-        "avg_round_pf_e1": pf_dict_e1_char["avg_round"] or 0,
-        "avg_round_pf_s0": pf_dict_s0_char["avg_round"] or 0,
+        "avg_round_pf_e1": pf_dict_e1_char.get("avg_round", 0),
+        "avg_round_pf_s0": pf_dict_s0_char.get("avg_round", 0),
         "sample_pf": uses_pf.get(char, {}).get("sample", 0),
         "sample_size_players_pf": uses_pf.get(char, {}).get("sample_size_players", 0),
         "app_rate_as": uses_as.get(char, {}).get("app_rate", 0),
-        "app_rate_as_e1": as_dict_e1_char["app_rate"] or 0,
-        "app_rate_as_s0": as_dict_s0_char["app_rate"] or 0,
+        "app_rate_as_e1": as_dict_e1_char.get("app_rate", 0),
+        "app_rate_as_s0": as_dict_s0_char.get("app_rate", 0),
         "avg_round_as": uses_as.get(char, {}).get("avg_round", 0),
-        "avg_round_as_e1": as_dict_e1_char["avg_round"] or 0,
-        "avg_round_as_s0": as_dict_s0_char["avg_round"] or 0,
+        "avg_round_as_e1": as_dict_e1_char.get("avg_round", 0),
+        "avg_round_as_s0": as_dict_s0_char.get("avg_round", 0),
         "sample_as": uses_as.get(char, {}).get("sample", 0),
         "sample_size_players_as": uses_as.get(char, {}).get("sample_size_players", 0),
         "app_0": 0,
@@ -405,5 +405,11 @@ for char in CHARACTERS:
         )
     uses.append(uses_temp)
 
-with open("../char_results/builds.json", "w") as out_file:
+phase_num = RECENT_PHASE
+if as_mode:
+    phase_num = phase_num + "_as"
+elif pf_mode:
+    phase_num = phase_num + "_pf"
+
+with open("../char_results/" + phase_num + "/builds.json", "w") as out_file:
     out_file.write(json.dumps(uses, indent=2))

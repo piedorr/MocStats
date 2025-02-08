@@ -107,6 +107,7 @@ class Composition:
                 "Feixiao",
                 "Rappa",
                 "The Herta",
+                "Aglaea",
             ]:
                 self.dps.insert(0, character)
             elif character in [

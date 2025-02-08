@@ -3599,5 +3599,61 @@
         "role": "Amplifier",
         "alt_name": null,
         "out_name": false
+    },
+    "Aglaea": {
+        "id": "1402",
+        "name": "Aglaea",
+        "tag": "aglaea",
+        "rarity": 5,
+        "path": "Memory",
+        "element": "Thunder",
+        "max_sp": 350,
+        "ranks": [
+            "140201",
+            "140202",
+            "140203",
+            "140204",
+            "140205",
+            "140206"
+        ],
+        "skills": [
+            "140201",
+            "140202",
+            "140203",
+            "140204",
+            "140206",
+            "140207",
+            "140208",
+            "140209"
+        ],
+        "skill_trees": [
+            "1402001",
+            "1402002",
+            "1402003",
+            "1402004",
+            "1402007",
+            "1402101",
+            "1402102",
+            "1402103",
+            "1402201",
+            "1402202",
+            "1402203",
+            "1402204",
+            "1402205",
+            "1402206",
+            "1402207",
+            "1402208",
+            "1402209",
+            "1402210",
+            "1402301",
+            "1402302"
+        ],
+        "icon": "icon/character/1402.png",
+        "preview": "image/character_preview/1402.png",
+        "portrait": "image/character_portrait/1402.png",
+        "availability": "Limited 5*",
+        "role": "Damage Dealer",
+        "alt_name": null,
+        "out_name": false
     }
 }

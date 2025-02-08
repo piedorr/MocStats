@@ -3,10 +3,14 @@ from os import listdir, path, mkdir
 import shutil
 
 sys.path.append("../Comps/")
-from comp_rates_config import past_phase
+from comp_rates_config import RECENT_PHASE, as_mode, pf_mode
 
-past_phase_pf = past_phase
-past_phase = past_phase.replace("_as",'').replace("_pf",'')
+if as_mode:
+    RECENT_PHASE_PF = RECENT_PHASE + "_as"
+elif pf_mode:
+    RECENT_PHASE_PF = RECENT_PHASE + "_pf"
+else:
+    RECENT_PHASE_PF = RECENT_PHASE
 
 source_dirs = [
     "../char_results",
@@ -18,13 +22,13 @@ source_dirs = [
 
 for source_dir in source_dirs:
     if source_dir == "../comp_results/json":
-        target_dir = "../comp_results/" + past_phase_pf + "/json"
+        target_dir = "../comp_results/" + RECENT_PHASE_PF + "/json"
     elif source_dir == "../mihomo":
         target_dir = "../mihomo/results_real"
     elif source_dir == "../mihomo/results_real":
-        target_dir = source_dir + "/" + past_phase
+        target_dir = source_dir + "/" + RECENT_PHASE
     else:
-        target_dir = source_dir + "/" + past_phase_pf
+        target_dir = source_dir + "/" + RECENT_PHASE_PF
 
     file_names = listdir(source_dir)
     if not path.exists(target_dir):
