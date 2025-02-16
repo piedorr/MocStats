@@ -30,15 +30,15 @@ with open(str(os.getenv("REPO_PATH")) + "/data/light_cones.json") as char_file:
     LIGHT_CONES = json.load(char_file)
 
 # don't add underscore, i.e. 2.2.1"_pf"
-RECENT_PHASE = "3.0.2"
+RECENT_PHASE = "2.7.3"
 
 # if no past phase, leave blank
 # add underscore, i.e. 2.2.1"_pf"
-past_phase = "2.7.2_pf"
+past_phase = "2.6.3"
 global pf_mode
 global as_mode
 # if as: pf_mode = True
-pf_mode = True
+pf_mode = False
 as_mode = False
 
 run_all_chars = False
