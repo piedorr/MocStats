@@ -40,8 +40,10 @@ global as_mode
 # if as: pf_mode = True
 pf_mode = True
 as_mode = False
-run_chars_name = ["The Herta"]
-char_infographics = run_chars_name[0]
+
+run_all_chars = False
+run_chars_name = ["Aglaea", "Boothill", "Robin", "Silver Wolf"]
+char_infographics = run_chars_name[1]
 
 # threshold for comps in character infographics, non-inclusive
 global char_app_rate_threshold

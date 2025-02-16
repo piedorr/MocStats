@@ -1280,13 +1280,7 @@ def comp_usages_write(comps_dict, filename, floor, info_char, sort_app):
                                 comps_dict[star_threshold][comp]["app_rate"]
                             )
                             + "%",
-                            "avg_round": str(
-                                round(
-                                    comps_dict[star_threshold][comp]["round"] / 1000, 2
-                                )
-                                if (pf_mode and not as_mode)
-                                else comps_dict[star_threshold][comp]["round"]
-                            ),
+                            "avg_round": str(comps_dict[star_threshold][comp]["round"]),
                             # "own_rate": str(comps_dict[star_threshold][comp]["own_rate"]) + "%",
                             # "usage_rate": str(comps_dict[star_threshold][comp]["usage_rate"]) + "%"
                         }
@@ -1501,9 +1495,7 @@ def duo_write(duos_dict, usage, filename, archetype, check_duo):
             temp_duos += [
                 duos["char_" + str(i + 1)],
                 duos["app_rate_" + str(i + 1)],
-                round(duos["avg_round_" + str(i + 1)] / 1000, 3 if pf_mode else 2)
-                if (pf_mode and not as_mode)
-                else duos["avg_round_" + str(i + 1)],
+                duos["avg_round_" + str(i + 1)],
             ]
         csv_writer.writerow(temp_duos)
 
@@ -1890,18 +1882,6 @@ def char_usages_write(chars_dict, filename, floor, archetype):
                     round(float(out_chars[i][value]))
                     if pf_mode
                     else float(out_chars[i][value])
-                )
-                out_chars_csv[i][value] = (
-                    str(
-                        round(
-                            float(out_chars_csv[i][value]) / 1000
-                            if pf_mode
-                            else float(out_chars_csv[i][value]),
-                            3 if pf_mode else 2,
-                        )
-                    )
-                    if not as_mode
-                    else out_chars_csv[i][value]
                 )
             else:
                 out_chars[i][value] = 99.99

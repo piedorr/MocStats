@@ -2,10 +2,16 @@ import csv
 import json
 import os.path
 import sys
-sys.path.append('../Comps/')
-from comp_rates_config import RECENT_PHASE, skew_num, pf_mode, as_mode, run_chars_name
 
-from subprocess import call
+sys.path.append("../Comps/")
+from comp_rates_config import (
+    RECENT_PHASE,
+    skew_num,
+    pf_mode,
+    as_mode,
+    run_chars_name,
+    run_all_chars,
+)
 
 skip_self = False
 skip_random = False
@@ -22,9 +28,6 @@ check_char_name = "Yanqing"
 # check_stats = ["cvalue"]
 check_stats = []
 
-# stat.py
-run_all_chars = False
-
 
 phase_num = RECENT_PHASE
 if as_mode:
@@ -32,10 +35,10 @@ if as_mode:
 elif pf_mode:
     phase_num = phase_num + "_pf"
 
-f = open('../data/relics.json')
+f = open("../data/relics.json")
 relics_data = json.load(f)
 
-f = open('../data/characters.json')
+f = open("../data/characters.json")
 characters = json.load(f)
 
 trailblazer_ids = []
@@ -45,8 +48,8 @@ for char_name, char in characters.items():
             trailblazer_ids.append(trailblazer_id)
 
 if os.path.exists("../char_results/uids.csv"):
-    with open("../char_results/uids.csv", 'r', encoding='UTF8') as f:
-        reader = csv.reader(f, delimiter=',')
+    with open("../char_results/uids.csv", "r", encoding="UTF8") as f:
+        reader = csv.reader(f, delimiter=",")
         uids = list(reader)
         uids = [int(uid[0]) for uid in uids]
         uids = list(dict.fromkeys(uids))

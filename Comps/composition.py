@@ -220,6 +220,10 @@ class Composition:
                 len_element["Lightning"] += 1
             if CHARACTERS[character]["element"] == "Physical":
                 len_element["Physical"] += 1
+
+        if (not self.dps and not self.subdps) and "Lingsha" in self.healer:
+            self.dps.insert(0, "Lingsha")
+
         self.fivecount = len(fives)
         self.characters = self.dps + self.subdps + self.anemo + self.healer
 
@@ -228,9 +232,6 @@ class Composition:
         ) and "Black Swan" in self.subdps:
             self.subdps.remove("Black Swan")
             self.anemo.insert(0, "Black Swan")
-
-        if (not self.dps or not self.subdps) and "Lingsha" in self.healer:
-            self.dps.insert(0, "Lingsha")
 
         """Name structure creator.
         """
