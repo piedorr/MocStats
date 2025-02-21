@@ -1234,8 +1234,7 @@ def comp_usages_write(comps_dict, filename, floor, info_char, sort_app):
                 # unless if it's used for a character's infographic
                 if (
                     (
-                        ((pf_mode and not as_mode) or ("No Sustain" not in comp_name))
-                        and comp_name not in comp_names
+                        comp_name not in comp_names
                         and comp_name not in dual_comp_names
                         and dual_comp_name not in comp_names
                         and alt_comp_name not in comp_names
