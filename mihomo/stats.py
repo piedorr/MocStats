@@ -1,7 +1,4 @@
-import sys
 from slugify import slugify
-
-sys.path.append("../Comps/")
 
 import os
 import numpy as np
@@ -16,6 +13,7 @@ from scipy.stats import skew
 from pynput import keyboard
 from itertools import chain
 from nohomo_config import (
+    RECENT_PHASE,
     phase_num,
     pf_mode,
     skip_random,
@@ -27,7 +25,7 @@ from nohomo_config import (
     print_chart,
 )
 
-with open("output1.csv", "r") as f:
+with open("results_real/" + RECENT_PHASE + "/output1.csv", "r") as f:
     reader = csv.reader(f, delimiter=",")
     headers = next(reader)
     data = np.array(list(reader))
@@ -476,7 +474,7 @@ for char in stats:
             stats[char][value] = 0.00
 
     stats[char]["name"] = slugify(stats[char]["name"])
-    if (stats[char]["name"] in slug):
+    if stats[char]["name"] in slug:
         stats[char]["name"] = slug[stats[char]["name"]]
     if stats[char]["name"] == CHARACTERS[iter_char]["char"]:
         del stats[char]["name"]

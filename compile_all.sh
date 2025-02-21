@@ -6,10 +6,10 @@ cd mihomo
 python combine.py
 cd ../Comps
 python combine_raw_chars.py
-python hash.py &
 python comp_rates.py -w &
 python comp_rates.py -f &
-python comp_rates.py -a
+python comp_rates.py -a &
+python hash.py
 
 cd ../mihomo
 python stats.py
