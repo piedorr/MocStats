@@ -14,10 +14,23 @@ parser.add_argument("-ct", "--comps_top", action="store_true")
 parser.add_argument("-w", "--whale", action="store_true")
 parser.add_argument("-f", "--f2p", action="store_true")
 
+parser.add_argument(
+    "-moc",
+    "--memory_of_chaos",
+    action="store_true",
+)
+parser.add_argument(
+    "-pf",
+    "--pure_fic",
+    action="store_true",
+)
+parser.add_argument(
+    "-as",
+    "--apoc_shadow",
+    action="store_true",
+)
+
 # # Unused for now
-# parser.add_argument("-MOC", action = "store_true")
-# parser.add_argument("-PF", action = "store_true")
-# parser.add_argument("-AS", action = "store_true")
 # parser.add_argument("-p", "--past")
 # parser.add_argument("-r", "--recent")
 
@@ -39,8 +52,21 @@ past_phase = "3.0.3"
 global pf_mode
 global as_mode
 # if as: pf_mode = True
-pf_mode = True
-as_mode = False
+pf_mode = args.pure_fic or args.apoc_shadow
+as_mode = args.apoc_shadow
+
+if not pf_mode:
+    pf_mode = False
+if not as_mode:
+    as_mode = False
+
+suffix = ""
+if as_mode:
+    suffix = "_as"
+elif pf_mode:
+    suffix = "_pf"
+RECENT_PHASE_PF = RECENT_PHASE + suffix
+past_phase = past_phase + suffix
 
 run_all_chars = False
 run_chars_name = ["Aglaea", "Boothill", "Robin", "Silver Wolf"]
