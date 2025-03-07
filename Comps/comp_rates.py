@@ -1557,6 +1557,7 @@ def char_usages_write(chars_dict, filename, floor, archetype):
         out_chars_append = {
             "char": char,
             "app_rate": str(chars_dict[char]["app"]) + "%",
+            "app_rate_e0": str(chars_dict[char]["app_exclude"]) + "%",
             "avg_round": str(chars_dict[char]["round"]),
             # "prev_avg_round": str(prev_round.get(char, 99.99)),
             "std_dev_round": str(chars_dict[char]["std_dev_round"]),
@@ -1568,7 +1569,7 @@ def char_usages_write(chars_dict, filename, floor, archetype):
             "diff": str(chars_dict[char]["diff"]) + "%",
             "diff_rounds": str(chars_dict[char]["diff_rounds"]),
         }
-        for i in ["app_rate", "diff", "diff_rounds"]:
+        for i in ["app_rate", "app_rate_e0", "diff", "diff_rounds"]:
             if out_chars_append[i] == "-%":
                 out_chars_append[i] = "-"
         if list(chars_dict[char]["weapons"]):
@@ -1720,7 +1721,7 @@ def char_usages_write(chars_dict, filename, floor, archetype):
     elif f2pOnly:
         filename = filename + "_E0S0"
 
-    iterate_value_app = ["app_rate", "diff"]
+    iterate_value_app = ["app_rate", "app_rate_e0", "diff"]
     iterate_value_round = ["avg_round", "std_dev_round", "q1_round", "diff_rounds"]
     iterate_name_arti = []
     for i in range(weap_len):

@@ -136,6 +136,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
             players_chars[star_num][character] = set()
             appears[star_num][character] = {
                 "flat": 0,
+                "flat_exclude": 0,
                 "round": {
                     "1": [],
                     "2": [],
@@ -152,6 +153,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                 },
                 "owned": 0,
                 "percent": 0.00,
+                "percent_exclude": 0.00,
                 "avg_round": 0.00,
                 "std_dev_round": 0.00,
                 "q1_round": 0.00,
@@ -242,6 +244,9 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                             dpsCount = 1
 
                         appears[star_num][char_name]["flat"] += 1
+                        if whaleComp == whaleOnly and (not f2pOnly or f2pComp):
+                            appears[star_num][char_name]["flat_exclude"] += 1
+
                         if (
                             whaleComp == whaleOnly
                             and (not f2pOnly or f2pComp)
@@ -420,9 +425,12 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                 appears[star_num][char]["percent"] = round(
                     appears[star_num][char]["flat"] / total, 2
                 )
+                appears[star_num][char]["percent_exclude"] = round(
+                    appears[star_num][char]["flat_exclude"] / total, 2
+                )
             else:
                 appears[star_num][char]["percent"] = 0.00
-            if appears[star_num][char]["flat"] >= 8:
+            if appears[star_num][char]["flat_exclude"] >= 8:
                 avg_round = []
                 std_dev_round = []
                 q1_round = []
@@ -921,6 +929,8 @@ def usages(owns, appears, past_phase, filename, chambers=ROOMS, offset=1):
             uses[star_num][char] = {
                 "app": appears[star_num][char]["percent"],
                 "app_flat": appears[star_num][char]["flat"],
+                "app_exclude": appears[star_num][char]["percent_exclude"],
+                "app_flat_exclude": appears[star_num][char]["flat_exclude"],
                 "round": appears[star_num][char]["avg_round"],
                 "std_dev_round": appears[star_num][char]["std_dev_round"],
                 "q1_round": appears[star_num][char]["q1_round"],

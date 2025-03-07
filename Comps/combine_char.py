@@ -189,6 +189,7 @@ for char in CHARACTERS:
     uses_temp = {
         "char": char,
         "app_rate_moc": uses_moc.get(char, {}).get("app_rate", 0),
+        "app_rate_moc_e0s1": uses_moc.get(char, {}).get("app_rate_e0", 0),
         "app_rate_moc_e1": moc_dict_e1_char.get("app_rate", 0),
         "app_rate_moc_s0": moc_dict_s0_char.get("app_rate", 0),
         "avg_round_moc": uses_moc.get(char, {}).get("avg_round", 99.99),
@@ -197,6 +198,7 @@ for char in CHARACTERS:
         "sample_moc": uses_moc.get(char, {}).get("sample", 0),
         "sample_size_players_moc": uses_moc.get(char, {}).get("sample_size_players", 0),
         "app_rate_pf": uses_pf.get(char, {}).get("app_rate", 0),
+        "app_rate_pf_e0s1": uses_pf.get(char, {}).get("app_rate_e0", 0),
         "app_rate_pf_e1": pf_dict_e1_char.get("app_rate", 0),
         "app_rate_pf_s0": pf_dict_s0_char.get("app_rate", 0),
         "avg_round_pf": uses_pf.get(char, {}).get("avg_round", 0),
@@ -205,6 +207,7 @@ for char in CHARACTERS:
         "sample_pf": uses_pf.get(char, {}).get("sample", 0),
         "sample_size_players_pf": uses_pf.get(char, {}).get("sample_size_players", 0),
         "app_rate_as": uses_as.get(char, {}).get("app_rate", 0),
+        "app_rate_as_e0s1": uses_as.get(char, {}).get("app_rate_e0", 0),
         "app_rate_as_e1": as_dict_e1_char.get("app_rate", 0),
         "app_rate_as_s0": as_dict_s0_char.get("app_rate", 0),
         "avg_round_as": uses_as.get(char, {}).get("avg_round", 0),
