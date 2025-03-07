@@ -5,6 +5,7 @@ import csv
 import statistics
 import warnings
 from scipy.stats import skew, trim_mean
+from percentile import calculate_percentile
 from comp_rates_config import (
     RECENT_PHASE,
     pf_mode,
@@ -153,6 +154,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                 "percent": 0.00,
                 "avg_round": 0.00,
                 "std_dev_round": 0.00,
+                "q1_round": 0.00,
                 "weap_freq": {},
                 "arti_freq": {},
                 "planar_freq": {},
@@ -423,6 +425,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
             if appears[star_num][char]["flat"] >= 8:
                 avg_round = []
                 std_dev_round = []
+                q1_round = []
                 uses_room = {}
                 for room_num in range(1, 13):
                     if room_num >= 10:
@@ -442,6 +445,12 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                             std_dev_round.append(
                                 statistics.stdev(
                                     appears[star_num][char]["round"][str(room_num)]
+                                )
+                            )
+                            q1_round.append(
+                                calculate_percentile(
+                                    appears[star_num][char]["round"][str(room_num)],
+                                    25,
                                 )
                             )
                             skewness = skew(
@@ -464,6 +473,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                                 )
                         else:
                             std_dev_round.append(0)
+                            q1_round.append(0)
                             avg_round.append(
                                 statistics.mean(
                                     appears[star_num][char]["round"][str(room_num)]
@@ -496,6 +506,9 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                     appears[star_num][char]["std_dev_round"] = round(
                         statistics.mean(std_dev_round), 2
                     )
+                    appears[star_num][char]["q1_round"] = round(
+                        statistics.mean(q1_round), 2
+                    )
                     if pf_mode:
                         appears[star_num][char]["avg_round"] = round(
                             appears[star_num][char]["avg_round"]
@@ -503,14 +516,21 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                         appears[star_num][char]["std_dev_round"] = round(
                             appears[star_num][char]["std_dev_round"]
                         )
+                        appears[star_num][char]["q1_round"] = round(
+                            appears[star_num][char]["q1_round"]
+                        )
                 else:
                     appears[star_num][char]["avg_round"] = 99.99
+                    appears[star_num][char]["q1_round"] = 99.99
                     if pf_mode:
                         appears[star_num][char]["avg_round"] = 0
+                        appears[star_num][char]["q1_round"] = 0
             else:
                 appears[star_num][char]["avg_round"] = 99.99
+                appears[star_num][char]["q1_round"] = 99.99
                 if pf_mode:
                     appears[star_num][char]["avg_round"] = 0
+                    appears[star_num][char]["q1_round"] = 0
 
             # if (chambers == ["1-1", "1-2", "2-1", "2-2", "3-1", "3-2", "4-1", "4-2", "5-1", "5-2", "6-1", "6-2", "7-1", "7-2", "8-1", "8-2", "9-1", "9-2", "10-1", "10-2", "11-1", "11-2", "12-1", "12-2"]):
             appears[star_num][char]["sample"] = len(players_chars[star_num][char])
@@ -903,6 +923,7 @@ def usages(owns, appears, past_phase, filename, chambers=ROOMS, offset=1):
                 "app_flat": appears[star_num][char]["flat"],
                 "round": appears[star_num][char]["avg_round"],
                 "std_dev_round": appears[star_num][char]["std_dev_round"],
+                "q1_round": appears[star_num][char]["q1_round"],
                 # "own": owns[star_num][char]["percent"],
                 "own": 0,
                 "usage": 0,
