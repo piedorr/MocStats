@@ -8,7 +8,6 @@ from scipy.stats import skew, trim_mean
 from comp_rates_config import (
     RECENT_PHASE,
     pf_mode,
-    as_mode,
     whaleOnly,
     f2pOnly,
     sigWeaps,
@@ -216,43 +215,14 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                         sustainCount += 1
                     if CHARACTERS[char]["role"] == "Damage Dealer":
                         dpsCount += 1
-                        if char == "Topaz & Numby":
-                            for char_fua in [
-                                "Dr. Ratio",
-                                "Clara",
-                                "Yunli",
-                                "Jing Yuan",
-                                "Himeko",
-                                "Kafka",
-                                "Blade",
-                                "Herta",
-                                "Xueyi",
-                                "Jade",
-                                "Feixiao",
-                                "Moze",
-                            ]:
-                                if char_fua in player.chambers[chamber].characters:
-                                    dpsCount -= 1
-                                    break
-                    if "Kafka" not in player.chambers[chamber].characters:
-                        if char in ["Sampo", "Black Swan", "Luka", "Guinaifen"]:
-                            dpsCount += 1
-                    elif char == "Serval":
-                        dpsCount -= 1
 
-                if sustainCount == 0 and ((pf_mode and not as_mode) or whaleOnly):
-                    sustainCount = 1
-                if "Ruan Mei" in player.chambers[chamber].characters:
-                    dpsCount = 1
                 if (whaleOnly and not whaleComp) or (
                     f2pOnly and (not f2pComp or whaleComp)
                 ):
                     continue
-                # dpsCount = 1
 
                 # findchars(char, foundchar)
                 # if find_archetype(foundchar):
-                # if player.chambers[chamber].characters == ['Kafka', 'Sampo', 'Silver Wolf', 'Bailu']:
                 if True:
                     for char in player.chambers[chamber].characters:
                         # to print the amount of players using a character, for char infographics
@@ -273,16 +243,13 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                         if (
                             whaleComp == whaleOnly
                             and (not f2pOnly or f2pComp)
-                            and (
-                                sustainCount == 1
-                                or char_name in ["Fire Trailblazer", "Ice March 7th"]
-                            )
-                            and dpsCount == 1
+                            and (sustainCount <= 1)
                         ):
                             if CHARACTERS[char]["availability"] == "Limited 5*":
                                 appears[star_num][char_name]["cons_freq"][0]["round"][
                                     list(str(chamber).split("-"))[0]
                                 ].append(player.chambers[chamber].round_num)
+
                             appears[star_num][char_name]["round"][
                                 list(str(chamber).split("-"))[0]
                             ].append(player.chambers[chamber].round_num)
@@ -306,10 +273,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                         appears[star_num][char_name]["cons_freq"][
                             player.owned[char]["cons"]
                         ]["flat"] += 1
-                        if (
-                            sustainCount == 1
-                            or char_name in ["Fire Trailblazer", "Ice March 7th"]
-                        ) and dpsCount == 1:
+                        if sustainCount <= 1:
                             if CHARACTERS[char]["availability"] == "Limited 5*":
                                 if player.owned[char]["cons"] != 0:
                                     appears[star_num][char_name]["cons_freq"][
@@ -356,15 +320,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                             appears[star_num][char_name]["weap_freq"][
                                 player.owned[char]["weapon"]
                             ]["flat"] += 1
-                            if (
-                                not whaleComp
-                                and (
-                                    sustainCount == 1
-                                    or char_name
-                                    in ["Fire Trailblazer", "Ice March 7th"]
-                                )
-                                and dpsCount == 1
-                            ):
+                            if not whaleComp and (sustainCount <= 1):
                                 appears[star_num][char_name]["weap_freq"][
                                     player.owned[char]["weapon"]
                                 ]["round"][list(str(chamber).split("-"))[0]].append(
@@ -400,15 +356,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                             appears[star_num][char_name]["arti_freq"][
                                 player.owned[char]["artifacts"]
                             ]["flat"] += 1
-                            if (
-                                not whaleComp
-                                and (
-                                    sustainCount == 1
-                                    or char_name
-                                    in ["Fire Trailblazer", "Ice March 7th"]
-                                )
-                                and dpsCount == 1
-                            ):
+                            if not whaleComp and (sustainCount <= 1):
                                 appears[star_num][char_name]["arti_freq"][
                                     player.owned[char]["artifacts"]
                                 ]["round"][list(str(chamber).split("-"))[0]].append(
@@ -444,15 +392,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                             appears[star_num][char_name]["planar_freq"][
                                 player.owned[char]["planars"]
                             ]["flat"] += 1
-                            if (
-                                not whaleComp
-                                and (
-                                    sustainCount == 1
-                                    or char_name
-                                    in ["Fire Trailblazer", "Ice March 7th"]
-                                )
-                                and dpsCount == 1
-                            ):
+                            if not whaleComp and (sustainCount <= 1):
                                 appears[star_num][char_name]["planar_freq"][
                                     player.owned[char]["planars"]
                                 ]["round"][list(str(chamber).split("-"))[0]].append(

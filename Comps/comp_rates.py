@@ -562,8 +562,6 @@ def used_comps(
     total_self_comps = 0
     whale_count = 0
     f2p_count = 0
-    # sustainless = 0
-    # dual_sustain = {}
     # dual_dps = {}
     # total_char_comps = {}
 
@@ -652,29 +650,6 @@ def used_comps(
                     sustain_count += 1
                 if CHARACTERS[comp_tuple[char]]["role"] == "Damage Dealer":
                     dps_count += 1
-                    if comp_tuple[char] == "Topaz & Numby":
-                        for char_fua in range(4):
-                            if comp_tuple[char_fua] in [
-                                "Dr. Ratio",
-                                "Clara",
-                                "Yunli",
-                                "Jing Yuan",
-                                "Himeko",
-                                "Kafka",
-                                "Blade",
-                                "Herta",
-                                "Xueyi",
-                                "Jade",
-                                "Feixiao",
-                                "Moze",
-                            ]:
-                                dps_count -= 1
-                                break
-                if "Kafka" not in comp_tuple:
-                    if comp_tuple[char] in ["Black Swan", "Sampo", "Luka", "Guinaifen"]:
-                        dps_count += 1
-                elif comp_tuple[char] == "Serval":
-                    dps_count -= 1
                 for duo_dps in valid_duo_dps:
                     if set(duo_dps).issubset(comp_tuple):
                         dps_count = 1
@@ -688,20 +663,6 @@ def used_comps(
                 f2p_count += 1
             if f2pOnly and (not f2p_comp or whale_comp):
                 continue
-            if "Ruan Mei" in comp_tuple or (pf_mode and not as_mode):
-                dps_count = 1
-            # if not sustain_count:
-            #     sustainless += 1
-            # if sustain_count > 1:
-            #     for char in range (4):
-            #         if comp_tuple[char] not in dual_sustain:
-            #             dual_sustain[comp_tuple[char]] = 0
-            #         dual_sustain[comp_tuple[char]] += 1
-            # if dps_count > 1:
-            #     for char in range (4):
-            #         if comp_tuple[char] not in dual_dps:
-            #             dual_dps[comp_tuple[char]] = 0
-            #         dual_dps[comp_tuple[char]] += 1
 
             for star_threshold in range(0, 5):
                 if star_threshold != 4 and comp.star_num != star_threshold:
@@ -816,7 +777,7 @@ def used_comps(
                     comps_dict[star_threshold][comp_tuple]["round_num"][
                         list(str(comp.room).split("-"))[0]
                     ].append(comp.round_num)
-                    if star_threshold == 4 and sustain_count == 1 and dps_count == 1:
+                    if star_threshold == 4 and sustain_count <= 1:
                         avg_round_stage[list(str(comp.room).split("-"))[0]].append(
                             comp.round_num
                         )
@@ -849,25 +810,6 @@ def used_comps(
             sample_size[chamber_num[0]]["random"] = total_comps - total_self_comps
         # if total_comps == 0:
         #     del sample_size[chamber_num[0]]
-    # print(error_uids)
-    # print("Less than four: " + str(lessFour))
-    # print("Less than four: " + str(len(lessFour)/total_comps))
-    # print("Healerless: " + str(sustainless))
-    # print("Healerless: " + str(sustainless / total_comps))
-    # for char in dual_sustain:
-    #     if char in ["Jingliu", "Dan Heng • Imbibitor Lunae", "Kafka", "Jing Yuan", "Seele", "Blade", "Qingque"]:
-    #         dual_percent = dual_sustain[char]/total_char_comps[char]
-    #         if dual_percent > 0.5:
-    #             print("Char: " + str(char))
-    #             print("    Dual Sustain: " + str(dual_percent))
-    #             print()
-    # for char in dual_dps:
-    #     dual_percent = dual_dps[char]/total_char_comps[char]
-    #     if char in ["Jingliu", "Dan Heng • Imbibitor Lunae", "Kafka", "Jing Yuan", "Seele", "Blade", "Qingque", "Himeko", "Sushang"]:
-    #     # if dual_percent > 0.5:
-    #         print("Char: " + str(char))
-    #         print("    Dual DPS: " + str(dual_percent))
-    #         print()
     if whaleOnly:
         print("Whale percentage: " + str(whale_count / total_comps))
     return comps_dict
@@ -1033,8 +975,6 @@ def used_duos(players, comps, rooms, usage, archetype, check_duo, phase=RECENT_P
                 sustain_count += 1
         if not find_archetype(foundchar):
             continue
-        if sustain_count < 1 and (pf_mode and not as_mode):
-            sustain_count = 1
 
         # Permutate the duos, for example if Ganyu and Xiangling are used,
         # two duos are used, Ganyu/Xiangling and Xiangling/Ganyu
@@ -1069,23 +1009,10 @@ def used_duos(players, comps, rooms, usage, archetype, check_duo, phase=RECENT_P
 
             if is_triple_dps and check_duo:
                 continue
-            if not whale_comp:
-                if CHARACTERS[duo[0]]["role"] == "Sustain":
-                    if (
-                        sustain_count == 1
-                        or duo[0] in ["Fire Trailblazer", "Ice March 7th"]
-                        or CHARACTERS[duo[1]]["role"] == "Sustain"
-                    ):
-                        duos_dict[duo]["round_num"][
-                            list(str(comp.room).split("-"))[0]
-                        ].append(comp.round_num)
-                elif sustain_count == 1 or duo[1] in [
-                    "Fire Trailblazer",
-                    "Ice March 7th",
-                ]:
-                    duos_dict[duo]["round_num"][
-                        list(str(comp.room).split("-"))[0]
-                    ].append(comp.round_num)
+            if (not whale_comp) and sustain_count <= 1:
+                duos_dict[duo]["round_num"][list(str(comp.room).split("-"))[0]].append(
+                    comp.round_num
+                )
 
     sorted_duos = sorted(
         duos_dict.items(), key=lambda t: t[1]["app_flat"], reverse=True
@@ -1538,66 +1465,9 @@ def duo_write(duos_dict, usage, filename, archetype, check_duo):
         csv_writer = csv.writer(open("../char_results/duo_check.csv", "w", newline=""))
         for char_i in char_names:
             for char_j in char_names:
-                is_char_i_dps = CHARACTERS[char_i][
-                    "role"
-                ] == "Damage Dealer" or char_i in [
-                    "Sampo",
-                    "Black Swan",
-                    "Luka",
-                    "Guinaifen",
-                ]
-                is_char_j_dps = CHARACTERS[char_j][
-                    "role"
-                ] == "Damage Dealer" or char_j in [
-                    "Sampo",
-                    "Black Swan",
-                    "Luka",
-                    "Guinaifen",
-                ]
+                is_char_i_dps = CHARACTERS[char_i]["role"] == "Damage Dealer"
+                is_char_j_dps = CHARACTERS[char_j]["role"] == "Damage Dealer"
                 if is_char_i_dps and is_char_j_dps:
-                    if (
-                        char_i in ["Black Swan", "Serval", "Sampo", "Luka", "Guinaifen"]
-                        and char_j in ["Black Swan", "Kafka"]
-                        or char_j
-                        in ["Black Swan", "Serval", "Sampo", "Luka", "Guinaifen"]
-                        and char_i in ["Black Swan", "Kafka"]
-                    ):
-                        continue
-                    if (
-                        char_i
-                        in [
-                            "Dr. Ratio",
-                            "Clara",
-                            "Yunli",
-                            "Jing Yuan",
-                            "Himeko",
-                            "Kafka",
-                            "Blade",
-                            "Herta",
-                            "Xueyi",
-                            "Jade",
-                            "Feixiao",
-                            "Moze",
-                        ]
-                        and char_j == "Topaz & Numby"
-                        or char_j
-                        in [
-                            "Dr. Ratio",
-                            "Clara",
-                            "Yunli",
-                            "Jing Yuan",
-                            "Himeko",
-                            "Kafka",
-                            "Blade",
-                            "Herta",
-                            "Xueyi",
-                            "Jade",
-                            "Feixiao",
-                            "Moze",
-                        ]
-                        and char_i == "Topaz & Numby"
-                    ):
-                        continue
                     if char_j not in out_duos_check:
                         continue
                     if char_i not in out_duos_check:
