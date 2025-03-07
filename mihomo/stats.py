@@ -49,7 +49,7 @@ reader = csv.reader(f, delimiter=",")
 headers = next(reader)
 spiral = list(reader)
 
-with open("../char_results/all.csv", "r") as f:
+with open("../char_results/" + phase_num + "/all.csv", "r") as f:
     reader = csv.reader(f, delimiter=",")
     headers = next(reader)
     build = np.array(list(reader))
@@ -452,11 +452,11 @@ for char in chars:
 
 temp_stats = []
 iter_char = 0
-with open("../char_results/all.json") as char_file:
+with open("../char_results/" + phase_num + "/all.json") as char_file:
     CHARACTERS = json.load(char_file)
-with open("../char_results/appearance_combine.json") as app_char_file:
+with open("../char_results/" + phase_num + "/appearance_combine.json") as app_char_file:
     APP = json.load(app_char_file)
-with open("../char_results/rounds_combine.json") as round_char_file:
+with open("../char_results/" + phase_num + "/rounds_combine.json") as round_char_file:
     ROUND = json.load(round_char_file)
 for char in stats:
     for i in chain(range(11, 19), range(20, 28)):
