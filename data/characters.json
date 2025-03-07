@@ -3655,5 +3655,57 @@
         "role": "Damage Dealer",
         "alt_name": null,
         "out_name": false
+    },
+    "Tribbie": {
+        "id": "1403",
+        "name": "Tribbie",
+        "tag": "tribbie",
+        "rarity": 5,
+        "path": "Shaman",
+        "element": "Quantum",
+        "max_sp": 120,
+        "ranks": [
+            "140301",
+            "140302",
+            "140303",
+            "140304",
+            "140305",
+            "140306"
+        ],
+        "skills": [
+            "140301",
+            "140302",
+            "140303",
+            "140304",
+            "140306",
+            "140307"
+        ],
+        "skill_trees": [
+            "1403001",
+            "1403002",
+            "1403003",
+            "1403004",
+            "1403007",
+            "1403101",
+            "1403102",
+            "1403103",
+            "1403201",
+            "1403202",
+            "1403203",
+            "1403204",
+            "1403205",
+            "1403206",
+            "1403207",
+            "1403208",
+            "1403209",
+            "1403210"
+        ],
+        "icon": "icon/character/1403.png",
+        "preview": "image/character_preview/1403.png",
+        "portrait": "image/character_portrait/1403.png",
+        "availability": "Limited 5*",
+        "role": "Amplifier",
+        "alt_name": null,
+        "out_name": false
     }
 }
