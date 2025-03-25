@@ -3707,5 +3707,59 @@
         "role": "Amplifier",
         "alt_name": null,
         "out_name": false
+    },
+    "Mydei": {
+        "id": "1404",
+        "name": "Mydei",
+        "tag": "mydei",
+        "rarity": 5,
+        "path": "Warrior",
+        "element": "Imaginary",
+        "max_sp": 160,
+        "ranks": [
+            "140401",
+            "140402",
+            "140403",
+            "140404",
+            "140405",
+            "140406"
+        ],
+        "skills": [
+            "140401",
+            "140402",
+            "140403",
+            "140404",
+            "140406",
+            "140407",
+            "140409",
+            "140411"
+        ],
+        "skill_trees": [
+            "1404001",
+            "1404002",
+            "1404003",
+            "1404004",
+            "1404007",
+            "1404101",
+            "1404102",
+            "1404103",
+            "1404201",
+            "1404202",
+            "1404203",
+            "1404204",
+            "1404205",
+            "1404206",
+            "1404207",
+            "1404208",
+            "1404209",
+            "1404210"
+        ],
+        "icon": "icon/character/1404.png",
+        "preview": "image/character_preview/1404.png",
+        "portrait": "image/character_portrait/1404.png",
+        "availability": "Limited 5*",
+        "role": "Damage Dealer",
+        "alt_name": null,
+        "out_name": false
     }
 }

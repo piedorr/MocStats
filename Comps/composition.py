@@ -108,6 +108,7 @@ class Composition:
                 "Rappa",
                 "The Herta",
                 "Aglaea",
+                "Mydei",
             ]:
                 self.dps.insert(0, character)
             elif character in [
