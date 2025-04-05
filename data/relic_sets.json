@@ -15,8 +15,7 @@
             ],
             []
         ],
-        "icon": "icon/relic/101.png",
-        "guide_overview": []
+        "icon": "icon/relic/101.png"
     },
     "102": {
         "id": "102",
@@ -39,8 +38,7 @@
                 }
             ]
         ],
-        "icon": "icon/relic/102.png",
-        "guide_overview": []
+        "icon": "icon/relic/102.png"
     },
     "103": {
         "id": "103",
@@ -58,8 +56,7 @@
             ],
             []
         ],
-        "icon": "icon/relic/103.png",
-        "guide_overview": []
+        "icon": "icon/relic/103.png"
     },
     "104": {
         "id": "104",
@@ -77,8 +74,7 @@
             ],
             []
         ],
-        "icon": "icon/relic/104.png",
-        "guide_overview": []
+        "icon": "icon/relic/104.png"
     },
     "105": {
         "id": "105",
@@ -96,8 +92,7 @@
             ],
             []
         ],
-        "icon": "icon/relic/105.png",
-        "guide_overview": []
+        "icon": "icon/relic/105.png"
     },
     "106": {
         "id": "106",
@@ -110,8 +105,7 @@
             [],
             []
         ],
-        "icon": "icon/relic/106.png",
-        "guide_overview": []
+        "icon": "icon/relic/106.png"
     },
     "107": {
         "id": "107",
@@ -129,8 +123,7 @@
             ],
             []
         ],
-        "icon": "icon/relic/107.png",
-        "guide_overview": []
+        "icon": "icon/relic/107.png"
     },
     "108": {
         "id": "108",
@@ -148,8 +141,7 @@
             ],
             []
         ],
-        "icon": "icon/relic/108.png",
-        "guide_overview": []
+        "icon": "icon/relic/108.png"
     },
     "109": {
         "id": "109",
@@ -167,8 +159,7 @@
             ],
             []
         ],
-        "icon": "icon/relic/109.png",
-        "guide_overview": []
+        "icon": "icon/relic/109.png"
     },
     "110": {
         "id": "110",
@@ -186,8 +177,7 @@
             ],
             []
         ],
-        "icon": "icon/relic/110.png",
-        "guide_overview": []
+        "icon": "icon/relic/110.png"
     },
     "111": {
         "id": "111",
@@ -210,8 +200,7 @@
                 }
             ]
         ],
-        "icon": "icon/relic/111.png",
-        "guide_overview": []
+        "icon": "icon/relic/111.png"
     },
     "112": {
         "id": "112",
@@ -229,8 +218,7 @@
             ],
             []
         ],
-        "icon": "icon/relic/112.png",
-        "guide_overview": []
+        "icon": "icon/relic/112.png"
     },
     "113": {
         "id": "113",
@@ -248,8 +236,7 @@
             ],
             []
         ],
-        "icon": "icon/relic/113.png",
-        "guide_overview": []
+        "icon": "icon/relic/113.png"
     },
     "114": {
         "id": "114",
@@ -267,8 +254,7 @@
             ],
             []
         ],
-        "icon": "icon/relic/114.png",
-        "guide_overview": []
+        "icon": "icon/relic/114.png"
     },
     "115": {
         "id": "115",
@@ -281,8 +267,7 @@
             [],
             []
         ],
-        "icon": "icon/relic/115.png",
-        "guide_overview": []
+        "icon": "icon/relic/115.png"
     },
     "116": {
         "id": "116",
@@ -300,8 +285,7 @@
             ],
             []
         ],
-        "icon": "icon/relic/116.png",
-        "guide_overview": []
+        "icon": "icon/relic/116.png"
     },
     "117": {
         "id": "117",
@@ -319,8 +303,7 @@
                 }
             ]
         ],
-        "icon": "icon/relic/117.png",
-        "guide_overview": []
+        "icon": "icon/relic/117.png"
     },
     "118": {
         "id": "118",
@@ -338,8 +321,7 @@
             ],
             []
         ],
-        "icon": "icon/relic/118.png",
-        "guide_overview": []
+        "icon": "icon/relic/118.png"
     },
     "119": {
         "id": "119",
@@ -357,8 +339,7 @@
             ],
             []
         ],
-        "icon": "icon/relic/119.png",
-        "guide_overview": []
+        "icon": "icon/relic/119.png"
     },
     "120": {
         "id": "120",
@@ -381,8 +362,7 @@
                 }
             ]
         ],
-        "icon": "icon/relic/120.png",
-        "guide_overview": []
+        "icon": "icon/relic/120.png"
     },
     "121": {
         "id": "121",
@@ -400,8 +380,7 @@
             ],
             []
         ],
-        "icon": "icon/relic/121.png",
-        "guide_overview": []
+        "icon": "icon/relic/121.png"
     },
     "122": {
         "id": "122",
@@ -419,8 +398,7 @@
             ],
             []
         ],
-        "icon": "icon/relic/122.png",
-        "guide_overview": []
+        "icon": "icon/relic/122.png"
     },
     "123": {
         "id": "123",
@@ -438,8 +416,7 @@
             ],
             []
         ],
-        "icon": "icon/relic/123.png",
-        "guide_overview": []
+        "icon": "icon/relic/123.png"
     },
     "124": {
         "id": "124",
@@ -462,8 +439,7 @@
                 }
             ]
         ],
-        "icon": "icon/relic/124.png",
-        "guide_overview": []
+        "icon": "icon/relic/124.png"
     },
     "301": {
         "id": "301",
@@ -479,8 +455,7 @@
                 }
             ]
         ],
-        "icon": "icon/relic/301.png",
-        "guide_overview": []
+        "icon": "icon/relic/301.png"
     },
     "302": {
         "id": "302",
@@ -496,8 +471,7 @@
                 }
             ]
         ],
-        "icon": "icon/relic/302.png",
-        "guide_overview": []
+        "icon": "icon/relic/302.png"
     },
     "303": {
         "id": "303",
@@ -513,8 +487,7 @@
                 }
             ]
         ],
-        "icon": "icon/relic/303.png",
-        "guide_overview": []
+        "icon": "icon/relic/303.png"
     },
     "304": {
         "id": "304",
@@ -530,8 +503,7 @@
                 }
             ]
         ],
-        "icon": "icon/relic/304.png",
-        "guide_overview": []
+        "icon": "icon/relic/304.png"
     },
     "305": {
         "id": "305",
@@ -547,8 +519,7 @@
                 }
             ]
         ],
-        "icon": "icon/relic/305.png",
-        "guide_overview": []
+        "icon": "icon/relic/305.png"
     },
     "306": {
         "id": "306",
@@ -564,8 +535,7 @@
                 }
             ]
         ],
-        "icon": "icon/relic/306.png",
-        "guide_overview": []
+        "icon": "icon/relic/306.png"
     },
     "307": {
         "id": "307",
@@ -581,8 +551,7 @@
                 }
             ]
         ],
-        "icon": "icon/relic/307.png",
-        "guide_overview": []
+        "icon": "icon/relic/307.png"
     },
     "308": {
         "id": "308",
@@ -598,8 +567,7 @@
                 }
             ]
         ],
-        "icon": "icon/relic/308.png",
-        "guide_overview": []
+        "icon": "icon/relic/308.png"
     },
     "309": {
         "id": "309",
@@ -615,8 +583,7 @@
                 }
             ]
         ],
-        "icon": "icon/relic/309.png",
-        "guide_overview": []
+        "icon": "icon/relic/309.png"
     },
     "310": {
         "id": "310",
@@ -632,8 +599,7 @@
                 }
             ]
         ],
-        "icon": "icon/relic/310.png",
-        "guide_overview": []
+        "icon": "icon/relic/310.png"
     },
     "311": {
         "id": "311",
@@ -649,8 +615,7 @@
                 }
             ]
         ],
-        "icon": "icon/relic/311.png",
-        "guide_overview": []
+        "icon": "icon/relic/311.png"
     },
     "312": {
         "id": "312",
@@ -666,8 +631,7 @@
                 }
             ]
         ],
-        "icon": "icon/relic/312.png",
-        "guide_overview": []
+        "icon": "icon/relic/312.png"
     },
     "313": {
         "id": "313",
@@ -683,8 +647,7 @@
                 }
             ]
         ],
-        "icon": "icon/relic/313.png",
-        "guide_overview": []
+        "icon": "icon/relic/313.png"
     },
     "314": {
         "id": "314",
@@ -700,8 +663,7 @@
                 }
             ]
         ],
-        "icon": "icon/relic/314.png",
-        "guide_overview": []
+        "icon": "icon/relic/314.png"
     },
     "315": {
         "id": "315",
@@ -712,8 +674,7 @@
         "properties": [
             []
         ],
-        "icon": "icon/relic/315.png",
-        "guide_overview": []
+        "icon": "icon/relic/315.png"
     },
     "316": {
         "id": "316",
@@ -729,8 +690,7 @@
                 }
             ]
         ],
-        "icon": "icon/relic/316.png",
-        "guide_overview": []
+        "icon": "icon/relic/316.png"
     },
     "317": {
         "id": "317",
@@ -746,8 +706,7 @@
                 }
             ]
         ],
-        "icon": "icon/relic/317.png",
-        "guide_overview": []
+        "icon": "icon/relic/317.png"
     },
     "318": {
         "id": "318",
@@ -763,8 +722,7 @@
                 }
             ]
         ],
-        "icon": "icon/relic/318.png",
-        "guide_overview": []
+        "icon": "icon/relic/318.png"
     },
     "319": {
         "id": "319",
@@ -780,8 +738,7 @@
                 }
             ]
         ],
-        "icon": "icon/relic/319.png",
-        "guide_overview": []
+        "icon": "icon/relic/319.png"
     },
     "320": {
         "id": "320",
@@ -797,7 +754,6 @@
                 }
             ]
         ],
-        "icon": "icon/relic/320.png",
-        "guide_overview": []
+        "icon": "icon/relic/320.png"
     }
 }

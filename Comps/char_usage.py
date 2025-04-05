@@ -458,7 +458,7 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                             q1_round.append(
                                 calculate_percentile(
                                     appears[star_num][char]["round"][str(room_num)],
-                                    25,
+                                    75 if pf_mode else 25,
                                 )
                             )
                             skewness = skew(

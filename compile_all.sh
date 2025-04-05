@@ -44,6 +44,7 @@ python stats.py
 cd ../Comps
 python move.py
 python combine_char.py
+python copyfiles.py
 
 echo ""
 echo "PF stats"
@@ -52,6 +53,7 @@ python stats.py -pf
 cd ../Comps
 python move.py -pf
 python combine_char.py -pf
+python copyfiles.py -pf
 
 echo ""
 echo "AS stats"
@@ -60,3 +62,4 @@ python stats.py -as
 cd ../Comps
 python move.py -as
 python combine_char.py -as
+python copyfiles.py -as

@@ -1,8 +1,5 @@
-import sys
 from os import listdir, path, mkdir
 import shutil
-
-sys.path.append("../Comps/")
 from comp_rates_config import RECENT_PHASE, as_mode, pf_mode
 
 suffix = ""
