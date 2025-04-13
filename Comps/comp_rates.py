@@ -567,22 +567,31 @@ def used_comps(
 
     # For storing the prev and next comps
     comp_iter = 0
-    side_comp = None
     for comp in comps:
-        if comp_iter - 1 > len(comps):
-            if comps[comp_iter - 1].player == comp.player:
+        # Check if the comp is used in the rooms that are being checked
+        if comp.room not in rooms:
+            continue
+
+        side_comp = None
+        if comp_iter - 1 >= 0:
+            if (
+                comps[comp_iter - 1].player == comp.player
+                and comps[comp_iter - 1].room == comp.room
+            ):
                 side_comp = comps[comp_iter - 1]
-        elif not side_comp and comp_iter + 1 < len(comps):
-            if comps[comp_iter + 1].player == comp.player:
+        if not side_comp and comp_iter + 1 < len(comps):
+            if (
+                comps[comp_iter + 1].player == comp.player
+                and comps[comp_iter + 1].room == comp.room
+            ):
                 side_comp = comps[comp_iter + 1]
         comp_iter += 1
 
         comp_tuple = tuple(comp.characters)
         if side_comp:
             side_comp_tuple = tuple(side_comp.characters)
-        # Check if the comp is used in the rooms that are being checked
-        if comp.room not in rooms:
-            continue
+        else:
+            side_comp_tuple = None
 
         foundchar = resetfind()
         for char in comp.characters:
@@ -594,7 +603,7 @@ def used_comps(
             if len(comp_tuple) < 4:
                 #     lessFour.append(comp.player)
                 continue
-            if len(side_comp_tuple) < 4:
+            if side_comp_tuple and len(side_comp_tuple) < 4:
                 continue
 
             whale_comp = False
@@ -621,8 +630,10 @@ def used_comps(
                             not in sigWeaps
                         ):
                             f2p_comp = False
-                elif (
-                    CHARACTERS[side_comp_tuple[char]]["availability"] == "Limited 5*"
+                if (
+                    side_comp_tuple
+                    and CHARACTERS[side_comp_tuple[char]]["availability"]
+                    == "Limited 5*"
                     and not whale_comp
                     and side_comp
                     and not pf_mode
@@ -654,6 +665,15 @@ def used_comps(
                     if set(duo_dps).issubset(comp_tuple):
                         dps_count = 1
                         break
+            # check_comp_tuple = (
+            #     "Firefly",
+            #     "Fugue",
+            #     "Imaginary Trailblazer",
+            #     "Ruan Mei",
+            # )
+            # if check_comp_tuple == comp_tuple and side_comp and whale_comp:
+            #     print(comp.player)
+            #     print(side_comp.player)
 
             if whale_comp:
                 whale_count += 1
@@ -921,12 +941,14 @@ def rank_usages(comps_dict, rooms, owns_offset=1):
             # comps_dict[star_threshold][comp]["round_rank"] = rounds.index(comps_dict[star_threshold][comp]["round"]) + 1
 
     # # To check the list of weapons and artifacts for a comp
-    # comp_tuples = [('Kafka', 'Asta', 'Tingyun', 'Luocha'), ('Kafka', 'Asta', 'Tingyun', 'Bailu')]
+    # comp_tuples = [
+    #     ("Firefly", "Fugue", "Imaginary Trailblazer", "Ruan Mei"),
+    #     # ("Firefly", "Imaginary Trailblazer", "Ruan Mei", "Gallagher"),
+    # ]
     # for comp_tuple in comp_tuples:
     #     print(comp_tuple)
+    #     print("   round_num: " + str(comps_dict[4][comp_tuple]["round_num"][str(12)]))
     #     print("   App: " + str(comps_dict[4][comp_tuple]["app_rate"]))
-    #     print("   Own: " + str(comps_dict[4][comp_tuple]["own_rate"]))
-    #     print("   Usage: " + str(comps_dict[4][comp_tuple]["usage_rate"]))
     #     print("   5* Count: " + str(comps_dict[4][comp_tuple]["5* count"]))
     #     if comps_dict[4][comp_tuple]["5* count"] <= 1:
     #         print("   F2P App: " + str(comps_dict[4][comp_tuple]["app_rate"]))
@@ -934,13 +956,28 @@ def rank_usages(comps_dict, rooms, owns_offset=1):
     #     for i in comp_tuple:
     #         print(i + ": ")
     #         for weapon in comps_dict[4][comp_tuple][i]["weapon"]:
-    #             print("   " + weapon + ": " + str(comps_dict[4][comp_tuple][i]["weapon"][weapon]))
+    #             print(
+    #                 "   "
+    #                 + weapon
+    #                 + ": "
+    #                 + str(comps_dict[4][comp_tuple][i]["weapon"][weapon])
+    #             )
     #         print()
     #         for artifacts in comps_dict[4][comp_tuple][i]["artifacts"]:
-    #             print("   " + artifacts + ": " + str(comps_dict[4][comp_tuple][i]["artifacts"][artifacts]))
+    #             print(
+    #                 "   "
+    #                 + artifacts
+    #                 + ": "
+    #                 + str(comps_dict[4][comp_tuple][i]["artifacts"][artifacts])
+    #             )
     #         print()
     #         for cons in comps_dict[4][comp_tuple][i]["cons"]:
-    #             print("   " + cons + ": " + str(comps_dict[4][comp_tuple][i]["cons"][cons]))
+    #             print(
+    #                 "   "
+    #                 + cons
+    #                 + ": "
+    #                 + str(comps_dict[4][comp_tuple][i]["cons"][cons])
+    #             )
     #         print()
 
 
