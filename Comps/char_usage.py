@@ -210,15 +210,24 @@ def appearances(players, owns, archetype, chambers=ROOMS, offset=1, info_char=Fa
                         if player.chambers[chamber].char_cons:
                             if player.chambers[chamber].char_cons[char] > 0:
                                 whaleComp = True
-                        if char in player.owned:
-                            if player.owned[char]["cons"] > 0:
-                                whaleComp = True
-                            if player.owned[char]["weapon"] in sigWeaps:
-                                f2pComp = False
+                    if char in player.owned:
+                        if player.owned[char]["weapon"] in sigWeaps:
+                            f2pComp = False
                     if CHARACTERS[char]["role"] == "Sustain":
                         sustainCount += 1
                     if CHARACTERS[char]["role"] == "Damage Dealer":
                         dpsCount += 1
+
+                if not (pf_mode):
+                    side_chamber = chamber[:-1] + ("2" if chamber[-1] == "1" else "1")
+                    for char in player.chambers[side_chamber].characters:
+                        if CHARACTERS[char]["availability"] == "Limited 5*":
+                            if player.chambers[side_chamber].char_cons:
+                                if player.chambers[side_chamber].char_cons[char] > 0:
+                                    whaleComp = True
+                        if char in player.owned:
+                            if player.owned[char]["weapon"] in sigWeaps:
+                                f2pComp = False
 
                 if (whaleOnly and not whaleComp) or (
                     f2pOnly and (not f2pComp or whaleComp)
