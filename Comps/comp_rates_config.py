@@ -107,10 +107,17 @@ run_commands = [
     # "Comp usage all stages",
 ]
 
-if args.whale or args.top or args.f2p:
+if args.top or args.f2p:
     run_commands = [
         "Char usages 8 - 10",
         "Comp usage 8 - 10",
+    ]
+
+elif args.whale:
+    run_commands = [
+        "Char usages 8 - 10",
+        "Comp usage 8 - 10",
+        "Comp usages for each stage",
     ]
 
 elif args.comps_top:

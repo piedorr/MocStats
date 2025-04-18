@@ -43,8 +43,6 @@ cd ../mihomo
 python stats.py
 cd ../Comps
 python move.py
-python combine_char.py
-python copyfiles.py
 
 echo ""
 echo "PF stats"
@@ -52,8 +50,6 @@ cd ../mihomo
 python stats.py -pf
 cd ../Comps
 python move.py -pf
-python combine_char.py -pf
-python copyfiles.py -pf
 
 echo ""
 echo "AS stats"
@@ -61,5 +57,15 @@ cd ../mihomo
 python stats.py -as
 cd ../Comps
 python move.py -as
+
+python combine_char.py
+python combine_char.py -pf
 python combine_char.py -as
+
+python combine_comp.py
+python combine_comp.py -pf
+python combine_comp.py -as
+
+python copyfiles.py
+python copyfiles.py -pf
 python copyfiles.py -as

@@ -27,12 +27,13 @@ for source_dir in source_dirs:
     else:
         target_dir = "../web_results/" + moc_suffix + "/chars"
 
+    temp_target_dir = ""
     file_names = listdir(source_dir)
     if path.exists(target_dir):
         send2trash(target_dir)
     mkdir(target_dir)
     for file_name in file_names:
-        if "comp_results" in source_dir or (
+        if ("comp_results" in source_dir and "combined" in file_name) or (
             file_name == "duo_usages.json"
             or file_name == ("demographic_collect" + suffix + ".json")
             or (file_name == "builds.json" and (RECENT_PHASE + "_as") in source_dir)
