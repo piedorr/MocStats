@@ -108,7 +108,7 @@ class Composition:
                 "Rappa",
                 "The Herta",
                 "Aglaea",
-                "Mydei",
+                "Castorice",
             ]:
                 self.dps.insert(0, character)
             elif character in [
@@ -119,6 +119,7 @@ class Composition:
                 "Sushang",
                 "Jingliu",
                 "Himeko",
+                "Mydei",
             ]:
                 self.dps.append(character)
             elif character in [
