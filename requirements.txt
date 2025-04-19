@@ -1,0 +1,13 @@
+requests>=2.32.3
+pygsheets>=2.0.6
+genshin>=1.7.6
+TwoCaptcha>=0.0.1
+enka>=2.5.0
+Send2Trash>=1.8.3
+dotenv>=0.9.9
+pandas>=2.2.3
+scipy>=1.15.2
+plyer>=2.1.0
+python-slugify>=8.0.4
+matplotlib>=3.10.1
+pynput>=1.8.0
