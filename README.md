@@ -8,20 +8,24 @@ You can find the raw data in the `data/raw_csvs` folder. Feel free to analyze th
 
 # How to use
 
+## Setup
+
+Run `pip install -r requirements.txt`
+
 Change past and recent phase in `Comps/comp_rates_config.py`
 
-If collecting new builds data:
+## Compile for all gamemodes
 
-- In `Comps` folder:
-  - `python comp_rates.py -t`
-- In `enka.network` folder:
-  - `pip install -U enka`
-  - `python enkanetwork.py`
+Run `sh compile_all.sh`
 
-If using past data:
+Results can be found in the `char_results` and `comp_results` folders.
 
-- Copy `mihomo/results/{version}_output.csv` to `mihomo/output1.csv`
+## Compile specific gamemode
 
-After done scanning:
+> By default, this compiles data for MoC, add the argument `-pf` or `-as` at the end of all python commands to compile data for PF or AS. So the command would be `python comp_rates.py -pf`.
 
-- `sh compile_all.sh`
+In `Comps` folder, run `python comp_rates.py`
+
+Still in `Comps` folder, run `python move.py`
+
+In `mihomo` folder, run `python stats.py`
