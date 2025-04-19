@@ -1,6 +1,5 @@
 import json
 import argparse
-import os
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -36,10 +35,10 @@ parser.add_argument(
 
 args = parser.parse_args()
 
-with open(str(os.getenv("REPO_PATH")) + "/data/characters.json") as char_file:
+with open("../data/characters.json") as char_file:
     CHARACTERS = json.load(char_file)
 
-with open(str(os.getenv("REPO_PATH")) + "/data/light_cones.json") as char_file:
+with open("../data/light_cones.json") as char_file:
     LIGHT_CONES = json.load(char_file)
 
 # don't add underscore, i.e. 2.2.1"_pf"
