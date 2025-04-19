@@ -79,7 +79,9 @@ class Composition:
         }
         if comp_chars_cons:
             for char_iter in range(len(comp_chars)):
-                self.char_cons[comp_chars[char_iter]] = int(comp_chars_cons[char_iter])
+                self.char_cons[comp_chars[char_iter]] = int(
+                    float(comp_chars_cons[char_iter])
+                )
         comp_chars.sort()
         for character in comp_chars:
             if "Imbibitor" in character:

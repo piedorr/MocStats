@@ -25,10 +25,15 @@ from nohomo_config import (
     print_chart,
 )
 
-with open("results_real/" + RECENT_PHASE + "/output1.csv", "r") as f:
-    reader = csv.reader(f, delimiter=",")
-    headers = next(reader)
-    data = np.array(list(reader))
+if os.path.exists("../data/raw_csvs_real/"):
+    f = open("results_real/" + RECENT_PHASE + "/output1.csv", "r")
+else:
+    f = open("results/" + RECENT_PHASE + "_output.csv", "r")
+reader = csv.reader(f, delimiter=",")
+headers = next(reader)
+data = np.array(list(reader))
+f.close()
+
 with open("../data/light_cones.json", "r") as f:
     LIGHT_CONES = json.load(f)
 with open("../Comps/prydwen-slug.json") as slug_file:
@@ -48,6 +53,7 @@ else:
 reader = csv.reader(f, delimiter=",")
 headers = next(reader)
 spiral = list(reader)
+f.close()
 
 with open("../char_results/" + phase_num + "/all.csv", "r") as f:
     reader = csv.reader(f, delimiter=",")
@@ -226,7 +232,10 @@ for row in data:
         ar += int(row[1])
         count += 1
     if row[2] not in chars:
-        if "Dan Heng â€¢ Imbibitor Lunae" in row[2]:
+        if row[2] in [
+            "Dan Heng â€¢ Imbibitor Lunae",
+            "Dan Heng Ã¢â‚¬Â¢ Imbibitor Lunae",
+        ]:
             row[2] = "Dan Heng • Imbibitor Lunae"
         elif "Topaz and Numby" in row[2]:
             row[2] = "Topaz & Numby"
@@ -449,6 +458,8 @@ for char in chars:
         del stats[char]["sample_size"]
     csv_writer.writerow(stats[char].values())
     csv_writer2.writerow([char + ": " + str(stats[char]["sample_size_players"])])
+file1.close()
+file2.close()
 
 temp_stats = []
 iter_char = 0

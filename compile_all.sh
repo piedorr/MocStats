@@ -2,13 +2,15 @@
 
 set -e # Stop on error
 
-cd mihomo
-python combine.py
-cd ../Comps
-python combine_raw_chars.py
-python hash.py
-
-# cd Comps
+if [[ -d "data/raw_csvs_real" ]]; then
+  cd mihomo
+  python combine.py
+  cd ../Comps
+  python combine_raw_chars.py
+  python hash.py
+else
+  cd Comps
+fi
 
 echo ""
 echo "MoC"
@@ -66,6 +68,8 @@ python combine_comp.py
 python combine_comp.py -pf
 python combine_comp.py -as
 
-python copyfiles.py
-python copyfiles.py -pf
-python copyfiles.py -as
+if [ -d "web_results" ]; then
+  python copyfiles.py
+  python copyfiles.py -pf
+  python copyfiles.py -as
+fi

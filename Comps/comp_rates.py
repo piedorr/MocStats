@@ -830,8 +830,8 @@ def used_comps(
             sample_size[chamber_num[0]]["random"] = total_comps - total_self_comps
         # if total_comps == 0:
         #     del sample_size[chamber_num[0]]
-    if whaleOnly:
-        print("Whale percentage: " + str(whale_count / total_comps))
+    # if whaleOnly:
+    #     print("Whale percentage: " + str(whale_count / total_comps))
     return comps_dict
 
 
