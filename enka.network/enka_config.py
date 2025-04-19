@@ -55,6 +55,6 @@ else:
     uids = [806411333]
 
 filenum = 1
-while os.path.exists("output" + str(filenum) + ".csv"):
+while os.path.exists("../mihomo/output" + str(filenum) + ".csv"):
     filenum += 1
-filename = "output" + str(filenum)
+filename = "../mihomo/output" + str(filenum)
