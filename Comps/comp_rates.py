@@ -84,6 +84,7 @@ def main():
     self_freq_comp = {}
     # dps_freq_comp = {}
     last_uid = "0"
+    skip_uid = False
 
     for line in reader:
         if skip_self and line[0] in self_uids:
@@ -247,6 +248,7 @@ def main():
     print("done csv: ", (cur_time - start_time), "s")
 
     global usage
+    usage = {}
     if pf_mode:
         three_stages = ["4-1", "4-2"]
         three_double_stages = [["4-1", "4-2"]]
