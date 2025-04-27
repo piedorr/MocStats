@@ -1,14 +1,12 @@
-import json
-import argparse
-from dotenv import load_dotenv
+from argparse import ArgumentParser
+from json import load
 
-load_dotenv()
-
-parser = argparse.ArgumentParser()
+parser = ArgumentParser()
 parser.add_argument("-a", "--all", action="store_true")
 parser.add_argument("-ca", "--comps_all", action="store_true")
 parser.add_argument("-d", "--duos", action="store_true")
 parser.add_argument("-t", "--top", action="store_true")
+parser.add_argument("-cht", "--chars_top", action="store_true")
 parser.add_argument("-ct", "--comps_top", action="store_true")
 parser.add_argument("-w", "--whale", action="store_true")
 parser.add_argument("-f", "--f2p", action="store_true")
@@ -36,10 +34,10 @@ parser.add_argument(
 args = parser.parse_args()
 
 with open("../data/characters.json") as char_file:
-    CHARACTERS = json.load(char_file)
+    CHARACTERS: dict[str, dict[str, str | int | None]] = load(char_file)
 
 with open("../data/light_cones.json") as char_file:
-    LIGHT_CONES = json.load(char_file)
+    LIGHT_CONES: dict[str, dict[str, str | int | None]] = load(char_file)
 
 # don't add underscore, i.e. 2.2.1"_pf"
 RECENT_PHASE = "3.2.1"
@@ -51,8 +49,8 @@ past_phase = "3.1.3"
 global pf_mode
 global as_mode
 # if as: pf_mode = True
-pf_mode = args.pure_fic or args.apoc_shadow
-as_mode = args.apoc_shadow
+pf_mode: bool = args.pure_fic or args.apoc_shadow
+as_mode: bool = args.apoc_shadow
 
 if not pf_mode:
     pf_mode = False
@@ -90,8 +88,8 @@ duo_dict_len_print = 10
 skip_self = False
 skip_random = False
 archetype = "all"
-whaleOnly = args.whale
-f2pOnly = args.f2p
+whaleOnly: bool = args.whale
+f2pOnly: bool = args.f2p
 
 # Char infographics should be separated from overall comp rankings
 run_commands = [
@@ -119,6 +117,11 @@ elif args.whale:
         "Comp usages for each stage",
     ]
 
+elif args.chars_top:
+    run_commands = [
+        "Char usages 8 - 10",
+    ]
+
 elif args.comps_top:
     run_commands = [
         "Comp usage 8 - 10",
@@ -144,7 +147,7 @@ elif args.duos:
         "Duos check",
     ]
 
-sigWeaps = []
+sigWeaps: list[str] = []
 standWeaps = [
     "Night on the Milky Way",
     "Something Irreplaceable",
@@ -164,7 +167,7 @@ for light_cone in LIGHT_CONES:
         LIGHT_CONES[light_cone]["rarity"] == 5
         and LIGHT_CONES[light_cone]["name"] not in standWeaps
     ):
-        sigWeaps += [LIGHT_CONES[light_cone]["name"]]
+        sigWeaps += [str(LIGHT_CONES[light_cone]["name"])]
 
 alt_comps = "Character specific infographics" in run_commands
 if alt_comps and char_app_rate_threshold > app_rate_threshold:

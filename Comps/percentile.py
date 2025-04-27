@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def calculate_percentile(custom_array, percentile):
+def calculate_percentile(custom_array: list[int], percentile: float) -> float:
     """
     Calculate the specified percentile of an array using linear interpolation.
 

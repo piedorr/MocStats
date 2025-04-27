@@ -1,8 +1,16 @@
-import time
+import csv
 import os.path
 import statistics
+import time
 
-import csv
+from comp_rates_config import (
+    CHARACTERS,
+    RECENT_PHASE,
+    alt_comps,
+    app_rate_threshold,
+    json,
+    skip_self,
+)
 
 # import re
 # import operator
@@ -12,14 +20,6 @@ import csv
 # from scipy.stats import skew
 # from itertools import permutations
 from composition import Composition
-from comp_rates_config import (
-    RECENT_PHASE,
-    CHARACTERS,
-    json,
-    skip_self,
-    alt_comps,
-    app_rate_threshold,
-)
 
 
 def main():

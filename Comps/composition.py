@@ -3,7 +3,7 @@ import json
 # Set class constants in initialization
 # Load the list of characters from their file
 with open("../data/characters.json") as char_file:
-    CHARACTERS = json.load(char_file)
+    CHARACTERS: dict[str, dict[str, str | int | None]] = json.load(char_file)
 
 # # Load the list of elements from the reactions file
 # with open('../data/reaction.json') as react_file:
@@ -28,16 +28,16 @@ class Composition:
 
     def __init__(
         self,
-        uid,
-        comp_chars,
-        phase,
-        round_num,
-        star_num,
-        room,
-        info_char,
-        buff,
-        comp_chars_cons,
-    ):
+        uid: str,
+        comp_chars: list[str],
+        phase: str,
+        round_num: str,
+        star_num: str,
+        room: str,
+        info_char: bool,
+        buff: str,
+        comp_chars_cons: list[int],
+    ) -> None:
         """Composition constructor. Takes in:
         A player, as a UID string
         A composition, as a length-four list of character strings
@@ -53,21 +53,23 @@ class Composition:
         self.buff = buff
         # self.comp_elements()
 
-    def char_structs(self, comp_chars, info_char, comp_chars_cons):
+    def char_structs(
+        self, comp_chars: list[str], info_char: bool, comp_chars_cons: list[int]
+    ) -> None:
         """Character structure creator.
         Makes a presence dict that maps character names to bools, and
         a list (alphabetically ordered) of the character names.
         """
-        self.char_presence = {}
-        self.char_cons = {}
-        fives = []
-        self.dps = []
-        self.subdps = []
-        self.anemo = []
-        self.healer = []
-        self.dot = []
-        self.fua = []
-        self.super_break = []
+        self.char_presence: dict[str, bool] = {}
+        self.char_cons: dict[str, int] = {}
+        fives: list[str] = []
+        self.dps: list[str] = []
+        self.subdps: list[str] = []
+        self.anemo: list[str] = []
+        self.healer: list[str] = []
+        self.dot: list[str] = []
+        self.fua: list[str] = []
+        self.super_break: list[str] = []
         len_element = {
             "Ice": 0,
             "Wind": 0,
@@ -79,9 +81,7 @@ class Composition:
         }
         if comp_chars_cons:
             for char_iter in range(len(comp_chars)):
-                self.char_cons[comp_chars[char_iter]] = int(
-                    float(comp_chars_cons[char_iter])
-                )
+                self.char_cons[comp_chars[char_iter]] = comp_chars_cons[char_iter]
         comp_chars.sort()
         for character in comp_chars:
             if "Imbibitor" in character:
@@ -298,47 +298,7 @@ class Composition:
             else:
                 self.comp_name = "Full Sustain"
 
-    # def comp_elements(self):
-    #     """Composition elements tracker.
-    #     Creates a dict that maps elements to number of chars with that element,
-    #     and a dict that maps the resonance(s) the comp has to booleans.
-    #     """
-    #     self.elements = dict.fromkeys(ELEMENTS, 0)
-    #     for char in self.characters:
-    #         self.elements[CHARACTERS[char]["element"]] += 1
-
-    #     # self.resonance = dict.fromkeys(ELEMENTS, False)
-
-    #     # # Add the unique resonance to the list of element resonances,
-    #     # # and set it as the default. Technically there's the edge case for
-    #     # # if there's < 4 characters, it should be false I think?
-    #     # self.resonance['Unique'] = len(self.characters) == 4
-    #     # for ele in ELEMENTS:
-    #     #     if self.elements[ele] >= 2:
-    #     #         self.resonance[ele] = True
-    #     #         self.resonance['Unique'] = False
-
-    # def resonance_string(self):
-    #     """Returns the resonance of the composition. Two resos are joined by a ,"""
-    #     resos = []
-    #     for reso in self.resonance.keys():
-    #         if self.resonance[reso]:
-    #             resos.append(reso)
-    #     return ", ".join(resos)
-
-    # def on_res_chars(self):
-    #     """Returns the list of characters who match the composition's resonance."""
-    #     chars = []
-    #     for char in self.characters:
-    #         if self.resonance[CHARACTERS[char]["element"]] or self.resonance["Unique"]:
-    #             chars.append(char)
-    #     return chars
-
-    # def char_element_list(self):
-    #     """Returns the characters' elements as a list"""
-    #     return [ CHARACTERS[char]['element'] for char in self.characters ]
-
-    def contains_chars(self, chars):
+    def contains_chars(self, chars: list[str]) -> bool:
         """Returns a bool whether this comp contains all the chars in included list."""
         for char in chars:
             if not self.char_presence[char]:

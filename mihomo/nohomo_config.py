@@ -6,11 +6,11 @@ import sys
 sys.path.append("../Comps/")
 from comp_rates_config import (
     RECENT_PHASE,
-    skew_num,
-    pf_mode,
     as_mode,
-    run_chars_name,
+    pf_mode,
     run_all_chars,
+    run_chars_name,
+    skew_num,
 )
 
 skip_self = False

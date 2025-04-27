@@ -1,40 +1,39 @@
-from slugify import slugify
-
-import os
-import numpy as np
-import operator
 import csv
 import json
+import operator
+import os
 import statistics
+from itertools import chain
 
 # matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
-from scipy.stats import skew
-from pynput import keyboard
-from itertools import chain
+import numpy as np
 from nohomo_config import (
     RECENT_PHASE,
-    phase_num,
-    pf_mode,
-    skip_random,
-    skip_self,
     check_char,
     check_char_name,
     check_stats,
-    skew_num,
+    pf_mode,
+    phase_num,
     print_chart,
+    skew_num,
+    skip_random,
+    skip_self,
 )
+from pynput import keyboard
+from scipy.stats import skew
+from slugify import slugify
 
 if os.path.exists("../data/raw_csvs_real/"):
-    f = open("results_real/" + RECENT_PHASE + "/output1.csv", "r")
+    f = open("results_real/" + RECENT_PHASE + "/output1.csv")
 else:
-    f = open("results/" + RECENT_PHASE + "_output.csv", "r")
+    f = open("results/" + RECENT_PHASE + "_output.csv")
 reader = csv.reader(f, delimiter=",")
 headers = next(reader)
 data = np.array(list(reader))
 f.close()
 
-with open("../data/light_cones.json", "r") as f:
+with open("../data/light_cones.json") as f:
     LIGHT_CONES = json.load(f)
 with open("../Comps/prydwen-slug.json") as slug_file:
     slug = json.load(slug_file)
@@ -47,15 +46,15 @@ with open("../Comps/prydwen-slug.json") as slug_file:
 # exit()
 
 if os.path.exists("../data/raw_csvs_real/"):
-    f = open("../data/raw_csvs_real/" + phase_num + ".csv", "r")
+    f = open("../data/raw_csvs_real/" + phase_num + ".csv")
 else:
-    f = open("../data/raw_csvs/" + phase_num + ".csv", "r")
+    f = open("../data/raw_csvs/" + phase_num + ".csv")
 reader = csv.reader(f, delimiter=",")
 headers = next(reader)
 spiral = list(reader)
 f.close()
 
-with open("../char_results/" + phase_num + "/all.csv", "r") as f:
+with open("../char_results/" + phase_num + "/all.csv") as f:
     reader = csv.reader(f, delimiter=",")
     headers = next(reader)
     build = np.array(list(reader))
@@ -216,9 +215,11 @@ mainstatkeys = list(mainstats[chars[0]].keys())
 substatkeys = list(substats[chars[0]].keys())
 
 if os.path.isfile("../../uids.csv"):
-    with open("../../uids.csv", "r", encoding="UTF8") as f:
+    with open("../../uids.csv", encoding="UTF8") as f:
         reader = csv.reader(f, delimiter=",")
         self_uids = list(reader)[0]
+else:
+    self_uids = []
 
 for row in data:
     if skip_self and row[0] in self_uids:
@@ -278,11 +279,6 @@ for row in data:
             "Trailblazer" in spiral_rows[row[0]] and "Trailblazer" in row[2]
         ):
             found = True
-        # for char in spiral_rows[row[0]]:
-        #     if char in ["Thoma","Yoimiya","Yanfei","Hu Tao","Xinyan","Diluc","Amber","Xiangling","Klee","Bennett","Dehya"]:
-        #         foundPyro = True
-        # if found and char_arti == "Gilded Dreams":
-        # if found and ((float(row[9]) * 2) + float(row[10]) > 1.8 and float(row[18]) > 0.4):
 
         # isValidChar = False
         # match archetype:
@@ -311,7 +307,6 @@ for row in data:
                         mainstats[row[2]][mainstatkeys[i]][row[i + 32]] += 1
                     else:
                         mainstats[row[2]][mainstatkeys[i]][row[i + 32]] = 1
-                # stats[row[2]]["cvalue"].append(stats[row[2]]["crate"][-1] * 2 + stats[row[2]]["cdmg"][-1])
 
                 # if char_arti in artifacts[char]:
                 #     artifacts[char][char_arti] += 1
@@ -382,7 +377,10 @@ for char in copy_chars:
                             # print("1 - Mean, 2 - Median: ")
                             with keyboard.Events() as events:
                                 event = events.get(1e6)
-                                if event.key == keyboard.KeyCode.from_char("1"):
+                                if (
+                                    event is not None
+                                    and event.key == keyboard.KeyCode.from_char("1")
+                                ):
                                     stats[char][stat] = str(mean[char][stat])
                                 else:
                                     stats[char][stat] = str(median[char][stat])
@@ -414,20 +412,6 @@ for char in copy_chars:
                         stat
                     ][mainstatlist[i]]
                 i += 1
-
-        # for i in range(9):
-        #     substats[char][substatkeys[i]] = float(stats[char][statkeys[i+19]]) / substats[char][substatkeys[i]]
-        # sorted_stats = (sorted(
-        #     substats[char].items(),
-        #     key = operator.itemgetter(1),
-        #     reverse=True
-        # ))
-        # substats[char] = {k: v for k, v in sorted_stats}
-        # substatlist = list(substats[char])
-        # for i in range(9):
-        #     stats[char]["sub_" + str(i+1)] = substatlist[i]
-        #     stats[char]["sub_" + str(i+1) + "_app"] = stats[char][substatlist[i]]
-        #     del stats[char][substatlist[i]]
 
     else:
         for stat in stats[char]:

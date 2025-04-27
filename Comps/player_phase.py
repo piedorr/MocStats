@@ -1,11 +1,31 @@
 import json
 
+from composition import Composition
+
 # Set class constants in initialization
 # Load the list of characters from their file
 with open("../data/characters.json") as char_file:
-    CHARACTERS = json.load(char_file)
+    CHARACTERS: dict[str, dict[str, str | int | None]] = json.load(char_file)
 with open("../data/relic_affixes.json") as relic_file:
-    articombinations = json.load(relic_file)
+    articombinations: dict[str, dict[str, str | int | None]] = json.load(relic_file)
+
+
+class OwnedChars:
+    def __init__(
+        self,
+        level: str,
+        cons: str,
+        weapon: str,
+        element: str,
+        artifacts: str,
+        planars: str,
+    ) -> None:
+        self.level: int = int(level)
+        self.cons: int = int(cons)
+        self.weapon: str = weapon
+        self.element: str = element
+        self.artifacts: str = artifacts
+        self.planars: str = planars
 
 
 class PlayerPhase:
@@ -18,7 +38,7 @@ class PlayerPhase:
         None if they don't own the character.
     """
 
-    def __init__(self, player, phase):
+    def __init__(self, player: str, phase: str) -> None:
         """
         Composition constructor. Takes in:
         A player, as a string
@@ -26,18 +46,21 @@ class PlayerPhase:
         """
         self.player = player
         self.phase = phase
-        self.owned = {}
-        self.chambers = {}
+        self.chambers: dict[str, Composition] = {}
+        self.owned: dict[str, OwnedChars] = {}
 
-    def add_character(self, name, level, cons, weapon, element, artifacts, planars):
+    def add_character(
+        self,
+        name: str,
+        level: str,
+        cons: str,
+        weapon: str,
+        element: str,
+        artifacts: str,
+        planars: str,
+    ) -> None:
         """
-        Adds in a character to the owned characters dict. Takes in:
-        A name, a string.
-        A level, an integer.
-        A cons, an integer.
-        A weapon, a string.
-        Artifacts, a string.
-        Element, a string.
+        Adds in a character to the owned characters dict.
         """
         for arti in articombinations:
             articom = []
@@ -53,16 +76,9 @@ class PlayerPhase:
                     artifacts = artifacts.replace(i, "")
                     artifacts = arti + ", " + artifacts
 
-        self.owned[name] = {
-            "level": int(level),
-            "cons": int(cons),
-            "weapon": weapon,
-            "element": element,
-            "artifacts": artifacts,
-            "planars": planars,
-        }
+        self.owned[name] = OwnedChars(level, cons, weapon, element, artifacts, planars)
 
-    def add_comp(self, composition):
+    def add_comp(self, composition: Composition) -> None:
         """Adds a composition to the chambers dict."""
         if composition.phase != self.phase or composition.player != self.player:
             return
@@ -70,17 +86,17 @@ class PlayerPhase:
             return
         self.chambers[composition.room] = composition
 
-    def chars_owned(self, characters):
-        """Takes in an iter of character names, and returns true if the player owned them all."""
+    def chars_owned(self, characters: list[str]) -> bool:
+        """Takes in an iter of character names,
+        and returns true if the player owned them all."""
         for char in characters:
-            # if char in {"Traveler-A", "Traveler-G", "Traveler-E", "Traveler-D", "Traveler"}:
-            #     continue
             if not self.owned[char]:
                 return False
         return True
 
-    def chars_used(self, characters):
-        """Takes in an iter of character names, and returns true if the player used them all."""
+    def chars_used(self, characters: list[str]) -> bool:
+        """Takes in an iter of character names,
+        and returns true if the player used them all."""
         if not self.chars_owned(characters):
             return False
         for char in characters:
@@ -88,21 +104,23 @@ class PlayerPhase:
                 return False
         return True
 
-    def no_chars_owned(self, characters):
-        """Takes in a list of character names, and returns true if the player owns none of them."""
+    def no_chars_owned(self, characters: list[str]) -> bool:
+        """Takes in a list of character names,
+        and returns true if the player owns none of them."""
         for char in characters:
             if self.owned[char]:
                 return False
         return True
 
-    def no_chars_used(self, characters):
-        """Takes in an iter of character names, and returns true if the player used none of them."""
+    def no_chars_used(self, characters: list[str]) -> bool:
+        """Takes in an iter of character names,
+        and returns true if the player used none of them."""
         for char in characters:
             if self.char_used(char):
                 return False
         return True
 
-    def char_used(self, character):
+    def char_used(self, character: str) -> bool:
         """Takes in a character name, and returns true if the player used them."""
         if not self.owned[character]:
             return False
@@ -111,7 +129,7 @@ class PlayerPhase:
                 return True
         return False
 
-    def chars_placement(self, characters):
+    def chars_placement(self, characters: list[str]) -> None | dict:
         """
         Takes in an iter of character names, and if the player owns them all,
         returns a dict of which chambers each was used in.
