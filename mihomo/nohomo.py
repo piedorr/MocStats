@@ -1,10 +1,14 @@
 import _thread
-import time
 import asyncio
+import time
 import traceback
+from typing import TYPE_CHECKING
 
-from mihomo import Language, MihomoAPI, StarrailInfoParsed
-from nohomo_config import json, os, csv, uids, filename, trailblazer_ids, relics_data
+from mihomo import Language, MihomoAPI  # type: ignore
+from nohomo_config import csv, filename, json, os, relics_data, trailblazer_ids, uids
+
+if TYPE_CHECKING:
+    from mihomo import StarrailInfoParsed  # type: ignore
 
 client = MihomoAPI(Language.EN)
 

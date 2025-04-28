@@ -1,21 +1,21 @@
 import _thread
-import time
 import asyncio
+import time
 import traceback
 
-import enka
-from enka_config import json, os, csv, uids, filename, trailblazer_ids, relics_data
+import enka  # type: ignore
+from enka_config import csv, filename, json, os, relics_data, trailblazer_ids, uids
 
 print(len(uids))
 
 
-def jprint(obj):
+def jprint(obj: dict[str, str]) -> None:
     # create a formatted string of the Python JSON object
     text = json.dumps(obj, sort_keys=True, indent=4)
     print(text)
 
 
-def input_thread(input_list):
+def input_thread(input_list: list[bool]) -> None:
     input()
     input_list.append(True)
 
@@ -88,7 +88,7 @@ async def main() -> None:
         )
         writer_chars.writerow(header)
 
-        input_list = []
+        input_list: list[bool] = []
         _thread.start_new_thread(input_thread, (input_list,))
         uid_iter = -1
         while not input_list and uid_iter < len(uids):
@@ -101,12 +101,12 @@ async def main() -> None:
                 if i == 5:
                     print("error")
                 try:
-                    print("{} / {} : {}, {}".format(uid_iter + 1, len(uids), uid, i))
+                    print(f"{uid_iter + 1} / {len(uids)} : {uid}, {i}")
                     data = await client.fetch_showcase(uid)
                     for character in data.characters:
                         element_name = character.element.name.capitalize()
-                        line = []
-                        line_chars = []
+                        line: list[str | int | float | None] = []
+                        line_chars: list[str | int | float | None] = []
                         line.append(uid)
                         line_chars.append(uid)
                         line_chars.append("2.2b")
@@ -193,8 +193,8 @@ async def main() -> None:
                             "Effect Hit Rate": 0.00,
                             "Break Effect": 0.00,
                         }
-                        artifacts = {}
-                        ornaments = {}
+                        artifacts: dict[str, int] = {}
+                        ornaments: dict[str, int] = {}
                         for relic in character.relics:
                             mainstats[relics_data[str(relic.id)]["type"]] = (
                                 relic.main_stat.name
@@ -261,7 +261,7 @@ async def main() -> None:
                     print("timeout")
                     time.sleep(1)
                 except AttributeError:
-                    print("{}: {}".format(uid, traceback.format_exc()))
+                    print(f"{uid}: {traceback.format_exc()}")
                     # print(str(uid) + " Too Many Requests")
                     time.sleep(1)
                 except Exception as e:
@@ -276,7 +276,7 @@ async def main() -> None:
                         print("User not found.")
                         break
                     else:
-                        print("{}: {}".format(uid, traceback.format_exc()))
+                        print(f"{uid}: {traceback.format_exc()}")
                         # exit()
                         break
 

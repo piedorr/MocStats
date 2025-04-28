@@ -4,7 +4,7 @@ import os.path
 import sys
 
 sys.path.append("../Comps/")
-from comp_rates_config import RECENT_PHASE, pf_mode, as_mode
+from comp_rates_config import RECENT_PHASE, as_mode, pf_mode
 
 skip_self = False
 skip_random = False
@@ -38,14 +38,14 @@ relics_data = json.load(f)
 f = open("../data/characters.json")
 characters = json.load(f)
 
-trailblazer_ids = []
-for char_name, char in characters.items():
+trailblazer_ids: list[str] = []
+for _char_name, char in characters.items():
     if "trailblazer_ids" in char:
         for trailblazer_id in char["trailblazer_ids"]:
             trailblazer_ids.append(trailblazer_id)
 
 if os.path.exists("../char_results/uids.csv"):
-    with open("../char_results/uids.csv", "r", encoding="UTF8") as f:
+    with open("../char_results/uids.csv", encoding="UTF8") as f:
         reader = csv.reader(f, delimiter=",")
         uids = list(reader)
         uids = [int(uid[0]) for uid in uids]

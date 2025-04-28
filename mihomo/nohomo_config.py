@@ -8,9 +8,6 @@ from comp_rates_config import (
     RECENT_PHASE,
     as_mode,
     pf_mode,
-    run_all_chars,
-    run_chars_name,
-    skew_num,
 )
 
 skip_self = False
@@ -26,7 +23,7 @@ comp_stats = []
 check_char = True
 check_char_name = "Yanqing"
 # check_stats = ["cvalue"]
-check_stats = []
+check_stats: list[str] = []
 
 
 phase_num = RECENT_PHASE
@@ -41,8 +38,8 @@ relics_data = json.load(f)
 f = open("../data/characters.json")
 characters = json.load(f)
 
-trailblazer_ids = []
-for char_name, char in characters.items():
+trailblazer_ids: list[str] = []
+for _char_name, char in characters.items():
     if "trailblazer_ids" in char:
         for trailblazer_id in char["trailblazer_ids"]:
             trailblazer_ids.append(trailblazer_id)
@@ -50,7 +47,7 @@ for char_name, char in characters.items():
 if os.path.exists("../char_results/uids.csv") and os.path.exists(
     "../data/raw_csvs_real/"
 ):
-    with open("../char_results/uids.csv", "r", encoding="UTF8") as f:
+    with open("../char_results/uids.csv", encoding="UTF8") as f:
         reader = csv.reader(f, delimiter=",")
         uids = list(reader)
         uids = [int(uid[0]) for uid in uids]
