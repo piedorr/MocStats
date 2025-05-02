@@ -1,6 +1,7 @@
 import json
 import re
-from comp_rates_config import RECENT_PHASE, pf_mode, as_mode
+
+from comp_rates_config import RECENT_PHASE, as_mode, pf_mode
 from slugify import slugify
 
 with open("../Comps/prydwen-slug.json") as slug_file:
@@ -177,7 +178,6 @@ for char in as_dict:
 
 for char in CHARACTERS:
     char = slugify(char)
-    char
     if char in slug:
         char = slug[char]
     moc_dict_e1_char = next((x for x in moc_dict_e1 if x["char"] == char), {})

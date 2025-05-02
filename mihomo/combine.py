@@ -1,22 +1,23 @@
 import csv
 from os import path
+
 from send2trash import send2trash
 
-output = []
-output_char = []
+output: list[list[str]] = []
+output_char: list[list[str]] = []
 
 iteration = 0
 while path.exists("output" + str(iteration + 1) + ".csv"):
     iteration += 1
-uidlistchar = set()
-uidlist = set()
-uidcheck = set()
+uidlistchar = set[str]()
+uidlist = set[str]()
+uidcheck = set[int]()
 
 for i in range(iteration):
-    print('{} / {}'.format(i + 1, iteration), end="")
+    print(f"{i + 1} / {iteration}", end="")
     # with open("output" + str(i + 1) + ".csv", 'r', encoding='UTF8') as f:
-    with open("output" + str(i + 1) + ".csv", 'r') as f:
-        reader = csv.reader(f, delimiter=',')
+    with open("output" + str(i + 1) + ".csv") as f:
+        reader = csv.reader(f, delimiter=",")
         headers = next(reader)
         if i == 0:
             output += [headers]
@@ -31,8 +32,8 @@ for i in range(iteration):
                     output += [j]
         # np.concatenate((output, list(reader)), axis=1)
 
-    with open("output" + str(i + 1) + "_char.csv", 'r') as f:
-        reader = csv.reader(f, delimiter=',')
+    with open("output" + str(i + 1) + "_char.csv") as f:
+        reader = csv.reader(f, delimiter=",")
         headers = next(reader)
         if i == 0:
             output_char += [headers]
@@ -52,8 +53,8 @@ for i in range(iteration):
     print("\r", end="")
 
 # print(uidcheck)
-csv_writer = csv.writer(open("output1.csv", 'w', newline=''))
+csv_writer = csv.writer(open("output1.csv", "w", newline=""))
 csv_writer.writerows(output)
 
-csv_writer = csv.writer(open("output1_char.csv", 'w', newline=''))
+csv_writer = csv.writer(open("output1_char.csv", "w", newline=""))
 csv_writer.writerows(output_char)

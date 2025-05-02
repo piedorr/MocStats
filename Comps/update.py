@@ -1,15 +1,18 @@
-import json
-import requests
 import io
+import json
 
-download = requests.get("https://github.com/Mar-7th/StarRailRes/raw/master/index_new/en/relic_sets.json").content.decode('utf-8')
+import requests
+
+download = requests.get(
+    "https://github.com/Mar-7th/StarRailRes/raw/master/index_new/en/relic_sets.json"
+).content.decode("utf-8")
 artifacts = json.load(io.StringIO(download))
 
-with open('../data/relic_affixes.json') as artifact_file:
+with open("../data/relic_affixes.json") as artifact_file:
     artifacts2 = json.load(artifact_file)
 # artifacts2 = {}
 
-artifacts_affixes = {}
+artifacts_affixes: dict[str, list[str]] = {}
 for artifact in artifacts:
     if artifacts[artifact]["id"][0] == "1":
         affix = artifacts[artifact]["desc"][0]
@@ -54,40 +57,50 @@ for artifact in list(artifacts_affixes.keys()):
 print()
 
 with open("../data/relic_sets.json", "w") as out_file:
-    out_file.write(json.dumps(artifacts,indent=4))
+    out_file.write(json.dumps(artifacts, indent=4))
 
 with open("../data/relic_affixes.json", "w") as out_file:
-    out_file.write(json.dumps(artifacts2,indent=4))
+    out_file.write(json.dumps(artifacts2, indent=4))
 
-download = requests.get("https://github.com/Mar-7th/StarRailRes/raw/master/index_new/en/relics.json").content.decode('utf-8')
+download = requests.get(
+    "https://github.com/Mar-7th/StarRailRes/raw/master/index_new/en/relics.json"
+).content.decode("utf-8")
 with open("../data/relics.json", "w") as out_file:
-    out_file.write(json.dumps(json.load(io.StringIO(download)),indent=4))
+    out_file.write(json.dumps(json.load(io.StringIO(download)), indent=4))
 
-download = requests.get("https://github.com/Mar-7th/StarRailRes/raw/master/index_new/en/light_cones.json").content.decode('utf-8')
+download = requests.get(
+    "https://github.com/Mar-7th/StarRailRes/raw/master/index_new/en/light_cones.json"
+).content.decode("utf-8")
 with open("../data/light_cones.json", "w") as out_file:
-    out_file.write(json.dumps(json.load(io.StringIO(download)),indent=4))
+    out_file.write(json.dumps(json.load(io.StringIO(download)), indent=4))
 
-download = requests.get("https://github.com/Mar-7th/StarRailRes/raw/master/index_new/en/simulated_blessings.json").content.decode('utf-8')
+download = requests.get(
+    "https://github.com/Mar-7th/StarRailRes/raw/master/index_new/en/simulated_blessings.json"
+).content.decode("utf-8")
 with open("../data/simulated_blessings.json", "w") as out_file:
-    out_file.write(json.dumps(json.load(io.StringIO(download)),indent=4))
+    out_file.write(json.dumps(json.load(io.StringIO(download)), indent=4))
 
-download = requests.get("https://github.com/Mar-7th/StarRailRes/raw/master/index_new/en/simulated_curios.json").content.decode('utf-8')
+download = requests.get(
+    "https://github.com/Mar-7th/StarRailRes/raw/master/index_new/en/simulated_curios.json"
+).content.decode("utf-8")
 curio_json = json.load(io.StringIO(download))
 curio_json["901"] = curio_json["109"].copy()
 curio_json["902"] = curio_json["109"].copy()
 curio_json["901"]["id"] = "901"
 curio_json["902"]["id"] = "902"
 with open("../data/simulated_curios.json", "w") as out_file:
-    out_file.write(json.dumps(curio_json,indent=4))
+    out_file.write(json.dumps(curio_json, indent=4))
 
 # download = requests.get("https://github.com/Mar-7th/StarRailRes/raw/master/index_new/en/simulated_blocks.json").content.decode('utf-8')
 # with open("../data/simulated_blocks.json", "w") as out_file:
 #     out_file.write(json.dumps(json.load(io.StringIO(download)),indent=4))
 
-with open('../data/characters.json') as char_file:
+with open("../data/characters.json") as char_file:
     chars1 = json.load(char_file)
-download = requests.get("https://github.com/Mar-7th/StarRailRes/raw/master/index_new/en/characters.json").content.decode('utf-8')
-chars2 = json.load((io.StringIO(download)))
+download = requests.get(
+    "https://github.com/Mar-7th/StarRailRes/raw/master/index_new/en/characters.json"
+).content.decode("utf-8")
+chars2 = json.load(io.StringIO(download))
 
 for char in chars2:
     char_name = chars2[char]["name"]
@@ -134,8 +147,10 @@ for char in chars2:
                     chars1[char_name]["role"] = "Amplifier"
                 case "2":
                     chars1[char_name]["role"] = "Sustain"
+                case _:
+                    pass
             chars1[char_name]["alt_name"] = None
             chars1[char_name]["out_name"] = False
 
-with open('../data/characters.json','w') as out_file:
-    out_file.write(json.dumps(chars1,indent=4))
+with open("../data/characters.json", "w") as out_file:
+    out_file.write(json.dumps(chars1, indent=4))

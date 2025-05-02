@@ -1,16 +1,17 @@
 import csv
-from send2trash import send2trash
-from comp_rates_config import RECENT_PHASE
 
-char_data = {}
-print_data = []
+from comp_rates_config import RECENT_PHASE
+from send2trash import send2trash
+
+char_data: dict[str, dict[str, list[str]]] = {}
+print_data: list[list[str]] = []
 
 # with open("char_data.csv", 'r') as f:
-with open("../mihomo/output1_char.csv", "r", encoding="UTF8") as f:
+with open("../mihomo/output1_char.csv", encoding="UTF8") as f:
     reader = csv.reader(f, delimiter=",")
     print_data += [next(reader)]
     char_data_temp = list(reader)
-with open("../data/raw_csvs_real/" + RECENT_PHASE + "_char.csv", "r") as f:
+with open("../data/raw_csvs_real/" + RECENT_PHASE + "_char.csv") as f:
     reader = csv.reader(f, delimiter=",")
     headers = next(reader)
     char_data_temp += list(reader)

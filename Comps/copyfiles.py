@@ -1,7 +1,8 @@
-from os import listdir, path, mkdir
 import shutil
-from send2trash import send2trash
+from os import listdir, mkdir, path
+
 from comp_rates_config import RECENT_PHASE, as_mode, pf_mode
+from send2trash import send2trash
 
 suffix = ""
 moc_suffix = ""

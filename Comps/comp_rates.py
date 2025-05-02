@@ -24,7 +24,6 @@ from comp_rates_config import (
     past_phase,
     pf_mode,
     run_commands,
-    sigWeaps,
     skip_random,
     skip_self,
     whaleOnly,

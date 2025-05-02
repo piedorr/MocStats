@@ -42,13 +42,6 @@ with open("../data/light_cones.json") as f:
 with open("../Comps/prydwen-slug.json") as slug_file:
     slug = json.load(slug_file)
 
-# lastuid = ""
-# for i in data:
-#     if i[0] != lastuid:
-#         lastuid = i[0]
-#         print(i[0])
-# exit()
-
 if os.path.exists("../data/raw_csvs_real/"):
     f = open("../data/raw_csvs_real/" + phase_num + ".csv")
 else:
@@ -176,14 +169,15 @@ else:
 
 for row in data:
     char = row[2]
-    if skip_self and row[0] in self_uids:
+    cur_uid = row[0]
+    if skip_self and cur_uid in self_uids:
         continue
-    if skip_random and row[0] not in self_uids:
+    if skip_random and cur_uid not in self_uids:
         continue
     # if (char.isnumeric()):
     #     row.insert(2,"Nilou")
-    if row[0] != uid:
-        uid = row[0]
+    if cur_uid != uid:
+        uid = cur_uid
         ar += int(row[1])
         count += 1
     if char not in chars:
@@ -226,13 +220,13 @@ for row in data:
 
     # found = False
     # for char_row in chardata:
-    #     if char_row[0] == row[0] and not found:
+    #     if char_row[0] == cur_uid and not found:
     #         if char_char == char and char_row[3] == "Dendro":
     #             found = True
     found = False
-    if row[0] in spiral_rows:
-        if char in spiral_rows[row[0]] or (
-            "Trailblazer" in spiral_rows[row[0]] and "Trailblazer" in char
+    if cur_uid in spiral_rows:
+        if char in spiral_rows[cur_uid] or (
+            "Trailblazer" in spiral_rows[cur_uid] and "Trailblazer" in char
         ):
             found = True
 
@@ -248,7 +242,7 @@ for row in data:
             # # if found and foundDendro and not foundHydro: # Aggravate/Spread
             # if isValidChar:
             stats[char].sample_size_players += 1
-            for i in range(spiral_rows[row[0]][char]):
+            for i in range(spiral_rows[cur_uid][char]):
                 stats[char].stats_count["char_lvl"].append(float(row[3]))
                 stats[char].sample_size += 1
                 stats[char].stats_count["spd_sub"].append(float(row[23]))
