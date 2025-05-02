@@ -132,7 +132,10 @@ for spiral_row in spiral:
         #     if spiral_temp != ['Bailu', 'Jing Yuan', 'Tingyun', 'Yukong']:
         #         continue
         for i in range(5, 9):
-            if "Dan Heng â€¢ Imbibitor Lunae" in spiral_row[i]:
+            if spiral_row[i] in [
+                "Dan Heng â€¢ Imbibitor Lunae",
+                "Dan Heng \u2022 Imbibitor Lunae",
+            ]:
                 spiral_row[i] = "Dan Heng • Imbibitor Lunae"
             if "Topaz and Numby" in spiral_row[i]:
                 spiral_row[i] = "Topaz & Numby"
@@ -184,6 +187,7 @@ for row in data:
         if char in [
             "Dan Heng â€¢ Imbibitor Lunae",
             "Dan Heng Ã¢â‚¬Â¢ Imbibitor Lunae",
+            "Dan Heng \u2022 Imbibitor Lunae",
         ]:
             char = "Dan Heng • Imbibitor Lunae"
         elif "Topaz and Numby" in char:
@@ -450,18 +454,7 @@ for char in stats:
         print(CHARACTERS[iter_char]["char"])
         exit()
 
-    app_dict: dict[str, float] = {}
-    if not (pf_mode):
-        app_dict = {
-            "12_app": APP["12-1"]["4"][char]["app"],
-            "12_round": ROUND["12-1"]["4"][char]["round"],
-        }
-    else:
-        app_dict = {
-            "4_app": APP["4-1"]["4"][char]["app"],
-            "4_round": ROUND["4-1"]["4"][char]["round"],
-        }
-    temp_stats.append((CHARACTERS[iter_char] | stats[char].stats_write) | app_dict)
+    temp_stats.append(CHARACTERS[iter_char] | stats[char].stats_write)
     # temp_stats.append((CHARACTERS[iter_char]) | app_dict)
     iter_char += 1
 

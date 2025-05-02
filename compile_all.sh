@@ -68,7 +68,7 @@ python combine_comp.py
 python combine_comp.py -pf
 python combine_comp.py -as
 
-if [ -d "web_results" ]; then
+if [ -d "../web_results" ]; then
   python copyfiles.py
   python copyfiles.py -pf
   python copyfiles.py -as

@@ -325,11 +325,17 @@ def main() -> None:
                 char_chambers[room] = char_usages(
                     all_players, archetype, past_phase, [room], filename=room, offset=2
                 )
-            appearances = {}
-            rounds = {}
+            appearances: dict[str, dict[int, dict[str, cu.CharUsageData]]] = {}
+            rounds: dict[str, dict[int, dict[str, cu.CharUsageData]]] = {}
+            appearances_write: dict[
+                str, dict[int, dict[str, dict[str, float | str]]]
+            ] = {}
+            rounds_write: dict[str, dict[int, dict[str, dict[str, float | str]]]] = {}
             for room in char_chambers:
                 appearances[room] = {}
                 rounds[room] = {}
+                appearances_write[room] = {}
+                rounds_write[room] = {}
                 for star_num in char_chambers[room]:
                     appearances[room][star_num] = dict(
                         sorted(
@@ -338,31 +344,24 @@ def main() -> None:
                             reverse=True,
                         )
                     )
-                    if pf_mode:
-                        rounds[room][star_num] = dict(
-                            sorted(
-                                char_chambers[room][star_num].items(),
-                                key=lambda t: t[1].round,
-                                reverse=True,
-                            )
+                    rounds[room][star_num] = dict(
+                        sorted(
+                            char_chambers[room][star_num].items(),
+                            key=lambda t: t[1].round,
+                            reverse=pf_mode,
                         )
-                    else:
-                        rounds[room][star_num] = dict(
-                            sorted(
-                                char_chambers[room][star_num].items(),
-                                key=lambda t: t[1].round,
-                                reverse=False,
-                            )
-                        )
+                    )
+                    appearances_write[room][star_num] = {}
+                    rounds_write[room][star_num] = {}
                     for char in char_chambers[room][star_num]:
-                        appearances[room][star_num][char] = {
+                        appearances_write[room][star_num][char] = {
                             "app": char_chambers[room][star_num][char].app,
                             "rarity": char_chambers[room][star_num][char].rarity,
                             "diff": char_chambers[room][star_num][char].diff,
                         }
                         if char_chambers[room][star_num][char].round == 0:
                             continue
-                        rounds[room][star_num][char] = {
+                        rounds_write[room][star_num][char] = {
                             "round": char_chambers[room][star_num][char].round,
                             # "prev_round": prev_chambers[room][str(star_num)][char],
                             "rarity": char_chambers[room][star_num][char].rarity,
@@ -370,9 +369,9 @@ def main() -> None:
                         }
             if not whaleOnly and not f2pOnly:
                 with open("../char_results/appearance.json", "w") as out_file:
-                    out_file.write(dumps(appearances, indent=2))
+                    out_file.write(dumps(appearances_write, indent=2))
                 with open("../char_results/rounds.json", "w") as out_file:
-                    out_file.write(dumps(rounds, indent=2))
+                    out_file.write(dumps(rounds_write, indent=2))
             cur_time = time()
             print("done char stage:", round(cur_time - start_time, 2), "s")
             start_time = cur_time
@@ -392,11 +391,17 @@ def main() -> None:
                     room,
                     filename=room[0].split("-")[0],
                 )
-            appearances = {}
-            rounds = {}
+            appearances: dict[str, dict[int, dict[str, cu.CharUsageData]]] = {}
+            rounds: dict[str, dict[int, dict[str, cu.CharUsageData]]] = {}
+            appearances_write: dict[
+                str, dict[int, dict[str, dict[str, float | str]]]
+            ] = {}
+            rounds_write: dict[str, dict[int, dict[str, dict[str, float | str]]]] = {}
             for room in char_chambers:
                 appearances[room] = {}
                 rounds[room] = {}
+                appearances_write[room] = {}
+                rounds_write[room] = {}
                 for star_num in char_chambers[room]:
                     appearances[room][star_num] = dict(
                         sorted(
@@ -405,31 +410,24 @@ def main() -> None:
                             reverse=True,
                         )
                     )
-                    if pf_mode:
-                        rounds[room][star_num] = dict(
-                            sorted(
-                                char_chambers[room][star_num].items(),
-                                key=lambda t: t[1].round,
-                                reverse=True,
-                            )
+                    rounds[room][star_num] = dict(
+                        sorted(
+                            char_chambers[room][star_num].items(),
+                            key=lambda t: t[1].round,
+                            reverse=pf_mode,
                         )
-                    else:
-                        rounds[room][star_num] = dict(
-                            sorted(
-                                char_chambers[room][star_num].items(),
-                                key=lambda t: t[1].round,
-                                reverse=False,
-                            )
-                        )
+                    )
+                    appearances_write[room][star_num] = {}
+                    rounds_write[room][star_num] = {}
                     for char in char_chambers[room][star_num]:
-                        appearances[room][star_num][char] = {
+                        appearances_write[room][star_num][char] = {
                             "app": char_chambers[room][star_num][char].app,
                             "rarity": char_chambers[room][star_num][char].rarity,
                             "diff": char_chambers[room][star_num][char].diff,
                         }
                         if char_chambers[room][star_num][char].round == 0:
                             continue
-                        rounds[room][star_num][char] = {
+                        rounds_write[room][star_num][char] = {
                             "round": char_chambers[room][star_num][char].round,
                             # "prev_round": prev_chambers[room][str(star_num)][char],
                             "rarity": char_chambers[room][star_num][char].rarity,
@@ -437,9 +435,9 @@ def main() -> None:
                         }
             if not whaleOnly and not f2pOnly:
                 with open("../char_results/appearance_combine.json", "w") as out_file:
-                    out_file.write(dumps(appearances, indent=2))
+                    out_file.write(dumps(appearances_write, indent=2))
                 with open("../char_results/rounds_combine.json", "w") as out_file:
-                    out_file.write(dumps(rounds, indent=2))
+                    out_file.write(dumps(rounds_write, indent=2))
             cur_time = time()
             print("done char stage (combine):", round(cur_time - start_time, 2), "s")
             start_time = cur_time
