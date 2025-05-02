@@ -4,6 +4,7 @@ import os.path
 import sys
 
 sys.path.append("../Comps/")
+from combine_uids import write_combined_uids
 from comp_rates_config import RECENT_PHASE, as_mode, pf_mode
 
 skip_self = False
@@ -44,15 +45,14 @@ for _char_name, char in characters.items():
         for trailblazer_id in char["trailblazer_ids"]:
             trailblazer_ids.append(trailblazer_id)
 
-if os.path.exists("../char_results/uids.csv"):
-    with open("../char_results/uids.csv", encoding="UTF8") as f:
-        reader = csv.reader(f, delimiter=",")
-        uids = list(reader)
-        uids = [int(uid[0]) for uid in uids]
-        uids = list(dict.fromkeys(uids))
-        # uids = uids[uids.index({uid})+1:]
-else:
-    uids = [806411333]
+if not os.path.exists("../char_results/uids_unique.csv"):
+    write_combined_uids(RECENT_PHASE)
+with open("../char_results/uids_unique.csv", encoding="UTF8") as f:
+    reader = csv.reader(f, delimiter=",")
+    uids = list(reader)
+    uids = [int(uid[0]) for uid in uids]
+    uids = list(dict.fromkeys(uids))
+    # uids = uids[uids.index({uid})+1:]
 
 filenum = 1
 while os.path.exists("../mihomo/output" + str(filenum) + ".csv"):
