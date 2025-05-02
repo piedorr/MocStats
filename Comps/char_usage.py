@@ -107,6 +107,7 @@ def appearances(
             all_uids.add(user.player)
             # foundchar = resetfind()
             whaleComp = False
+            gigaWhale = False
             f2pComp = True
             sustainCount = 0
 
@@ -117,6 +118,8 @@ def appearances(
                     and user.chambers[chamber].char_cons[char] > 0
                 ):
                     whaleComp = True
+                    if user.chambers[chamber].char_cons[char] > 2:
+                        gigaWhale = True
                 if char in user.owned and user.owned[char].weapon in sigWeaps:
                     f2pComp = False
                 if CHARACTERS[char]["role"] == "Sustain":
@@ -131,11 +134,15 @@ def appearances(
                         and user.chambers[side_chamber].char_cons[char] > 0
                     ):
                         whaleComp = True
+                        if user.chambers[side_chamber].char_cons[char] > 2:
+                            gigaWhale = True
                     if char in user.owned and user.owned[char].weapon in sigWeaps:
                         f2pComp = False
 
-            if (whaleOnly and not whaleComp) or (
-                f2pOnly and (not f2pComp or whaleComp)
+            if (
+                gigaWhale
+                or (whaleOnly and not whaleComp)
+                or (f2pOnly and (not f2pComp or whaleComp))
             ):
                 continue
 

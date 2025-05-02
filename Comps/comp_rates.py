@@ -621,36 +621,30 @@ def used_comps(
             continue
 
         whale_comp = False
+        giga_whale = False
         f2p_comp = True
         sustain_count = 0
-        owned_chars = players[phase][comp.player].owned
         for char in range(4):
             comp_char = comp_tuple[char]
-            if CHARACTERS[comp_char]["availability"] == "Limited 5*":
-                if comp.char_cons and comp.char_cons[comp_char] > 0:
-                    whale_comp = True
-                elif comp_char in owned_chars:
-                    if owned_chars[comp_char].cons > 0:
-                        whale_comp = True
-                    if owned_chars[comp_char].weapon not in sigWeaps:
-                        f2p_comp = False
+            if (
+                CHARACTERS[comp_char]["availability"] == "Limited 5*"
+                and comp.char_cons
+                and comp.char_cons[comp_char] > 0
+            ):
+                whale_comp = True
+                if comp.char_cons[comp_char] > 2:
+                    giga_whale = True
             if (
                 not pf_mode
-                and not as_mode
                 and side_comp_tuple
                 and CHARACTERS[side_comp_tuple[char]]["availability"] == "Limited 5*"
-                and not whale_comp
                 and side_comp
+                and side_comp.char_cons
+                and side_comp.char_cons[side_comp_tuple[char]] > 0
             ):
-                side_owned_chars = players[phase][side_comp.player].owned
-                side_comp_char = side_comp_tuple[char]
-                if side_comp.char_cons and side_comp.char_cons[side_comp_char] > 0:
-                    whale_comp = True
-                elif (
-                    side_comp_char in side_owned_chars
-                    and side_owned_chars[side_comp_char].cons > 0
-                ):
-                    whale_comp = True
+                whale_comp = True
+                if side_comp.char_cons[side_comp_tuple[char]] > 2:
+                    giga_whale = True
             # if comp_char not in total_char_comps:
             #     total_char_comps[comp_char] = 0
             # total_char_comps[comp_char] += 1
@@ -668,11 +662,13 @@ def used_comps(
 
         if whale_comp:
             whale_count += 1
-        if whaleOnly and not whale_comp:
-            continue
         if f2p_comp:
             f2p_count += 1
-        if f2pOnly and (not f2p_comp or whale_comp):
+        if (
+            giga_whale
+            or (whaleOnly and not whale_comp)
+            or (f2pOnly and (not f2p_comp or whale_comp))
+        ):
             continue
 
         if comp_tuple not in comps_dict[4]:
