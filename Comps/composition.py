@@ -122,6 +122,7 @@ class Composition:
                 "Jingliu",
                 "Himeko",
                 "Mydei",
+                "Anaxa",
             ]:
                 self.dps.append(character)
             elif character in [

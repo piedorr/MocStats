@@ -48,11 +48,11 @@ with open(relative_path("../data/light_cones.json")) as char_file:
     LIGHT_CONES: dict[str, dict[str, str | int | None]] = load(char_file)
 
 # don't add underscore, i.e. 2.2.1"_pf"
-RECENT_PHASE = "3.2.1"
+RECENT_PHASE = "3.2.2"
 
 # if no past phase, leave blank
 # add underscore, i.e. 2.2.1"_pf"
-past_phase = "3.1.3"
+past_phase = "3.2.1"
 
 global pf_mode
 global as_mode
