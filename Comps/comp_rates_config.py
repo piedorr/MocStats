@@ -1,5 +1,7 @@
 from argparse import ArgumentParser
 from json import load
+from os.path import dirname as path_dirname
+from os.path import join as path_join
 
 parser = ArgumentParser()
 parser.add_argument("-a", "--all", action="store_true")
@@ -33,10 +35,16 @@ parser.add_argument(
 
 args = parser.parse_args()
 
-with open("../data/characters.json") as char_file:
+
+def relative_path(relative_path: str) -> str:
+    script_dir = path_dirname(__file__)
+    return path_join(script_dir, relative_path)
+
+
+with open(relative_path("../data/characters.json")) as char_file:
     CHARACTERS: dict[str, dict[str, str | int | None]] = load(char_file)
 
-with open("../data/light_cones.json") as char_file:
+with open(relative_path("../data/light_cones.json")) as char_file:
     LIGHT_CONES: dict[str, dict[str, str | int | None]] = load(char_file)
 
 # don't add underscore, i.e. 2.2.1"_pf"
