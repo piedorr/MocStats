@@ -604,10 +604,6 @@ def used_comps(
         comp_iter += 1
 
         comp_tuple = tuple(comp.characters)
-        if side_comp:
-            side_comp_tuple = tuple(side_comp.characters)
-        else:
-            side_comp_tuple = None
 
         total_comps += 1
         if comp.player in self_uids:
@@ -615,7 +611,7 @@ def used_comps(
         if len(comp_tuple) < 4:
             #     lessFour.append(comp.player)
             continue
-        if side_comp_tuple and len(side_comp_tuple) < 4:
+        if side_comp and len(side_comp.characters) < 4:
             continue
 
         whale_comp = False
@@ -632,22 +628,21 @@ def used_comps(
                 whale_comp = True
                 if comp.char_cons[comp_char] > 2:
                     giga_whale = True
-            if (
-                not pf_mode
-                and side_comp_tuple
-                and CHARACTERS[side_comp_tuple[char]]["availability"] == "Limited 5*"
-                and side_comp
-                and side_comp.char_cons
-                and side_comp.char_cons[side_comp_tuple[char]] > 0
+            if CHARACTERS[comp_char]["role"] == "Sustain":
+                sustain_count += 1
+
+        if not pf_mode and side_comp and side_comp.char_cons:
+            for char in side_comp.characters:
+                if (
+                    CHARACTERS[char]["availability"] == "Limited 5*"
+                    and side_comp.char_cons[char] > 0
             ):
                 whale_comp = True
-                if side_comp.char_cons[side_comp_tuple[char]] > 2:
+                    if side_comp.char_cons[char] > 2:
                     giga_whale = True
             # if comp_char not in total_char_comps:
             #     total_char_comps[comp_char] = 0
             # total_char_comps[comp_char] += 1
-            if CHARACTERS[comp_char]["role"] == "Sustain":
-                sustain_count += 1
         # check_comp_tuple = (
         #     "Firefly",
         #     "Fugue",
