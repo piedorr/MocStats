@@ -636,10 +636,10 @@ def used_comps(
                 if (
                     CHARACTERS[char]["availability"] == "Limited 5*"
                     and side_comp.char_cons[char] > 0
-            ):
-                whale_comp = True
+                ):
+                    whale_comp = True
                     if side_comp.char_cons[char] > 2:
-                    giga_whale = True
+                        giga_whale = True
             # if comp_char not in total_char_comps:
             #     total_char_comps[comp_char] = 0
             # total_char_comps[comp_char] += 1
@@ -657,10 +657,8 @@ def used_comps(
             whale_count += 1
         if f2p_comp:
             f2p_count += 1
-        if (
-            giga_whale
-            or (whaleOnly and not whale_comp)
-            or (f2pOnly and (not f2p_comp or whale_comp))
+        if (whaleOnly and (not whale_comp or giga_whale)) or (
+            f2pOnly and (not f2p_comp or whale_comp)
         ):
             continue
 
@@ -853,7 +851,7 @@ def used_duos(
                 and comp.char_cons
                 and comp.char_cons[char] > 0
             ):
-                        whale_comp = True
+                whale_comp = True
             if CHARACTERS[char]["role"] == "Sustain":
                 sustain_count += 1
 
