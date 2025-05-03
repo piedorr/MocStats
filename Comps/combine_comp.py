@@ -1,5 +1,6 @@
-from comp_rates_config import RECENT_PHASE, pf_mode, as_mode
 import json
+
+from comp_rates_config import RECENT_PHASE, as_mode, pf_mode
 
 file_names = ["top"]
 moc_names = ["10-1", "10-2", "11-1", "11-2", "12-1", "12-2"]
@@ -23,7 +24,7 @@ for file_name in file_names:
     with open(
         "../comp_results/" + RECENT_PHASE_PF + "/json/" + file_name + ".json"
     ) as f:
-        team_data = json.load(f)
+        team_data: list[dict[str, str | float]] = json.load(f)
 
     with open(
         "../comp_results/" + RECENT_PHASE_PF + "/json/" + file_name + "_C1.json"
@@ -31,8 +32,8 @@ for file_name in file_names:
         team_c1_data = json.load(f)
 
     # Create a dictionary to store the matched teams
-    matched_teams = {}
-    matched_teams_c1 = {}
+    matched_teams: dict[tuple[str | float, ...], dict[str, str | float]] = {}
+    matched_teams_c1: dict[tuple[str | float, ...], dict[str, str | float]] = {}
 
     # Iterate over the team_data and create a tuple key for each team
     for team in team_data:

@@ -106,9 +106,9 @@ def appearances(
                 continue
             all_uids.add(user.player)
             # foundchar = resetfind()
-            whaleComp = False
-            gigaWhale = False
-            f2pComp = True
+            whale_comp = False
+            giga_whale = False
+            f2p_comp = True
             sustainCount = 0
 
             for char in user.chambers[chamber].characters:
@@ -117,11 +117,11 @@ def appearances(
                     and user.chambers[chamber].char_cons
                     and user.chambers[chamber].char_cons[char] > 0
                 ):
-                    whaleComp = True
+                    whale_comp = True
                     if user.chambers[chamber].char_cons[char] > 2:
-                        gigaWhale = True
+                        giga_whale = True
                 if char in user.owned and user.owned[char].weapon in sigWeaps:
-                    f2pComp = False
+                    f2p_comp = False
                 if CHARACTERS[char]["role"] == "Sustain":
                     sustainCount += 1
 
@@ -133,16 +133,16 @@ def appearances(
                         and user.chambers[side_chamber].char_cons
                         and user.chambers[side_chamber].char_cons[char] > 0
                     ):
-                        whaleComp = True
+                        whale_comp = True
                         if user.chambers[side_chamber].char_cons[char] > 2:
-                            gigaWhale = True
+                            giga_whale = True
                     if char in user.owned and user.owned[char].weapon in sigWeaps:
-                        f2pComp = False
+                        f2p_comp = False
 
             if (
-                gigaWhale
-                or (whaleOnly and not whaleComp)
-                or (f2pOnly and (not f2pComp or whaleComp))
+                giga_whale
+                or (whaleOnly and not whale_comp)
+                or (f2pOnly and (not f2p_comp or whale_comp))
             ):
                 continue
 
@@ -154,12 +154,12 @@ def appearances(
                     user_chars[char].add(user.player)
 
                 app[char].app_flat += 1
-                if whaleComp == whaleOnly and (not f2pOnly or f2pComp):
+                if whale_comp == whaleOnly and (not f2pOnly or f2p_comp):
                     app[char].app_flat_exclude += 1
 
                 if (
-                    whaleComp == whaleOnly
-                    and (not f2pOnly or f2pComp)
+                    whale_comp == whaleOnly
+                    and (not f2pOnly or f2p_comp)
                     and (sustainCount <= 1)
                 ):
                     app[char].round_list[cur_chamber].append(user_round)
@@ -184,7 +184,7 @@ def appearances(
                     if user_char.weapon not in app[char].weap_freq:
                         app[char].weap_freq[user_char.weapon] = RoundApp()
                     app[char].weap_freq[user_char.weapon].app_flat += 1
-                    if not whaleComp and (sustainCount <= 1):
+                    if not whale_comp and (sustainCount <= 1):
                         app[char].weap_freq[user_char.weapon].round_list[
                             cur_chamber
                         ].append(user_round)
@@ -193,7 +193,7 @@ def appearances(
                     if user_char.artifacts not in app[char].arti_freq:
                         app[char].arti_freq[user_char.artifacts] = RoundApp()
                     app[char].arti_freq[user_char.artifacts].app_flat += 1
-                    if not whaleComp and (sustainCount <= 1):
+                    if not whale_comp and (sustainCount <= 1):
                         app[char].arti_freq[user_char.artifacts].round_list[
                             cur_chamber
                         ].append(user_round)
@@ -202,7 +202,7 @@ def appearances(
                     if user_char.planars not in app[char].planar_freq:
                         app[char].planar_freq[user_char.planars] = RoundApp()
                     app[char].planar_freq[user_char.planars].app_flat += 1
-                    if not whaleComp and (sustainCount <= 1):
+                    if not whale_comp and (sustainCount <= 1):
                         app[char].planar_freq[user_char.planars].round_list[
                             cur_chamber
                         ].append(user_round)

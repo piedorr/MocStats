@@ -825,7 +825,9 @@ def duo_usages(
     check_duo: bool = False,
     filename: str = "duo_usages",
 ) -> None:
-    duos_dict = used_duos(players, comps, rooms, usage, check_duo, archetype)
+    duos_dict: dict[str, dict[str, cu.RoundApp]] = used_duos(
+        players, comps, rooms, usage, check_duo, archetype
+    )
     duo_write(duos_dict, usage, filename, archetype, check_duo)
 
 
@@ -838,11 +840,12 @@ def used_duos(
     archetype: str,
     check_duo: bool,
     phase: str = RECENT_PHASE,
-):
+) -> dict[str, dict[str, cu.RoundApp]]:
     # Returns dictionary of all the duos used and how many times they were used
-    duos_dict = {}
+    duos_dict: dict[tuple[str, str], cu.RoundApp] = {}
 
     for comp in comps:
+        cur_room = list(str(comp.room).split("-"))[0]
         if len(comp.characters) < 2 or comp.room not in rooms:
             continue
 
@@ -861,52 +864,30 @@ def used_duos(
             is_triple_dps = False
 
             if duo not in duos_dict:
-                duos_dict[duo] = {
-                    "app_flat": 0,
-                    "round_num": {
-                        "1": [],
-                        "2": [],
-                        "3": [],
-                        "4": [],
-                        "5": [],
-                        "6": [],
-                        "7": [],
-                        "8": [],
-                        "9": [],
-                        "10": [],
-                        "11": [],
-                        "12": [],
-                    },
-                }
-            duos_dict[duo]["app_flat"] += 1
+                duos_dict[duo] = cu.RoundApp()
+            duos_dict[duo].app_flat += 1
 
             if is_triple_dps and check_duo:
                 continue
             if (not whale_comp) and sustain_count <= 1:
-                duos_dict[duo]["round_num"][list(str(comp.room).split("-"))[0]].append(
-                    comp.round_num
-                )
+                duos_dict[duo].round_list[cur_room].append(comp.round_num)
 
-    sorted_duos = sorted(
-        duos_dict.items(), key=lambda t: t[1]["app_flat"], reverse=True
-    )
+    sorted_duos = sorted(duos_dict.items(), key=lambda t: t[1].app_flat, reverse=True)
     duos_dict = {k: v for k, v in sorted_duos}
 
-    sorted_duos = {}
+    return_duos: dict[str, dict[str, cu.RoundApp]] = {}
     for duo in duos_dict:
         cur_duo = duos_dict[duo]
         if usage[4][duo[0]].app_flat > 0:
             # Calculate the appearance rate of the duo by dividing the appearance count
             # of the duo with the appearance count of the first character
-            cur_duo["uses"] = round(
-                cur_duo["app_flat"] * 100 / usage[4][duo[0]].app_flat, 2
-            )
-            cur_duo["app_flat"] = 0
-            avg_round = []
+            cur_duo.app = round(cur_duo.app_flat * 100 / usage[4][duo[0]].app_flat, 2)
+            cur_duo.app_flat = 0
+            avg_round: list[float] = []
             for room_num in range(1, 13):
-                duo_round = cur_duo["round_num"][str(room_num)]
+                duo_round = cur_duo.round_list[str(room_num)]
                 if duo_round:
-                    cur_duo["app_flat"] += len(duo_round)
+                    cur_duo.app_flat += len(duo_round)
                     if len(duo_round) > 1:
                         skewness = skew(
                             duo_round,
@@ -922,25 +903,14 @@ def used_duos(
                     # avg_round.append(mean(duo_round))
                     # avg_round += duo_round
             if avg_round:
-                cur_duo["round_num"] = round(mean(avg_round), 2)
-                if pf_mode:
-                    cur_duo["round_num"] = round(cur_duo["round_num"])
+                cur_duo.round = round(mean(avg_round), 0 if pf_mode else 2)
             else:
-                cur_duo["round_num"] = 99.99
-                if pf_mode:
-                    cur_duo["round_num"] = 0
-            if duo[0] not in sorted_duos:
-                sorted_duos[duo[0]] = []
-            sorted_duos[duo[0]].append(
-                [
-                    duo[1],
-                    cur_duo["uses"],
-                    cur_duo["round_num"],
-                    cur_duo["app_flat"],
-                ]
-            )
+                cur_duo.round = 0 if pf_mode else 99.99
+            if duo[0] not in return_duos:
+                return_duos[duo[0]] = {}
+            return_duos[duo[0]][duo[1]] = cur_duo
 
-    return sorted_duos
+    return return_duos
 
 
 @profile
@@ -1181,14 +1151,15 @@ def comp_usages_write(
 
 @profile
 def duo_write(
-    duos_dict,
+    duos_dict: dict[str, dict[str, cu.RoundApp]],
     usage: dict[int, dict[str, cu.CharUsageData]],
     filename: str,
     archetype: str,
     check_duo: bool,
 ) -> None:
-    out_duos = []
+    out_duos: list[dict[str, str | float]] = []
     for char in duos_dict:
+        duo_keys = list(duos_dict[char].keys())
         if usage[4][char].app_flat > 0:
             out_duos_append = {
                 "char": char,
@@ -1197,11 +1168,11 @@ def duo_write(
             for i in range(duo_dict_len):
                 j = str(i + 1)
                 if i < len(duos_dict[char]):
-                    duo_char = duos_dict[char][i]
-                    out_duos_append["char_" + j] = duo_char[0]
-                    out_duos_append["app_rate_" + j] = str(duo_char[1]) + "%"
-                    out_duos_append["avg_round_" + j] = duo_char[2]
-                    out_duos_append["app_flat_" + j] = duo_char[3]
+                    duo_char = duos_dict[char][duo_keys[i]]
+                    out_duos_append["char_" + j] = duo_keys[i]
+                    out_duos_append["app_rate_" + j] = str(duo_char.app) + "%"
+                    out_duos_append["avg_round_" + j] = duo_char.round
+                    out_duos_append["app_flat_" + j] = duo_char.app_flat
                 else:
                     out_duos_append["char_" + j] = "-"
                     out_duos_append["app_rate_" + j] = "0.00%"
@@ -1216,11 +1187,12 @@ def duo_write(
         open("../char_results/" + filename + ".csv", "w", newline="")
     )
     count = 0
-    out_duos_check = {}
-    out_duos_exclu = {}
+    out_duos_check: dict[str, dict[str, dict[str, str | float]]] = {}
+    out_duos_exclu: dict[str, dict[str, dict[str, str | float]]] = {}
     for duos in out_duos:
-        out_duos_check[duos["char"]] = {}
-        out_duos_exclu[duos["char"]] = {}
+        duo_char = str(duos["char"])
+        out_duos_check[duo_char] = {}
+        out_duos_exclu[duo_char] = {}
         if count == 0:
             # csv_writer.writerow(duos.keys())
             temp_duos = ["char", "app"]
@@ -1234,7 +1206,7 @@ def duo_write(
             count += 1
         # csv_writer.writerow(duos.values())
         temp_duos = [
-            duos["char"],
+            duo_char,
             duos["app"],
         ]
         for i in range(10):
@@ -1248,33 +1220,35 @@ def duo_write(
         if check_duo:
             for i in range(duo_dict_len):
                 j = str(i + 1)
-                duos["app_rate_" + j] = float(duos["app_rate_" + j][:-1])
+                duo_app_j = float(str(duos["app_rate_" + j])[:-1])
+                duo_round_j = float(duos["avg_round_" + j])
+                duo_j = str(duos["char_" + j])
                 if (
-                    duos["app_rate_" + j] >= 1
-                    and duos["app_flat_" + j] >= 10
+                    duo_app_j >= 1
+                    and float(duos["app_flat_" + j]) >= 10
                     and (
-                        (duos["avg_round_" + j] < usage[4][duos["char_" + j]]["round"])
-                        or (duos["avg_round_" + j] < usage[4][duos["char"]]["round"])
+                        (duo_round_j < usage[4][duo_j].round)
+                        or (duo_round_j < usage[4][str(duo_char)].round)
                     )
-                    and usage[4][duos["char_" + j]]["round"] != 99.99
-                    and usage[4][duos["char_" + j]]["round"] != 0
+                    and usage[4][duo_j].round != 99.99
+                    and usage[4][duo_j].round != 0
                 ):
-                    # out_duos_exclu[duos["char"]][duos["char_" + j]] = {
-                    #     "app": duos["app_rate_" + j],
-                    #     "avg_round": duos["avg_round_" + j]
+                    # out_duos_exclu[duo_char][duo_j] = {
+                    #     "app": duo_app_j,
+                    #     "avg_round": duo_round_j
                     # }
                     # duos.pop("char_" + j)
                     # duos.pop("app_rate_" + j)
                     # duos.pop("avg_round_" + j)
                     # continue
-                    out_duos_check[duos["char"]][duos["char_" + j]] = {
-                        "app": duos["app_rate_" + j],
-                        "avg_round": duos["avg_round_" + j],
+                    out_duos_check[duo_char][duo_j] = {
+                        "app": duo_app_j,
+                        "avg_round": duo_round_j,
                     }
     if check_duo:
         char_names = list(CHARACTERS.keys())
-        out_dd = {}
-        out_dd_list = []
+        out_dd: dict[frozenset[str], dict[str, str | float]] = {}
+        out_dd_list: list[list[str]] = []
         csv_writer = csvwriter(open("../char_results/duo_check.csv", "w", newline=""))
         for char_i in char_names:
             for char_j in char_names:
@@ -1317,15 +1291,15 @@ def duo_write(
             # print(out_dd_print)
         for out_dd_print in out_dd:
             print(
-                out_dd[out_dd_print]["char_i"]
+                str(out_dd[out_dd_print]["char_i"])
                 + ", "
-                + out_dd[out_dd_print]["char_i_app"]
+                + str(out_dd[out_dd_print]["char_i_app"])
                 + ", "
-                + out_dd[out_dd_print]["char_j"]
+                + str(out_dd[out_dd_print]["char_j"])
                 + ", "
-                + out_dd[out_dd_print]["char_j_app"]
+                + str(out_dd[out_dd_print]["char_j_app"])
                 + ", "
-                + out_dd[out_dd_print]["avg_round"]
+                + str(out_dd[out_dd_print]["avg_round"])
             )
         if __name__ == "__main__":
             notification.notify(
@@ -1342,7 +1316,7 @@ def duo_write(
         for duo_value in ["char"] + [f"char_{i}" for i in range(1, 31)]:
             if out_duos[i][duo_value]:
                 out_duos[i][duo_value] = (
-                    out_duos[i][duo_value].lower().replace(" ", "-")
+                    str(out_duos[i][duo_value]).lower().replace(" ", "-")
                 )
                 if out_duos[i][duo_value] in slug:
                     out_duos[i][duo_value] = slug[out_duos[i][duo_value]]
