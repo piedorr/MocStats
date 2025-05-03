@@ -843,6 +843,7 @@ def used_duos(
 ) -> dict[str, dict[str, cu.RoundApp]]:
     # Returns dictionary of all the duos used and how many times they were used
     duos_dict: dict[tuple[str, str], cu.RoundApp] = {}
+    comp_iter = 0
 
     for comp in comps:
         cur_room = list(str(comp.room).split("-"))[0]
@@ -852,12 +853,37 @@ def used_duos(
         whale_comp = False
         sustain_count = 0
         for char in comp.characters:
-            if CHARACTERS[char]["availability"] == "Limited 5*":
-                if comp.char_cons:
-                    if comp.char_cons[char] > 0:
+            if (
+                CHARACTERS[char]["availability"] == "Limited 5*"
+                and comp.char_cons
+                and comp.char_cons[char] > 0
+            ):
                         whale_comp = True
             if CHARACTERS[char]["role"] == "Sustain":
                 sustain_count += 1
+
+        side_comp = None
+        if comp_iter - 1 >= 0:
+            if (
+                comps[comp_iter - 1].player == comp.player
+                and comps[comp_iter - 1].room == comp.room
+            ):
+                side_comp = comps[comp_iter - 1]
+        if not side_comp and comp_iter + 1 < len(comps):
+            if (
+                comps[comp_iter + 1].player == comp.player
+                and comps[comp_iter + 1].room == comp.room
+            ):
+                side_comp = comps[comp_iter + 1]
+        comp_iter += 1
+
+        if not pf_mode and side_comp and side_comp.char_cons:
+            for char in side_comp.characters:
+                if (
+                    CHARACTERS[char]["availability"] == "Limited 5*"
+                    and side_comp.char_cons[char] > 0
+                ):
+                    whale_comp = True
 
         duos = list(permutations(comp.characters, 2))
         for duo in duos:
