@@ -2,25 +2,27 @@ import sys
 
 sys.path.append("../Comps/")
 
-import os
-import numpy as np
 import csv
+import os
 import statistics
 
 # matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
-from scipy.stats import skew
-from pynput import keyboard
-from nohomo_config import (
-    phase_num,
+import numpy as np
+from comp_rates_config import (
+    RECENT_PHASE_PF,
+    pf_mode,
     run_all_chars,
     run_chars_name,
-    pf_mode,
+    skew_num,
     skip_random,
     skip_self,
-    skew_num,
+)
+from nohomo_config import (
     print_chart,
 )
+from pynput import keyboard
+from scipy.stats import skew  # type: ignore
 
 global self_uids
 if os.path.isfile("../../uids.csv"):
@@ -30,28 +32,28 @@ if os.path.isfile("../../uids.csv"):
 else:
     self_uids = []
 
-with open("output1.csv", "r") as f:
+with open("output1.csv") as f:
     reader = csv.reader(f, delimiter=",")
     headers = next(reader)
     data = np.array(list(reader))
 
 if os.path.exists("../data/raw_csvs_real/"):
-    f = open("../data/raw_csvs_real/" + phase_num + ".csv", "r")
+    f = open("../data/raw_csvs_real/" + RECENT_PHASE_PF + ".csv")
 else:
-    f = open("../data/raw_csvs/" + phase_num + ".csv", "r")
+    f = open("../data/raw_csvs/" + RECENT_PHASE_PF + ".csv")
 reader = csv.reader(f, delimiter=",")
 headers = next(reader)
 spiral = list(reader)
 
-with open("../char_results/all.csv", "r") as f:
+with open("../char_results/all.csv") as f:
     reader = csv.reader(f, delimiter=",")
     col_names_build = next(reader)
     build = np.array(list(reader))
 
 archetype = "all"
 
+chars: list[str] = []
 if run_all_chars:
-    chars = []
     for row in build:
         chars.append(row[0])
 else:
@@ -63,7 +65,7 @@ sample = {}
 weapons = {}
 copy_weapons = {}
 
-spiral_rows = {}
+spiral_rows: dict[str, set[str]] = {}
 for spiral_row in spiral:
     if (
         int("".join(filter(str.isdigit, spiral_row[1]))) > 11
@@ -154,134 +156,50 @@ for char in chars:
 statkeys = list(stats[chars[0]][weapons[chars[0]][0]].keys())
 
 for row in data:
+    cur_char = row[2]
     if skip_self and row[0] in self_uids:
         continue
     if skip_random and row[0] not in self_uids:
         continue
-    # if (row[2].isnumeric()):
-    #     row.insert(2,"Nilou")
-    if "Dan Heng â€¢ Imbibitor Lunae" in row[2]:
-        row[2] = "Dan Heng • Imbibitor Lunae"
-    if "Topaz and Numby" in row[2]:
-        row[2] = "Topaz & Numby"
-    if row[2] == "Trailblazer" or row[2] == "March 7th":
+    if "Dan Heng â€¢ Imbibitor Lunae" in cur_char:
+        cur_char = "Dan Heng • Imbibitor Lunae"
+    if "Topaz and Numby" in cur_char:
+        cur_char = "Topaz & Numby"
+    if cur_char == "Trailblazer" or cur_char == "March 7th":
         match row[4]:
             case "Fire":
-                row[2] = "Fire " + row[2]
+                cur_char = "Fire " + cur_char
             case "Physical":
-                row[2] = "Physical " + row[2]
+                cur_char = "Physical " + cur_char
             case "Ice":
-                row[2] = "Ice " + row[2]
+                cur_char = "Ice " + cur_char
             case "Lightning":
-                row[2] = "Lightning " + row[2]
+                cur_char = "Lightning " + cur_char
             case "Wind":
-                row[2] = "Wind " + row[2]
+                cur_char = "Wind " + cur_char
             case "Quantum":
-                row[2] = "Quantum " + row[2]
+                cur_char = "Quantum " + cur_char
             case "Imaginary":
-                row[2] = "Imaginary " + row[2]
-    # if row[2] == char and float(row[13]) < 100: #EM < 100
-    # for chars_row in chars:
-    #     if chars_row[2] == "Traveler":
-    #         if chars_row[3] == "Geo":
-    #             chars_row[2] = "Traveler-G"
-    #         elif chars_row[3] == "Anemo":
-    #             chars_row[2] = "Traveler-A"
-    #         elif chars_row[3] == "Electro":
-    #             chars_row[2] = "Traveler-E"
-    #         elif chars_row[3] == "Dendro":
-    #             chars_row[2] = "Traveler-D"
-    #     # if spiral_row[0] == chars_row[0] and chars_row[2] == char:
-    #     if row[0] == chars_row[0] and chars_row[2] == char:
-    if row[2] in chars:
+                cur_char = "Imaginary " + cur_char
+            case _:
+                pass
+    if cur_char in chars:
         found = False
         if row[0] in spiral_rows:
-            if row[2] in spiral_rows[row[0]] or (
-                "Trailblazer" in spiral_rows[row[0]] and "Trailblazer" in row[2]
+            if cur_char in spiral_rows[row[0]] or (
+                "Trailblazer" in spiral_rows[row[0]] and "Trailblazer" in cur_char
             ):
                 found = True
-            # for char in spiral_rows[row[0]]:
-            #     if char in ["Thoma","Yoimiya","Yanfei","Hu Tao","Xinyan","Diluc","Amber","Xiangling","Klee","Bennett","Dehya"]:
-            #         foundPyro = True
             if found:
-                # if row[5] not in weapons:
-                #     weapons.append(row[5])
-                #     stats[row[2]][row[5]] = {
-                #         "name": row[5],
-                #         "attack_lvl": [],
-                #         "skill_lvl": [],
-                #         "burst_lvl": [],
-                #         "max_hp": [],
-                #         "atk": [],
-                #         "dfns": [],
-                #         "crate": [],
-                #         "cdmg": [],
-                #         "charge": [],
-                #         "heal": [],
-                #         "em": [],
-                #         "phys": [],
-                #         "pyro": [],
-                #         "electro": [],
-                #         "hydro": [],
-                #         "dendro": [],
-                #         "anemo": [],
-                #         "geo": [],
-                #         "cryo": []
-                #     }
-                #     median[char][row[5]] = {
-                #         "name": row[5],
-                #         "attack_lvl": 0,
-                #         "skill_lvl": 0,
-                #         "burst_lvl": 0,
-                #         "max_hp": 0,
-                #         "atk": 0,
-                #         "dfns": 0,
-                #         "crate": 0,
-                #         "cdmg": 0,
-                #         "charge": 0,
-                #         "heal": 0,
-                #         "em": 0,
-                #         "phys": 0,
-                #         "pyro": 0,
-                #         "electro": 0,
-                #         "hydro": 0,
-                #         "dendro": 0,
-                #         "anemo": 0,
-                #         "geo": 0,
-                #         "cryo": 0
-                #     }
-                #     mean[char][row[5]] = {
-                #         "name": row[5],
-                #         "attack_lvl": 0,
-                #         "skill_lvl": 0,
-                #         "burst_lvl": 0,
-                #         "max_hp": 0,
-                #         "atk": 0,
-                #         "dfns": 0,
-                #         "crate": 0,
-                #         "cdmg": 0,
-                #         "charge": 0,
-                #         "heal": 0,
-                #         "em": 0,
-                #         "phys": 0,
-                #         "pyro": 0,
-                #         "electro": 0,
-                #         "hydro": 0,
-                #         "dendro": 0,
-                #         "anemo": 0,
-                #         "geo": 0,
-                #         "cryo": 0
-                #     }
-                #     sample[row[2]][row[5]] = 0
-                if row[5] in weapons[row[2]]:
-                    sample[row[2]][row[5]] += 1
-                    stats[row[2]][row[5]]["char_lvl"].append(float(row[3]))
+                if row[5] in weapons[cur_char]:
+                    sample[cur_char][row[5]] += 1
+                    stats[cur_char][row[5]]["char_lvl"].append(float(row[3]))
                     if row[6].isnumeric():
-                        stats[row[2]][row[5]]["light_cone_lvl"].append(float(row[6]))
+                        stats[cur_char][row[5]]["light_cone_lvl"].append(float(row[6]))
                     for i in range(3, 11):
-                        stats[row[2]][row[5]][statkeys[i]].append(float(row[i + 4]))
+                        stats[cur_char][row[5]][statkeys[i]].append(float(row[i + 4]))
                     for i in range(11, 19):
-                        stats[row[2]][row[5]][statkeys[i]].append(
+                        stats[cur_char][row[5]][statkeys[i]].append(
                             float(row[i + 4]) / 100
                         )
 

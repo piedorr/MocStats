@@ -29,23 +29,8 @@ parser.add_argument(
     action="store_true",
 )
 
-# # Unused for now
-# parser.add_argument("-p", "--past")
-# parser.add_argument("-r", "--recent")
-
 args = parser.parse_args()
 
-
-def relative_path(relative_path: str) -> str:
-    script_dir = path_dirname(__file__)
-    return path_join(script_dir, relative_path)
-
-
-with open(relative_path("../data/characters.json")) as char_file:
-    CHARACTERS: dict[str, dict[str, str | int | None]] = load(char_file)
-
-with open(relative_path("../data/light_cones.json")) as char_file:
-    LIGHT_CONES: dict[str, dict[str, str | int | None]] = load(char_file)
 
 # don't add underscore, i.e. 2.2.1"_pf"
 RECENT_PHASE = "3.2.2"
@@ -155,6 +140,22 @@ elif args.duos:
         "Duos check",
     ]
 
+alt_comps = "Character specific infographics" in run_commands
+if alt_comps and char_app_rate_threshold > app_rate_threshold:
+    app_rate_threshold = char_app_rate_threshold
+
+
+def relative_path(relative_path: str) -> str:
+    script_dir = path_dirname(__file__)
+    return path_join(script_dir, relative_path)
+
+
+with open(relative_path("../data/characters.json")) as char_file:
+    CHARACTERS: dict[str, dict[str, str | int | None]] = load(char_file)
+
+with open(relative_path("../data/light_cones.json")) as char_file:
+    LIGHT_CONES: dict[str, dict[str, str | int | None]] = load(char_file)
+
 sigWeaps: list[str] = []
 standWeaps = [
     "Night on the Milky Way",
@@ -176,7 +177,3 @@ for light_cone in LIGHT_CONES:
         and LIGHT_CONES[light_cone]["name"] not in standWeaps
     ):
         sigWeaps += [str(LIGHT_CONES[light_cone]["name"])]
-
-alt_comps = "Character specific infographics" in run_commands
-if alt_comps and char_app_rate_threshold > app_rate_threshold:
-    app_rate_threshold = char_app_rate_threshold

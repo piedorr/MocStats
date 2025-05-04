@@ -45,9 +45,9 @@ with open("../char_results/" + as_phase + "_as/all_E0S0.json") as stats:
     as_dict_s0 = json.load(stats)
 
 uses = []
-uses_moc = {}
-uses_pf = {}
-uses_as = {}
+uses_moc: dict[str, dict[str, dict[str, dict[str, float]]]] = {}
+uses_pf: dict[str, dict[str, dict[str, dict[str, float]]]] = {}
+uses_as: dict[str, dict[str, dict[str, dict[str, float]]]] = {}
 stats_len = {
     "weapons": 10,
     "artifacts": 10,
@@ -180,13 +180,25 @@ for char in CHARACTERS:
     char = slugify(char)
     if char in slug:
         char = slug[char]
-    moc_dict_e1_char = next((x for x in moc_dict_e1 if x["char"] == char), {})
-    moc_dict_s0_char = next((x for x in moc_dict_s0 if x["char"] == char), {})
-    pf_dict_e1_char = next((x for x in pf_dict_e1 if x["char"] == char), {})
-    pf_dict_s0_char = next((x for x in pf_dict_s0 if x["char"] == char), {})
-    as_dict_e1_char = next((x for x in as_dict_e1 if x["char"] == char), {})
-    as_dict_s0_char = next((x for x in as_dict_s0 if x["char"] == char), {})
-    uses_temp = {
+    moc_dict_e1_char: dict[str, float] = next(
+        (x for x in moc_dict_e1 if x["char"] == char), dict[str, float]()
+    )
+    moc_dict_s0_char: dict[str, float] = next(
+        (x for x in moc_dict_s0 if x["char"] == char), dict[str, float]()
+    )
+    pf_dict_e1_char: dict[str, float] = next(
+        (x for x in pf_dict_e1 if x["char"] == char), dict[str, float]()
+    )
+    pf_dict_s0_char: dict[str, float] = next(
+        (x for x in pf_dict_s0 if x["char"] == char), dict[str, float]()
+    )
+    as_dict_e1_char: dict[str, float] = next(
+        (x for x in as_dict_e1 if x["char"] == char), dict[str, float]()
+    )
+    as_dict_s0_char: dict[str, float] = next(
+        (x for x in as_dict_s0 if x["char"] == char), dict[str, float]()
+    )
+    uses_temp: dict[str, float | str | dict[str, dict[str, float]]] = {
         "char": char,
         "app_rate_moc": uses_moc.get(char, {}).get("app_rate", 0),
         "app_rate_moc_e0s1": uses_moc.get(char, {}).get("app_rate_e0", 0),
@@ -253,19 +265,19 @@ for char in CHARACTERS:
         "rope_stats": uses_moc.get(char, {}).get("rope_stats", {}),
     }
 
-    rate_moc = (
+    rate_moc: float = (
         uses_temp["app_rate_moc"]
         if (uses_temp["app_rate_moc"] == 0)
         == (uses_moc.get(char, {}).get("weapon_1_app", {}) == 0)
         else 0
     )
-    rate_pf = (
+    rate_pf: float = (
         uses_temp["app_rate_pf"]
         if (uses_temp["app_rate_pf"] == 0)
         == (uses_pf.get(char, {}).get("weapon_1_app", {}) == 0)
         else 0
     )
-    rate_as = (
+    rate_as: float = (
         uses_temp["app_rate_as"]
         if (uses_temp["app_rate_as"] == 0)
         == (uses_as.get(char, {}).get("weapon_1_app", {}) == 0)

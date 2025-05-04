@@ -63,8 +63,8 @@ class PlayerPhase:
         Adds in a character to the owned characters dict.
         """
         for arti in articombinations:
-            articom = []
-            comarti = []
+            articom: list[str] = []
+            comarti: list[str] = []
             for artiset in articombinations[arti]:
                 articom.append(artiset + ", ")
                 comarti.append(", " + artiset)
@@ -129,14 +129,14 @@ class PlayerPhase:
                 return True
         return False
 
-    def chars_placement(self, characters: list[str]) -> None | dict:
+    def chars_placement(self, characters: list[str]) -> None | dict[str, list[str]]:
         """
         Takes in an iter of character names, and if the player owns them all,
         returns a dict of which chambers each was used in.
         """
         if not self.chars_owned(characters):
             return None
-        chambers = {
+        chambers: dict[str, list[str]] = {
             "1-1": [],
             "1-2": [],
             "2-1": [],

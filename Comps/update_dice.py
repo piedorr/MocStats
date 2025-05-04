@@ -1,5 +1,6 @@
 import json
 import os.path
+
 from comp_rates_config import RECENT_PHASE
 
 if os.path.exists("../data/raw_csvs_real/"):
@@ -8,7 +9,7 @@ else:
     f = open("../data/raw_csvs/" + RECENT_PHASE + "_nous.json")
 json_data = json.load(f)
 
-dice_faces = set()
+dice_faces: set[str] = set()
 dice_faces_dict = {
     "4076c4ccf19ca71dd8f31e313a9e9604": "IconRogueDlcDiceFaceI3",
     "2d74ffb5ffe4a607aecc90eba019e4a7": "IconRogueDlcDiceFaceI19",
@@ -81,14 +82,16 @@ for uid in json_data:
 # exit()
 
 out_dices = {}
-with open('../data/nous_dice.json') as char_file:
+with open("../data/nous_dice.json") as char_file:
     DICES = json.load(char_file)
 for dice in DICES:
     for dice_face in dice_faces:
-        if DICES[dice]["shortIcon"] == dice_faces_dict[dice_face[:-2]] and DICES[dice]["rarity"] == int(dice_face[-1:]):
+        if DICES[dice]["shortIcon"] == dice_faces_dict[dice_face[:-2]] and DICES[dice][
+            "rarity"
+        ] == int(dice_face[-1:]):
             out_dices[dice_face] = DICES[dice]
             break
 
 with open("../data/nous_dice_hoyolab.json", "w") as out_file:
-    out_file.write(json.dumps(out_dices,indent=4))
+    out_file.write(json.dumps(out_dices, indent=4))
 exit()

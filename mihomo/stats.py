@@ -1,58 +1,61 @@
-import csv
-import json
-import operator
-import os
-import statistics
-import sys
+from csv import reader as csvreader
+from csv import writer as csvwriter
 from itertools import chain
+from json import dumps as json_dumps
+from json import load as json_load
+from operator import itemgetter
+from os import mkdir, path
+from statistics import mean as stat_mean
+from statistics import median as stat_median
+from sys import path as sys_path
 
 import numpy as np
 from matplotlib.pyplot import hist as plt_hist  # type: ignore
 from matplotlib.pyplot import show as plt_show  # type: ignore
 
-sys.path.append("../Comps/")
+sys_path.append("../Comps/")
 from comp_rates_config import (
+    RECENT_PHASE,
+    RECENT_PHASE_PF,
+    pf_mode,
     skew_num,
+    skip_random,
+    skip_self,
 )
 from nohomo_config import (
-    RECENT_PHASE,
     check_char,
     check_char_name,
     check_stats,
-    pf_mode,
-    phase_num,
     print_chart,
-    skip_random,
-    skip_self,
 )
 from pynput import keyboard
 from scipy.stats import skew  # type: ignore
 
-if os.path.exists("../data/raw_csvs_real/"):
+if path.exists("../data/raw_csvs_real/"):
     f = open("results_real/" + RECENT_PHASE + "/output1.csv")
 else:
     f = open("results/" + RECENT_PHASE + "_output.csv")
-reader = csv.reader(f, delimiter=",")
+reader = csvreader(f, delimiter=",")
 headers = next(reader)
 data = np.array(list(reader))
 f.close()
 
 with open("../data/light_cones.json") as f:
-    LIGHT_CONES = json.load(f)
+    LIGHT_CONES = json_load(f)
 with open("../Comps/prydwen-slug.json") as slug_file:
-    slug = json.load(slug_file)
+    slug = json_load(slug_file)
 
-if os.path.exists("../data/raw_csvs_real/"):
-    f = open("../data/raw_csvs_real/" + phase_num + ".csv")
+if path.exists("../data/raw_csvs_real/"):
+    f = open("../data/raw_csvs_real/" + RECENT_PHASE_PF + ".csv")
 else:
-    f = open("../data/raw_csvs/" + phase_num + ".csv")
-reader = csv.reader(f, delimiter=",")
+    f = open("../data/raw_csvs/" + RECENT_PHASE_PF + ".csv")
+reader = csvreader(f, delimiter=",")
 headers = next(reader)
 spiral = list(reader)
 f.close()
 
-with open("../char_results/" + phase_num + "/all.csv") as f:
-    reader = csv.reader(f, delimiter=",")
+with open("../char_results/" + RECENT_PHASE_PF + "/all.csv") as f:
+    reader = csvreader(f, delimiter=",")
     headers = next(reader)
     build = np.array(list(reader))
 
@@ -163,9 +166,9 @@ uid = 0
 mainstatkeys: list[str] = list(mainstats[chars[0]].keys())
 substatkeys: list[str] = list(substats.keys())
 
-if os.path.isfile("../../uids.csv"):
+if path.isfile("../../uids.csv"):
     with open("../../uids.csv", encoding="UTF8") as f:
-        reader = csv.reader(f, delimiter=",")
+        reader = csvreader(f, delimiter=",")
         self_uids = list(reader)[0]
 else:
     self_uids = []
@@ -290,17 +293,17 @@ for char in copy_chars:
                     "speed",
                 ]:
                     median[char][stat] = round(
-                        statistics.median(stats[char].stats_count[stat]), 2
+                        stat_median(stats[char].stats_count[stat]), 2
                     )
                     mean[char][stat] = round(
-                        statistics.mean(stats[char].stats_count[stat]), 2
+                        stat_mean(stats[char].stats_count[stat]), 2
                     )
                 else:
                     median[char][stat] = round(
-                        statistics.median(stats[char].stats_count[stat]), 4
+                        stat_median(stats[char].stats_count[stat]), 4
                     )
                     mean[char][stat] = round(
-                        statistics.mean(stats[char].stats_count[stat]), 4
+                        stat_mean(stats[char].stats_count[stat]), 4
                     )
                 if (
                     mean[char][stat] > 0
@@ -363,7 +366,7 @@ for char in copy_chars:
 
         for stat in mainstats[char]:
             sorted_stats = sorted(
-                mainstats[char][stat].items(), key=operator.itemgetter(1), reverse=True
+                mainstats[char][stat].items(), key=itemgetter(1), reverse=True
             )
             mainstats[char][stat] = {k: v for k, v in sorted_stats}
             for mainstat in mainstats[char][stat]:
@@ -398,15 +401,15 @@ for char in copy_chars:
                 stats[char].stats_write[stat + "_" + str(i + 1) + "_app"] = "-"
                 i += 1
 
-if os.path.exists("results_real"):
+if path.exists("results_real"):
     file1 = open("results_real/chars.csv", "w", newline="")
     file2 = open("results_real/demographic.csv", "w", newline="")
 else:
     file1 = open("results/chars.csv", "w", newline="")
     file2 = open("results/demographic.csv", "w", newline="")
 
-csv_writer = csv.writer(file1)
-csv_writer2 = csv.writer(file2)
+csv_writer = csvwriter(file1)
+csv_writer2 = csvwriter(file2)
 del stats[chars[0]].sample_size
 csv_writer.writerow(["name", *stats[chars[0]].stats_write.keys()])
 for char in chars:
@@ -419,12 +422,16 @@ file2.close()
 
 temp_stats: list[str] = []
 iter_char = 0
-with open("../char_results/" + phase_num + "/all.json") as char_file:
-    CHARACTERS = json.load(char_file)
-with open("../char_results/" + phase_num + "/appearance_combine.json") as app_char_file:
-    APP = json.load(app_char_file)
-with open("../char_results/" + phase_num + "/rounds_combine.json") as round_char_file:
-    ROUND = json.load(round_char_file)
+with open("../char_results/" + RECENT_PHASE_PF + "/all.json") as char_file:
+    CHARACTERS = json_load(char_file)
+with open(
+    "../char_results/" + RECENT_PHASE_PF + "/appearance_combine.json"
+) as app_char_file:
+    APP = json_load(app_char_file)
+with open(
+    "../char_results/" + RECENT_PHASE_PF + "/rounds_combine.json"
+) as round_char_file:
+    ROUND = json_load(round_char_file)
 for char in stats:
     for i in chain(range(10, 18), range(19, 27)):
         stats[char].stats_write[statkeys[i]] = round(
@@ -458,10 +465,10 @@ for char in stats:
     # temp_stats.append((CHARACTERS[iter_char]) | app_dict)
     iter_char += 1
 
-if not os.path.exists("../char_results/" + phase_num):
-    os.mkdir("../char_results/" + phase_num)
+if not path.exists("../char_results/" + RECENT_PHASE_PF):
+    mkdir("../char_results/" + RECENT_PHASE_PF)
 
-with open("../char_results/" + phase_num + "/all2.json", "w") as char_file:
-    char_file.write(json.dumps(temp_stats, indent=2))
+with open("../char_results/" + RECENT_PHASE_PF + "/all2.json", "w") as char_file:
+    char_file.write(json_dumps(temp_stats, indent=2))
 
 print("Average AR: ", (ar / count))

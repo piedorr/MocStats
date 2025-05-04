@@ -11,7 +11,6 @@ from comp_rates_config import (
     whaleOnly,
 )
 from line_profiler import profile
-from pandas import read_csv  # type: ignore
 from percentile import calculate_percentile
 from player_phase import PlayerPhase
 from scipy.stats import skew, trim_mean  # type: ignore
@@ -92,8 +91,6 @@ def appearances(
     user_chars: dict[str, set[str]] = {}
 
     all_uids = set[str]()
-    comp_error = False
-    error_comps = []
 
     for char in CHARACTERS:
         user_chars[char] = set[str]()
@@ -204,15 +201,6 @@ def appearances(
                         app[char].planar_freq[user_char.planars].round_list[
                             cur_chamber
                         ].append(user_round)
-
-    if comp_error:
-        df_char = read_csv("../data/phase_characters.csv")
-        df_spiral = read_csv("../data/compositions.csv")
-        df_char = df_char[~df_char["uid"].isin(error_comps)]
-        df_spiral = df_spiral[~df_spiral["uid"].isin(error_comps)]
-        df_char.to_csv("phase_characters.csv", index=False)
-        df_spiral.to_csv("compositions.csv", index=False)
-        raise ValueError("There are missing comps from character data.")
 
     total = len(all_uids) / 100.0
     all_rounds: dict[str, dict[int, dict[int, int]]] = {}
