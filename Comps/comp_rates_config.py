@@ -33,11 +33,11 @@ args = parser.parse_args()
 
 
 # don't add underscore, i.e. 2.2.1"_pf"
-RECENT_PHASE = "3.2.2"
+RECENT_PHASE = "3.2.3"
 
 # if no past phase, leave blank
 # add underscore, i.e. 2.2.1"_pf"
-past_phase = "3.2.1"
+past_phase = "3.2.2"
 
 global pf_mode
 global as_mode
