@@ -7,7 +7,7 @@ from composition import Composition
 with open("../data/characters.json") as char_file:
     CHARACTERS: dict[str, dict[str, str | int | None]] = json.load(char_file)
 with open("../data/relic_affixes.json") as relic_file:
-    articombinations: dict[str, dict[str, str | int | None]] = json.load(relic_file)
+    articombinations: dict[str, list[str]] = json.load(relic_file)
 
 
 class OwnedChars:
@@ -68,13 +68,18 @@ class PlayerPhase:
             for artiset in articombinations[arti]:
                 articom.append(artiset + ", ")
                 comarti.append(", " + artiset)
-            for i in articom:
-                if i in artifacts:
-                    artifacts = artifacts.replace(i, arti + ", ")
-            for i in comarti:
-                if i in artifacts:
-                    artifacts = artifacts.replace(i, "")
-                    artifacts = arti + ", " + artifacts
+            replaced = False
+            arti_name = articombinations[arti][0]
+            for arti_replace in articom:
+                if arti_replace in artifacts:
+                    artifacts = artifacts.replace(arti_replace, arti_name + ", ")
+                    replaced = True
+            if replaced:
+                arti_name = articombinations[arti][1]
+            for arti_replace in comarti:
+                if arti_replace in artifacts:
+                    artifacts = artifacts.replace(arti_replace, "")
+                    artifacts = arti_name + ", " + artifacts
 
         self.owned[name] = OwnedChars(level, cons, weapon, element, artifacts, planars)
 
