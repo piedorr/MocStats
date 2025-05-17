@@ -70,17 +70,19 @@ class PlayerPhase:
                 comarti.append(", " + artiset)
             replaced = False
             arti_name = articombinations[arti][0]
-            for arti_replace in articom:
+            for arti_replace in comarti:
                 if arti_replace in artifacts:
-                    artifacts = artifacts.replace(arti_replace, arti_name + ", ")
+                    artifacts = artifacts.replace(arti_replace, ", " + arti_name)
                     replaced = True
             if replaced:
                 arti_name = articombinations[arti][1]
-            for arti_replace in comarti:
+            for arti_replace in articom:
                 if arti_replace in artifacts:
                     artifacts = artifacts.replace(arti_replace, "")
-                    artifacts = arti_name + ", " + artifacts
+                    artifacts = artifacts + ", " + arti_name
 
+        if "Flex, " in artifacts:
+            artifacts = artifacts.replace("Flex, ", "") + ", Flex"
         self.owned[name] = OwnedChars(level, cons, weapon, element, artifacts, planars)
 
     def add_comp(self, composition: Composition) -> None:
