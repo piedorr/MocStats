@@ -2,14 +2,14 @@
 
 set -e # Stop on error
 
-if [[ -d "data/raw_csvs_real" ]]; then
+if [ -n "$1" ]; then
+  cd Comps
+else
   cd mihomo
   python combine.py
   cd ../Comps
   python combine_raw_chars.py
   python hash.py
-else
-  cd Comps
 fi
 
 echo ""
