@@ -3876,5 +3876,63 @@
         "role": "Damage Dealer",
         "alt_name": null,
         "out_name": false
+    },
+    "Hyacine": {
+        "id": "1409",
+        "name": "Hyacine",
+        "tag": "hyacine",
+        "rarity": 5,
+        "path": "Memory",
+        "element": "Wind",
+        "max_sp": 140,
+        "ranks": [
+            "140901",
+            "140902",
+            "140903",
+            "140904",
+            "140905",
+            "140906"
+        ],
+        "skills": [
+            "140901",
+            "140902",
+            "140903",
+            "140904",
+            "140906",
+            "140907",
+            "1140901",
+            "1140903",
+            "1140905",
+            "1140906"
+        ],
+        "skill_trees": [
+            "1409001",
+            "1409002",
+            "1409003",
+            "1409004",
+            "1409007",
+            "1409101",
+            "1409102",
+            "1409103",
+            "1409201",
+            "1409202",
+            "1409203",
+            "1409204",
+            "1409205",
+            "1409206",
+            "1409207",
+            "1409208",
+            "1409209",
+            "1409210",
+            "1409301",
+            "1409302"
+        ],
+        "icon": "icon/character/1409.png",
+        "preview": "image/character_preview/1409.png",
+        "portrait": "image/character_portrait/1409.png",
+        "availability": "Limited 5*",
+        "role": "Sustain",
+        "alt_name": null,
+        "out_name": false
     }
 }

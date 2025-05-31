@@ -172,6 +172,7 @@ class Composition:
                 "Lynx",
                 "Huohuo",
                 "Gallagher",
+                "Hyacine",
             ]:
                 self.healer.insert(0, character)
             elif character in [
